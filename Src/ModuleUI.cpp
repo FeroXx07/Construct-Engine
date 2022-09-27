@@ -69,6 +69,15 @@ bool ModuleUI::CleanUp()
 	return true;
 }
 
+update_status ModuleUI::PreUpdate(float dt)
+{
+	fps_log.push_back(io->Framerate);
+	ms_log.push_back(io->Framerate);
+	//ImGui::PlotHistogram()
+
+	return UPDATE_CONTINUE;
+}
+
 // Update
 update_status ModuleUI::Update(float dt)
 {
@@ -126,6 +135,7 @@ update_status ModuleUI::Update(float dt)
 		ImGui::EndMenu();
 	}
 	ImGui::EndMainMenuBar();
+	
 	return UPDATE_CONTINUE;
 }
 

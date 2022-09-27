@@ -6,6 +6,7 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
+#include <vector>
 
 class ModuleUI : public Module
 {
@@ -14,6 +15,8 @@ public:
 	~ModuleUI();
 
 	bool Start();
+
+	update_status PreUpdate(float dt);
 	update_status Update(float dt);
 	update_status PostUpdate(float dt);
 	bool CleanUp();
@@ -23,5 +26,9 @@ public:
 	bool show_demo_window = true;
 	bool show_another_window = false;
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 0.00f);
+
+private:
+	std::vector<float> fps_log;
+	std::vector<float> ms_log;
 };
 
