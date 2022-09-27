@@ -56,6 +56,7 @@ bool ModuleWindow::Init()
 		}
 
 		flags |= SDL_WINDOW_OPENGL;
+		flags |= SDL_WINDOW_ALLOW_HIGHDPI;
 
 		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
 

@@ -19,16 +19,16 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
-	Cube * ramp = new Cube(15, 0.1f, 15);
-	ramp->SetRotation(-25, { 1.0f,0.0f,0.0f });
-	ramp->color.Set(100, 100, 0, 0);
-	primitives.add(ramp);
+	//Cube * ramp = new Cube(15, 0.1f, 15);
+	//ramp->SetRotation(-25, { 1.0f,0.0f,0.0f });
+	//ramp->color.Set(100, 100, 0, 0);
+	//primitives.add(ramp);
 
-	for (uint n = 0; n < primitives.count(); n++)
-	{
-		Primitive *current;
-		primitives.at(n, current);
-	}
+	//for (uint n = 0; n < primitives.count(); n++)
+	//{
+	//	Primitive *current;
+	//	primitives.at(n, current);
+	//}
 
 	return ret;
 }
@@ -49,21 +49,21 @@ update_status ModuleSceneIntro::Update(float dt)
 	p.Render();
 	p.color.Set(255, 255, 255, 0);
 
-	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
-	{
-		Sphere* s = new Sphere(1);
-		s->SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
-		float force = 30.0f;
-		primitives.add(s);
-	}
+	//if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
+	//{
+	//	Sphere* s = new Sphere(1);
+	//	s->SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
+	//	float force = 30.0f;
+	//	primitives.add(s);
+	//}
 
-	for (uint n = 0; n < primitives.count(); n++)
-	{
-		Primitive* current;
-		primitives.at(n, current);
-		current->Update();
-		current->Render();
-	}
+	//for (uint n = 0; n < primitives.count(); n++)
+	//{
+	//	Primitive* current;
+	//	primitives.at(n, current);
+	//	current->Update();
+	//	current->Render();
+	//}
 
 	return UPDATE_CONTINUE;
 }
