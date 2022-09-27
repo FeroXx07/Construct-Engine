@@ -7,7 +7,7 @@ Application::Application()
 	scene_intro = new ModuleSceneIntro(this);
 	renderer3D = new ModuleRenderer3D(this);
 	camera = new ModuleCamera3D(this);
-
+    uiManager = new ModuleUI(this, false);
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
@@ -19,6 +19,7 @@ Application::Application()
 
 	// Scenes
 	AddModule(scene_intro);
+	AddModule(uiManager);
 
 	// Renderer last!
 	AddModule(renderer3D);
@@ -90,7 +91,7 @@ update_status Application::Update()
 		if (*item != NULL && ret == true)
 			ret = (*item)->PostUpdate(dt);
 	}
-
+	
 	FinishUpdate();
 	return ret;
 }
@@ -105,6 +106,12 @@ bool Application::CleanUp()
 			ret = (*item)->CleanUp();
 	}
 	return ret;
+}
+
+void Application::RequestBrowser(std::string url)
+{
+	//char url[100] = "http:// www.geeksforgeeks.org/";
+	ShellExecute(NULL, "open", url.c_str(), NULL, NULL, SW_SHOWNORMAL);
 }
 
 void Application::AddModule(Module* mod)

@@ -55,6 +55,9 @@
     <ClCompile Include="Src\Light.cpp">
       <Filter>MathAndTools</Filter>
     </ClCompile>
+    <ClCompile Include="Src\ModuleUI.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ImGui">
@@ -94,15 +97,6 @@
     <ClInclude Include="Src\glmath.h">
       <Filter>MathAndTools</Filter>
     </ClInclude>
-    <ClInclude Include="Src\p2Point.h">
-      <Filter>MathAndTools</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\p2List.h">
-      <Filter>MathAndTools</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\p2DynArray.h">
-      <Filter>MathAndTools</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Primitive.h">
       <Filter>MathAndTools</Filter>
     </ClInclude>
@@ -111,6 +105,9 @@
     </ClInclude>
     <ClInclude Include="Src\Light.h">
       <Filter>MathAndTools</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\ModuleUI.h">
+      <Filter>Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

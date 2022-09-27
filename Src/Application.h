@@ -1,7 +1,6 @@
 #pragma once
 
 #include <list>
-#include "p2List.h"
 #include "Globals.h"
 #include "Timer.h"
 #include "Module.h"
@@ -10,7 +9,8 @@
 #include "ModuleSceneIntro.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
-
+#include "ModuleUI.h"
+#include <string>
 
 class Application
 {
@@ -20,13 +20,12 @@ public:
 	ModuleSceneIntro* scene_intro;
 	ModuleRenderer3D* renderer3D;
 	ModuleCamera3D* camera;
-
+	ModuleUI* uiManager;
 
 private:
 
 	Timer	ms_timer;
 	float	dt;
-	//p2List<Module*> list_modules;
 	std::list<Module*> list_modules;
 
 public:
@@ -38,6 +37,7 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+	void RequestBrowser(std::string url);
 private:
 
 	void AddModule(Module* mod);

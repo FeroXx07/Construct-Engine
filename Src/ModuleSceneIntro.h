@@ -1,9 +1,7 @@
 #pragma once
 #include "Module.h"
-#include "p2DynArray.h"
 #include "Globals.h"
 #include "Primitive.h"
-#include "p2List.h"
 #define MAX_SNAKE 2
 
 class ModuleSceneIntro : public Module
@@ -18,13 +16,8 @@ public:
 
 
 public:
-	Plane p = Plane(0, 1, 0, 0);
-
-	Cube* checkPoint = nullptr;
-	Cube* deathSensor = nullptr;
-	Cube* impulseSensor = nullptr;
-	Cube* winSensor = nullptr;
+	myPrimitive::Plane p = myPrimitive::Plane(0, 1, 0, 0);
 
 	bool hasCheckPoint = false;
-	p2List<Primitive*> primitives;
+	std::list<myPrimitive::Primitive*> primitives;
 };

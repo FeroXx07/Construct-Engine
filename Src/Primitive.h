@@ -3,6 +3,15 @@
 #include "glmath.h"
 #include "Color.h"
 
+namespace myPrimitive {
+	class Primitive;
+	class Cube;
+	class Sphere;
+	class Cylinder;
+	class Line;
+	class Plane;
+}
+
 enum PrimitiveTypes
 {
 	Primitive_Point,
@@ -13,7 +22,7 @@ enum PrimitiveTypes
 	Primitive_Cylinder
 };
 
-class Primitive
+class myPrimitive::Primitive
 {
 public:
 
@@ -38,7 +47,7 @@ protected:
 };
 
 // ============================================
-class Cube : public Primitive
+class myPrimitive::Cube : public myPrimitive::Primitive
 {
 public :
 	Cube();
@@ -49,7 +58,7 @@ public:
 };
 
 // ============================================
-class Sphere : public Primitive
+class myPrimitive::Sphere : public myPrimitive::Primitive
 {
 public:
 	Sphere();
@@ -60,7 +69,7 @@ public:
 };
 
 // ============================================
-class Cylinder : public Primitive
+class myPrimitive::Cylinder : public myPrimitive::Primitive
 {
 public:
 	Cylinder();
@@ -72,7 +81,7 @@ public:
 };
 
 // ============================================
-class Line : public Primitive
+class myPrimitive::Line : public myPrimitive::Primitive
 {
 public:
 	Line();
@@ -84,7 +93,7 @@ public:
 };
 
 // ============================================
-class Plane : public Primitive
+class myPrimitive::Plane : public myPrimitive::Primitive
 {
 public:
 	Plane();
