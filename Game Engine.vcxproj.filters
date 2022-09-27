@@ -1,19 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Application.cpp" />
-    <ClCompile Include="Color.cpp" />
-    <ClCompile Include="glmath.cpp" />
-    <ClCompile Include="Light.cpp" />
-    <ClCompile Include="log.cpp" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="ModuleCamera3D.cpp" />
-    <ClCompile Include="ModuleInput.cpp" />
-    <ClCompile Include="ModuleRenderer3D.cpp" />
-    <ClCompile Include="ModuleWindow.cpp" />
-    <ClCompile Include="Primitive.cpp" />
-    <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="ModuleSceneIntro.cpp" />
     <ClCompile Include="imgui\imgui.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
@@ -35,28 +22,46 @@
     <ClCompile Include="imgui\imgui_widgets.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Application.h" />
-    <ClInclude Include="Color.h" />
-    <ClInclude Include="glmath.h" />
-    <ClInclude Include="Globals.h" />
-    <ClInclude Include="Light.h" />
-    <ClInclude Include="ModuleCamera3D.h" />
-    <ClInclude Include="ModuleRenderer3D.h" />
-    <ClInclude Include="Module.h" />
-    <ClInclude Include="ModuleInput.h" />
-    <ClInclude Include="ModuleWindow.h" />
-    <ClInclude Include="Primitive.h" />
-    <ClInclude Include="Timer.h" />
-    <ClInclude Include="ModuleSceneIntro.h" />
-    <ClInclude Include="p2DynArray.h" />
-    <ClInclude Include="p2List.h" />
-    <ClInclude Include="p2Point.h" />
+    <ClCompile Include="Src\Application.cpp" />
+    <ClCompile Include="Src\Color.cpp" />
+    <ClCompile Include="Src\glmath.cpp" />
+    <ClCompile Include="Src\Light.cpp" />
+    <ClCompile Include="Src\log.cpp" />
+    <ClCompile Include="Src\Main.cpp" />
+    <ClCompile Include="Src\ModuleCamera3D.cpp" />
+    <ClCompile Include="Src\ModuleInput.cpp" />
+    <ClCompile Include="Src\ModuleRenderer3D.cpp" />
+    <ClCompile Include="Src\ModuleSceneIntro.cpp" />
+    <ClCompile Include="Src\ModuleWindow.cpp" />
+    <ClCompile Include="Src\Primitive.cpp" />
+    <ClCompile Include="Src\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ImGui">
       <UniqueIdentifier>{edc7b278-c5b8-4e94-823a-12bb43ca0466}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Src\Globals.h" />
+    <ClInclude Include="Src\Application.h" />
+    <ClInclude Include="Src\Color.h" />
+    <ClInclude Include="Src\glmath.h" />
+    <ClInclude Include="Src\Timer.h" />
+    <ClInclude Include="Src\Light.h" />
+    <ClInclude Include="Src\Module.h" />
+    <ClInclude Include="Src\ModuleCamera3D.h" />
+    <ClInclude Include="Src\ModuleInput.h" />
+    <ClInclude Include="Src\ModuleRenderer3D.h" />
+    <ClInclude Include="Src\ModuleSceneIntro.h" />
+    <ClInclude Include="Src\ModuleWindow.h" />
+    <ClInclude Include="Src\p2DynArray.h" />
+    <ClInclude Include="Src\p2List.h" />
+    <ClInclude Include="Src\p2Point.h" />
+    <ClInclude Include="Src\Primitive.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Src\imgui.ini">
+      <Filter>ImGui</Filter>
+    </None>
   </ItemGroup>
 </Project>
