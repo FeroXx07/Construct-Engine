@@ -1,5 +1,6 @@
 #pragma once
 
+#include <list>
 #include "p2List.h"
 #include "Globals.h"
 #include "Timer.h"
@@ -25,7 +26,8 @@ private:
 
 	Timer	ms_timer;
 	float	dt;
-	p2List<Module*> list_modules;
+	//p2List<Module*> list_modules;
+	std::list<Module*> list_modules;
 
 public:
 

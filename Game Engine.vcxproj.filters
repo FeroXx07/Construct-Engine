@@ -23,41 +23,95 @@
       <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="Src\Application.cpp" />
-    <ClCompile Include="Src\Color.cpp" />
-    <ClCompile Include="Src\glmath.cpp" />
-    <ClCompile Include="Src\Light.cpp" />
     <ClCompile Include="Src\log.cpp" />
     <ClCompile Include="Src\Main.cpp" />
-    <ClCompile Include="Src\ModuleCamera3D.cpp" />
-    <ClCompile Include="Src\ModuleInput.cpp" />
-    <ClCompile Include="Src\ModuleRenderer3D.cpp" />
-    <ClCompile Include="Src\ModuleSceneIntro.cpp" />
-    <ClCompile Include="Src\ModuleWindow.cpp" />
-    <ClCompile Include="Src\Primitive.cpp" />
-    <ClCompile Include="Src\Timer.cpp" />
+    <ClCompile Include="Src\ModuleCamera3D.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\ModuleInput.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\ModuleRenderer3D.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\ModuleSceneIntro.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\ModuleWindow.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Color.cpp">
+      <Filter>MathAndTools</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\glmath.cpp">
+      <Filter>MathAndTools</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Primitive.cpp">
+      <Filter>MathAndTools</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Timer.cpp">
+      <Filter>MathAndTools</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Light.cpp">
+      <Filter>MathAndTools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ImGui">
       <UniqueIdentifier>{edc7b278-c5b8-4e94-823a-12bb43ca0466}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Modules">
+      <UniqueIdentifier>{0e2c25df-6f8f-46b9-9297-2289bb3d36a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MathAndTools">
+      <UniqueIdentifier>{af536429-b100-4df9-b0fb-352f3466afc9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Globals.h" />
     <ClInclude Include="Src\Application.h" />
-    <ClInclude Include="Src\Color.h" />
-    <ClInclude Include="Src\glmath.h" />
-    <ClInclude Include="Src\Timer.h" />
-    <ClInclude Include="Src\Light.h" />
-    <ClInclude Include="Src\Module.h" />
-    <ClInclude Include="Src\ModuleCamera3D.h" />
-    <ClInclude Include="Src\ModuleInput.h" />
-    <ClInclude Include="Src\ModuleRenderer3D.h" />
-    <ClInclude Include="Src\ModuleSceneIntro.h" />
-    <ClInclude Include="Src\ModuleWindow.h" />
-    <ClInclude Include="Src\p2DynArray.h" />
-    <ClInclude Include="Src\p2List.h" />
-    <ClInclude Include="Src\p2Point.h" />
-    <ClInclude Include="Src\Primitive.h" />
+    <ClInclude Include="Src\Module.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\ModuleCamera3D.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\ModuleInput.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\ModuleRenderer3D.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\ModuleSceneIntro.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\ModuleWindow.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Color.h">
+      <Filter>MathAndTools</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\glmath.h">
+      <Filter>MathAndTools</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\p2Point.h">
+      <Filter>MathAndTools</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\p2List.h">
+      <Filter>MathAndTools</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\p2DynArray.h">
+      <Filter>MathAndTools</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Primitive.h">
+      <Filter>MathAndTools</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Timer.h">
+      <Filter>MathAndTools</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Light.h">
+      <Filter>MathAndTools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\imgui.ini">
