@@ -59,6 +59,14 @@ bool ModuleUI::Start()
 //	//ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
 //	//IM_ASSERT(font != NULL);
 //
+	maxDataHistogram = 60;
+
+	std::ifstream f("LICENSE"); //taking file as inputstream
+	if (f) {
+		std::ostringstream ss;
+		ss << f.rdbuf(); // reading data
+		licenseStr = ss.str();
+	}
 	return true;
 }
 
@@ -69,10 +77,93 @@ bool ModuleUI::CleanUp()
 	return true;
 }
 
+void ModuleUI::ConfigWindowUpdate()
+{
+	Uint32 treeFlags = ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_Framed;
+	ImGui::Begin("Configuration");
+	if (ImGui::TreeNodeEx("Application", treeFlags | ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::Text("Max range limit: ");
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), std::to_string(maxDataHistogram).c_str());
+		sprintf_s(title, 25, "Framerate %.1f", fps_log[fps_log.size() - 1]);
+		ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
+		sprintf_s(title, 25, "Milliseconds %.1f", ms_log[ms_log.size() - 1]);
+		ImGui::PlotHistogram("##milliseconds", &ms_log[0], ms_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNodeEx("Window", treeFlags))
+	{
+		int height, width;
+		App->window->GetScreenSize(width, height);
+		float b = App->window->GetBrightness();
+
+		ImGui::SliderFloat("Brightness", &b, 0.0f, 1.0f, "%.1f");
+		if (b != App->window->GetBrightness())
+			App->window->SetBrightness(b);
+
+		ImGui::SliderInt("Width", &width, 1, 1920);
+		ImGui::SliderInt("Height", &height, 1, 1080);
+		if (width != App->window->GetScreenWidth() || height != App->window->GetScreenHeight())
+			App->window->SetScreenSize(width, height);
+
+		ImGui::Text("Refresh rate: ");
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), std::to_string(ms_log[ms_log.size() - 1]).c_str());
+
+		bool fullscreen = App->window->GetFullScreen();
+		bool resizable = App->window->GetResizable();
+
+		if (ImGui::Checkbox("Fullscreen", &fullscreen)) 
+			App->window->SetFullScreen(fullscreen);
+		if (ImGui::IsItemHovered())
+			ImGui::SetTooltip("Restart to apply");
+		ImGui::SameLine();
+		if (ImGui::Checkbox("Resizable", &resizable))
+			App->window->SetResizable(resizable);
+		if (ImGui::IsItemHovered())
+			ImGui::SetTooltip("Restart to apply");
+		ImGui::TreePop();
+	}
+	//ImGui::End();
+	
+}
+
+void ModuleUI::ConfigHardwarepdate()
+{
+	char sdlVer[25];
+	SDL_version ver; SDL_GetVersion(&ver);
+	
+	Uint32 treeFlags = ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_Framed;
+	if (ImGui::TreeNodeEx("Hardware", treeFlags))
+	{
+		ImGui::Text("SDL Version: "); 
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%d.%d.%d", ver.major, ver.minor, ver.patch);
+		ImGui::Separator();
+
+		ImGui::Text("CPUs: ");
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%d (Cache: %dkb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
+		ImGui::Separator();
+
+		ImGui::Text("System RAM: ");
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%dGb", SDL_GetSystemRAM()/1000);
+
+		ImGui::TreePop();
+	}
+	ImGui::End();
+}
+
 update_status ModuleUI::PreUpdate(float dt)
 {
 	fps_log.push_back(io->Framerate);
 	ms_log.push_back(io->Framerate);
+	if (fps_log.size() >= maxDataHistogram)
+		fps_log.erase(fps_log.begin());
+	if (ms_log.size() >= maxDataHistogram)
+		ms_log.erase(ms_log.begin());
 	//ImGui::PlotHistogram()
 
 	return UPDATE_CONTINUE;
@@ -123,6 +214,7 @@ update_status ModuleUI::Update(float dt)
 	//	ImGui::End();
 	//}
 
+	// Top Menu Bar
 	ImGui::BeginMainMenuBar();
 	if (ImGui::BeginMenu("Help"))
 	{
@@ -132,10 +224,70 @@ update_status ModuleUI::Update(float dt)
 		if (ImGui::MenuItem("Web Page"))
 			App->RequestBrowser("https://github.com/FeroXx07/Game-Engine");
 
+		//if (ImGui::MenuItem("About"))
+		//	ImGui::OpenPopup("About"); // Set pop up id
+
+		//// Always center this window when appearing
+		//ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+		//ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+		//// Pop up id required
+		//if (ImGui::BeginPopupModal("About", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		//{
+		//	ImGui::Text("All those beautiful files will be deleted.\nThis operation cannot be undone!\n\n");
+		//	ImGui::Separator();
+
+		//	//static int unused_i = 0;
+		//	//ImGui::Combo("Combo", &unused_i, "Delete\0Delete harder\0");
+
+		//	static bool dont_ask_me_next_time = false;
+		//	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+		//	ImGui::Checkbox("Don't ask me next time", &dont_ask_me_next_time);
+		//	ImGui::PopStyleVar();
+
+		//	if (ImGui::Button("Got it", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+		//	ImGui::SetItemDefaultFocus();
+		//	//ImGui::SameLine();
+		//	//if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+		//	//ImGui::EndPopup();
+		//}
+		if (ImGui::Button("About"))
+			ImGui::OpenPopup("About...");
+
+		// Always center this window when appearing
+		ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+		ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+		if (ImGui::BeginPopupModal("About...", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::Text("The engine currently doesn't have a name\n");
+			ImGui::Text("The sure thing is that it will be 3D Game Engine\n");
+			ImGui::Text("Make sure to visit the github page: https://github.com/FeroXx07/Game-Engine\n");
+			ImGui::Text(licenseStr.c_str());
+			
+			ImGui::Separator();
+
+			//static int unused_i = 0;
+			//ImGui::Combo("Combo", &unused_i, "Delete\0Delete harder\0");
+
+			/*static bool dont_ask_me_next_time = false;
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+			ImGui::Checkbox("Don't ask me next time", &dont_ask_me_next_time);
+			ImGui::PopStyleVar();*/
+
+			if (ImGui::Button("OK", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+			ImGui::EndPopup();
+		/*	ImGui::SetItemDefaultFocus();
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+			ImGui::EndPopup();*/
+		}
 		ImGui::EndMenu();
 	}
 	ImGui::EndMainMenuBar();
-	
+
+	ConfigWindowUpdate();
+	ConfigHardwarepdate();
 	return UPDATE_CONTINUE;
 }
 

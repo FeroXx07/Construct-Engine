@@ -7,6 +7,10 @@
 #include "Module.h"
 #include "Globals.h"
 #include <vector>
+#include<iostream>
+#include<fstream>
+#include<sstream>
+#include<string>
 
 class ModuleUI : public Module
 {
@@ -20,6 +24,9 @@ public:
 	update_status Update(float dt);
 	update_status PostUpdate(float dt);
 	bool CleanUp();
+
+	void ConfigWindowUpdate();
+	void ConfigHardwarepdate();
 public:
 	// Our state
 	ImGuiIO* io = nullptr;
@@ -30,5 +37,9 @@ public:
 private:
 	std::vector<float> fps_log;
 	std::vector<float> ms_log;
+	char title[25];
+	int maxDataHistogram = 0;
+
+	std::string licenseStr;
 };
 

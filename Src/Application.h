@@ -1,6 +1,4 @@
 #pragma once
-
-#include <list>
 #include "Globals.h"
 #include "Timer.h"
 #include "Module.h"
@@ -10,7 +8,19 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModuleUI.h"
+
 #include <string>
+#include <list>
+#include <nlohmann/json.hpp>
+#include <fstream>
+#include <iostream>
+
+// for convenience
+using json = nlohmann::json;
+// Return variable name as str
+#define getName(var)  #var
+// Return variable name as str and save it in another string
+#define getNameS(var, str)  sprintf(str, "%s", #var) 
 
 class Application
 {

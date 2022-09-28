@@ -2,6 +2,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "Primitive.h"
+#include <list>
 #define MAX_SNAKE 2
 
 class ModuleSceneIntro : public Module
