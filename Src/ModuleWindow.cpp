@@ -23,8 +23,7 @@ bool ModuleWindow::Init()
 {
 	LOG("Init SDL window & surface");
 	bool ret = true;
-
-	LoadJson();
+	bool initFromConfigJson = LoadJson();
 
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
@@ -50,38 +49,40 @@ bool ModuleWindow::Init()
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 		SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
-		SDL_GLContext gl_context = SDL_GL_CreateContext(App->window->window);
-		SDL_GL_MakeCurrent(App->window->window, gl_context);
+		SDL_GLContext gl_context = SDL_GL_CreateContext(window);
+		SDL_GL_MakeCurrent(window, gl_context);
 		SDL_GL_SetSwapInterval(1); // Enable vsync
 		////Use OpenGL 2.1
 		//SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
 		//SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-
-		if(isFullScreen == true)
+		
+		if (initFromConfigJson == false)
 		{
-			flags |= SDL_WINDOW_FULLSCREEN;
-		}
+			if (isFullScreen == true)
+			{
+				flags |= SDL_WINDOW_FULLSCREEN;
+			}
 
-		if(isResizable == true)
-		{
-			flags |= SDL_WINDOW_RESIZABLE;
-		}
+			if (isResizable == true)
+			{
+				flags |= SDL_WINDOW_RESIZABLE;
+			}
 
-		if(isBorderless == true)
-		{
-			flags |= SDL_WINDOW_BORDERLESS;
-		}
+			if (isBorderless == true)
+			{
+				flags |= SDL_WINDOW_BORDERLESS;
+			}
 
-		if(isFullScreen_Desktop == true)
-		{
-			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+			if (isFullScreen_Desktop == true)
+			{
+				flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+			}
 		}
 
 		flags |= SDL_WINDOW_OPENGL;
 		flags |= SDL_WINDOW_ALLOW_HIGHDPI;
 
 		window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
-
 		if(window == NULL)
 		{
 			LOG("Window could not be created! SDL_Error: %s\n", SDL_GetError());
@@ -116,6 +117,19 @@ bool ModuleWindow::CleanUp()
 	return true;
 }
 
+bool ModuleWindow::RestartWindow()
+{
+	bool ret = true;
+
+	App->renderer3D->CleanUp();
+	
+	this->CleanUp();
+	ret = Init();
+	ret = App->renderer3D->Init();
+
+	return ret;
+}
+
 
 void ModuleWindow::SetTitle(const char* title)
 {
@@ -126,19 +140,24 @@ void ModuleWindow::SetScreenSize(int width, int height)
 {
 	this->width = width;
 	this->height = height;
+	SDL_SetWindowSize(window, this->width, this->height);
 	SaveJson();
 }
 
 void ModuleWindow::SetFullScreen(bool value)
 {
 	isFullScreen = value;
-	Uint32 currentFlags = SDL_GetWindowFlags(window);
 	if (isFullScreen)
-		currentFlags |= SDL_WINDOW_BORDERLESS;
+	{
+		this->isFullScreen_Desktop = false;
+		SDL_SetWindowFullscreen(window, SDL_WindowFlags::SDL_WINDOW_FULLSCREEN);
+	}		
 	else
-		currentFlags &= ~SDL_WINDOW_BORDERLESS;
-	
-	int a = SDL_SetWindowFullscreen(window, currentFlags);
+		SDL_SetWindowFullscreen(window, 0);
+
+	//SDL_Surface* screenSurface = SDL_GetWindowSurface(window);
+	SDL_UpdateWindowSurface(window);
+
 	SaveJson();
 }
 
@@ -151,12 +170,27 @@ void ModuleWindow::SetResizable(bool value)
 void ModuleWindow::SetBorderless(bool value)
 {
 	isBorderless = value;
+	if (isBorderless)
+		SDL_SetWindowBordered(window,SDL_bool::SDL_FALSE);
+	else
+		SDL_SetWindowBordered(window, SDL_bool::SDL_TRUE);
+	SDL_UpdateWindowSurface(window);
 	SaveJson();
 }
 
 void ModuleWindow::SetFullScreen_Desktop(bool value)
 {
 	isFullScreen_Desktop = value;
+	if (isFullScreen_Desktop)
+	{
+		SDL_SetWindowFullscreen(window, SDL_WindowFlags::SDL_WINDOW_FULLSCREEN_DESKTOP);
+		this->isFullScreen = false;
+	}
+	else
+		SDL_SetWindowFullscreen(window, 0);
+
+	//SDL_Surface* screenSurface = SDL_GetWindowSurface(window);
+	SDL_UpdateWindowSurface(window);
 	SaveJson();
 }
 
@@ -222,32 +256,36 @@ void ModuleWindow::SaveJson()
 
 	// automatic transformation of STL containers in nlohmann Json
 	json j_Object(mapSettings);
-	jSettings = j_Object;
+	jSettings["Window"] = j_Object;
 
 	// add via member function
-	jSettings.push_back({ "title", title.c_str() });
-	jSettings.emplace( getName(brightness), brightness);
+	jSettings["Window"].push_back({ "title", title.c_str() });
+	jSettings["Window"].emplace( getName(brightness), brightness);
 
 	// add via += operator
-	jSettings += {getName(width), width};
+	jSettings["Window"] += {getName(width), width};
 
 	// add via key
-	jSettings[getName(height)] = height;
+	jSettings["Window"][getName(height)] = height;
 
 	// default serialization 
 	auto s1 = jSettings.dump();
 	std::cout << jSettings << std::endl;
 	
-	std::ofstream file("jSettings.json");
+	std::ofstream file("Settings/config.json");
 	file << jSettings;
 }
 
-void ModuleWindow::LoadJson()
+bool ModuleWindow::LoadJson()
 {
-	std::ifstream f("jSettings.json");
+	bool ret = false;
+
+	std::ifstream f("Settings/config.json");
 	if (f.is_open())
 	{
+		ret = true;
 		json data = json::parse(f);
+		data = data["Window"];
 		isFullScreen = data[getName(isFullScreen)];
 		isResizable = data[getName(isResizable)];
 		isBorderless = data[getName(isBorderless)];
@@ -257,4 +295,6 @@ void ModuleWindow::LoadJson()
 		height = data[getName(height)];
 		brightness = data[getName(brightness)];
 	}
+
+	return ret;
 }

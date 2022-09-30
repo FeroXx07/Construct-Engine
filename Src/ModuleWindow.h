@@ -19,9 +19,11 @@ public:
 	bool Init();
 	bool CleanUp();
 
+	bool RestartWindow();
+
 	// Json methods
 	void SaveJson();
-	void LoadJson();
+	bool LoadJson();
 public:
 	//The window we'll be rendering to
 	SDL_Window* window;
