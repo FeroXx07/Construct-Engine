@@ -6,10 +6,15 @@
 //#else
 //#include <SDL_opengl.h>
 //#endif
-#include <gl/GL.h>
+#include <gl/glew.h>
 #include <gl/GLU.h>
+#include <gl/GL.h>
+//#include <gl/GLU.h>
+
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
+#pragma comment (lib, "glew32.lib")    /* link OpenGL Utility lib     */
+#pragma comment (lib, "glew32s.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 
 ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -77,7 +82,13 @@ bool ModuleRenderer3D::Init()
 			LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
 			ret = false;
 		}
-		
+		LOG("Using Glew %s", glewGetString(GLEW_VERSION));
+		// Should be 2.0
+		LOG("Vendor: %s", glGetString(GL_VENDOR));
+		LOG("Renderer: %s", glGetString(GL_RENDERER));
+		LOG("OpenGL version supported %s", glGetString(GL_VERSION));
+		LOG("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+
 		GLfloat LightModelAmbient[] = {0.0f, 0.0f, 0.0f, 1.0f};
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
 		
