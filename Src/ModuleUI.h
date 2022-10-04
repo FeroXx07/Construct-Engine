@@ -26,7 +26,8 @@ public:
 	bool CleanUp();
 
 	void ConfigWindowUpdate();
-	void ConfigHardwarepdate();
+	void ConfigHardwareUpdate();
+	void ConsoleWindowUpdate();
 public:
 	// Our state
 	ImGuiIO* io = nullptr;

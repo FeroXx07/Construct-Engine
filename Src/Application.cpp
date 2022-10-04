@@ -78,17 +78,17 @@ update_status Application::Update()
 
 	for (auto item = list_modules.begin(); item != list_modules.end(); ++item)
 	{
-		if (*item != NULL && ret == true)
+		if (*item != NULL && ret == UPDATE_CONTINUE)
 			ret = (*item)->PreUpdate(dt);
 	}
 	for (auto item = list_modules.begin(); item != list_modules.end(); ++item)
 	{
-		if (*item != NULL && ret == true)
+		if (*item != NULL && ret == UPDATE_CONTINUE)
 			ret = (*item)->Update(dt);
 	}
 	for (auto item = list_modules.begin(); item != list_modules.end(); ++item)
 	{
-		if (*item != NULL && ret == true)
+		if (*item != NULL && ret == UPDATE_CONTINUE)
 			ret = (*item)->PostUpdate(dt);
 	}
 	

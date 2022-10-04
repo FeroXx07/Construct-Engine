@@ -6,7 +6,8 @@
 #else
 #include <SDL_opengl.h>
 #endif
-ModuleUI::ModuleUI(Application* app, bool start_enabled) : Module(app, start_enabled)
+#include "singleton.h"
+ModuleUI::ModuleUI(Application* app, bool start_enabled) : Module(app, start_enabled), title("")
 {
 }
 
@@ -137,7 +138,7 @@ void ModuleUI::ConfigWindowUpdate()
 	
 }
 
-void ModuleUI::ConfigHardwarepdate()
+void ModuleUI::ConfigHardwareUpdate()
 {
 	char sdlVer[25];
 	SDL_version ver; SDL_GetVersion(&ver);
@@ -160,6 +161,20 @@ void ModuleUI::ConfigHardwarepdate()
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%dGb", SDL_GetSystemRAM()/1000);
 
 		ImGui::TreePop();
+	}
+	ImGui::End();
+}
+
+void ModuleUI::ConsoleWindowUpdate()
+{
+	ImGui::Begin("Console");
+	std::queue<std::string> temp = logger.GetInstance()->queue;
+	while (!temp.empty())
+	{
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "LOG: ");
+		ImGui::SameLine();
+		ImGui::Text(temp.front().c_str());
+		temp.pop();
 	}
 	ImGui::End();
 }
@@ -227,7 +242,7 @@ update_status ModuleUI::Update(float dt)
 	if (ImGui::BeginMenu("Help"))
 	{
 		if (ImGui::MenuItem("Gui Demo"))
-			show_demo_window != show_demo_window;
+			show_demo_window = !show_demo_window;
 
 		if (ImGui::MenuItem("Web Page"))
 			App->RequestBrowser("https://github.com/FeroXx07/Game-Engine");
@@ -295,7 +310,8 @@ update_status ModuleUI::Update(float dt)
 	ImGui::EndMainMenuBar();
 
 	ConfigWindowUpdate();
-	ConfigHardwarepdate();
+	ConfigHardwareUpdate();
+	ConsoleWindowUpdate();
 	return UPDATE_CONTINUE;
 }
 
@@ -304,7 +320,7 @@ update_status ModuleUI::PostUpdate(float dt)
 	// Rendering
 	ImGui::Render();
 	//io = ImGui::GetIO(); (void)io;
-	glViewport(0, 0, io->DisplaySize.x, io->DisplaySize.y);
+	glViewport(0, 0, (GLsizei)io->DisplaySize.x, (GLsizei)io->DisplaySize.y);
 	/*glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
 	glClear(GL_COLOR_BUFFER_BIT);*/
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

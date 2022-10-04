@@ -200,6 +200,7 @@
     <ClInclude Include="Src\ModuleUI.h" />
     <ClInclude Include="Src\ModuleWindow.h" />
     <ClInclude Include="Src\Primitive.h" />
+    <ClInclude Include="Src\singleton.h" />
     <ClInclude Include="Src\Timer.h" />
   </ItemGroup>
   <ItemGroup>

@@ -6,6 +6,9 @@
 #include <SDL.h>
 //#pragma comment( lib, "SDL/lib/x64/SDL2.lib" )
 //#pragma comment( lib, "SDL/lib/x64/SDL2main.lib" )
+#include <string>
+
+#include "singleton.h"
 
 enum main_states
 {
@@ -18,8 +21,9 @@ enum main_states
 
 int main(int argc, char ** argv)
 {
+	
 	LOG("Starting game engine...\n");
-
+	
 	int main_return = EXIT_FAILURE;
 	main_states state = MAIN_CREATION;
 	Application* App = NULL;
@@ -85,5 +89,6 @@ int main(int argc, char ** argv)
 
 	delete App;
 	LOG("Exiting game engine ...\n",);
+	logger.destroy();
 	return main_return;
 }
