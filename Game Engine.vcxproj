@@ -76,6 +76,7 @@
     <OutDir>$(SolutionDir)\Game</OutDir>
     <IncludePath>$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IntDir>$(SolutionDir)\Game\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)\Game</OutDir>
@@ -85,6 +86,7 @@
     <OutDir>$(SolutionDir)\Game</OutDir>
     <IncludePath>$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IntDir>$(SolutionDir)\Game\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -111,13 +113,13 @@
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>$(SolutionDir)\SDL\include;$(SolutionDir)\imgui\include;$(SolutionDir)\MathGeoLib-1.5\src;$(SolutionDir)\JsonParser;$(SolutionDir)\Glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\SourceCode\SDL\include;$(SolutionDir)\SourceCode\imgui\include;$(SolutionDir)\SourceCode\MathGeoLib-1.5\src;$(SolutionDir)\SourceCode\JsonParser;$(SolutionDir)\SourceCode\Glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <AdditionalLibraryDirectories>$(SolutionDir)\SDL\lib\x64;$(SolutionDir)\Glew\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\SourceCode\SDL\lib\x64;$(SolutionDir)\SourceCode\Glew\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(CoreLibraryDependencies);SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -151,7 +153,7 @@
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)\SDL\include;$(SolutionDir)\imgui\include;$(SolutionDir)\MathGeoLib-1.5\src;$(SolutionDir)\JsonParser;$(SolutionDir)\Glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\SourceCode\SDL\include;$(SolutionDir)\SourceCode\imgui\include;$(SolutionDir)\SourceCode\MathGeoLib-1.5\src;$(SolutionDir)\SourceCode\JsonParser;$(SolutionDir)\SourceCode\Glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -159,52 +161,49 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <AdditionalLibraryDirectories>$(SolutionDir)\SDL\lib\x64;$(SolutionDir)\Glew\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\SourceCode\SDL\lib\x64;$(SolutionDir)\SourceCode\Glew\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(CoreLibraryDependencies);SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="imgui\imgui.cpp" />
-    <ClCompile Include="imgui\imgui_demo.cpp" />
-    <ClCompile Include="imgui\imgui_draw.cpp" />
-    <ClCompile Include="imgui\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="imgui\imgui_impl_sdl.cpp" />
-    <ClCompile Include="imgui\imgui_tables.cpp" />
-    <ClCompile Include="imgui\imgui_widgets.cpp" />
-    <ClCompile Include="Src\Application.cpp" />
-    <ClCompile Include="Src\Color.cpp" />
-    <ClCompile Include="Src\glmath.cpp" />
-    <ClCompile Include="Src\Light.cpp" />
-    <ClCompile Include="Src\log.cpp" />
-    <ClCompile Include="Src\Main.cpp" />
-    <ClCompile Include="Src\ModuleCamera3D.cpp" />
-    <ClCompile Include="Src\ModuleInput.cpp" />
-    <ClCompile Include="Src\ModuleRenderer3D.cpp" />
-    <ClCompile Include="Src\ModuleSceneIntro.cpp" />
-    <ClCompile Include="Src\ModuleUI.cpp" />
-    <ClCompile Include="Src\ModuleWindow.cpp" />
-    <ClCompile Include="Src\Primitive.cpp" />
-    <ClCompile Include="Src\Timer.cpp" />
+    <ClCompile Include="SourceCode\Application.cpp" />
+    <ClCompile Include="SourceCode\Color.cpp" />
+    <ClCompile Include="SourceCode\glmath.cpp" />
+    <ClCompile Include="SourceCode\imgui\imgui.cpp" />
+    <ClCompile Include="SourceCode\imgui\imgui_demo.cpp" />
+    <ClCompile Include="SourceCode\imgui\imgui_draw.cpp" />
+    <ClCompile Include="SourceCode\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="SourceCode\imgui\imgui_impl_sdl.cpp" />
+    <ClCompile Include="SourceCode\imgui\imgui_tables.cpp" />
+    <ClCompile Include="SourceCode\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="SourceCode\Light.cpp" />
+    <ClCompile Include="SourceCode\log.cpp" />
+    <ClCompile Include="SourceCode\Main.cpp" />
+    <ClCompile Include="SourceCode\ModuleCamera3D.cpp" />
+    <ClCompile Include="SourceCode\ModuleInput.cpp" />
+    <ClCompile Include="SourceCode\ModuleRenderer3D.cpp" />
+    <ClCompile Include="SourceCode\ModuleSceneIntro.cpp" />
+    <ClCompile Include="SourceCode\ModuleUI.cpp" />
+    <ClCompile Include="SourceCode\ModuleWindow.cpp" />
+    <ClCompile Include="SourceCode\Primitive.cpp" />
+    <ClCompile Include="SourceCode\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Src\Application.h" />
-    <ClInclude Include="Src\Color.h" />
-    <ClInclude Include="Src\glmath.h" />
-    <ClInclude Include="Src\Globals.h" />
-    <ClInclude Include="Src\Light.h" />
-    <ClInclude Include="Src\Module.h" />
-    <ClInclude Include="Src\ModuleCamera3D.h" />
-    <ClInclude Include="Src\ModuleInput.h" />
-    <ClInclude Include="Src\ModuleRenderer3D.h" />
-    <ClInclude Include="Src\ModuleSceneIntro.h" />
-    <ClInclude Include="Src\ModuleUI.h" />
-    <ClInclude Include="Src\ModuleWindow.h" />
-    <ClInclude Include="Src\Primitive.h" />
-    <ClInclude Include="Src\singleton.h" />
-    <ClInclude Include="Src\Timer.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Src\imgui.ini" />
+    <ClInclude Include="SourceCode\Application.h" />
+    <ClInclude Include="SourceCode\Color.h" />
+    <ClInclude Include="SourceCode\glmath.h" />
+    <ClInclude Include="SourceCode\Globals.h" />
+    <ClInclude Include="SourceCode\Light.h" />
+    <ClInclude Include="SourceCode\Module.h" />
+    <ClInclude Include="SourceCode\ModuleCamera3D.h" />
+    <ClInclude Include="SourceCode\ModuleInput.h" />
+    <ClInclude Include="SourceCode\ModuleRenderer3D.h" />
+    <ClInclude Include="SourceCode\ModuleSceneIntro.h" />
+    <ClInclude Include="SourceCode\ModuleUI.h" />
+    <ClInclude Include="SourceCode\ModuleWindow.h" />
+    <ClInclude Include="SourceCode\Primitive.h" />
+    <ClInclude Include="SourceCode\singleton.h" />
+    <ClInclude Include="SourceCode\Timer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
