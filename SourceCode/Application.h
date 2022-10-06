@@ -4,10 +4,10 @@
 #include "Module.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
-#include "ModuleSceneIntro.h"
+#include "ModuleLevel.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
-#include "ModuleUI.h"
+#include "ModuleEditor.h"
 
 #include <string>
 #include <list>
@@ -27,10 +27,10 @@ class Application
 public:
 	ModuleWindow* window;
 	ModuleInput* input;
-	ModuleSceneIntro* scene_intro;
+	ModuleLevel* level;
 	ModuleRenderer3D* renderer3D;
 	ModuleCamera3D* camera;
-	ModuleUI* uiManager;
+	ModuleEditor* uiManager;
 
 private:
 

@@ -4,10 +4,10 @@ Application::Application()
 {
 	window = new ModuleWindow(this);
 	input = new ModuleInput(this);
-	scene_intro = new ModuleSceneIntro(this);
+	level = new ModuleLevel(this);
 	renderer3D = new ModuleRenderer3D(this);
 	camera = new ModuleCamera3D(this);
-    uiManager = new ModuleUI(this, false);
+    uiManager = new ModuleEditor(this, false);
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
@@ -18,7 +18,7 @@ Application::Application()
 	AddModule(input);
 
 	// Scenes
-	AddModule(scene_intro);
+	AddModule(level);
 	AddModule(uiManager);
 
 	// Renderer last!

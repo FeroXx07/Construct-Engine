@@ -182,8 +182,8 @@
     <ClCompile Include="SourceCode\ModuleCamera3D.cpp" />
     <ClCompile Include="SourceCode\ModuleInput.cpp" />
     <ClCompile Include="SourceCode\ModuleRenderer3D.cpp" />
-    <ClCompile Include="SourceCode\ModuleSceneIntro.cpp" />
-    <ClCompile Include="SourceCode\ModuleUI.cpp" />
+    <ClCompile Include="SourceCode\ModuleLevel.cpp" />
+    <ClCompile Include="SourceCode\ModuleEditor.cpp" />
     <ClCompile Include="SourceCode\ModuleWindow.cpp" />
     <ClCompile Include="SourceCode\Primitive.cpp" />
     <ClCompile Include="SourceCode\Timer.cpp" />
@@ -198,8 +198,8 @@
     <ClInclude Include="SourceCode\ModuleCamera3D.h" />
     <ClInclude Include="SourceCode\ModuleInput.h" />
     <ClInclude Include="SourceCode\ModuleRenderer3D.h" />
-    <ClInclude Include="SourceCode\ModuleSceneIntro.h" />
-    <ClInclude Include="SourceCode\ModuleUI.h" />
+    <ClInclude Include="SourceCode\ModuleLevel.h" />
+    <ClInclude Include="SourceCode\ModuleEditor.h" />
     <ClInclude Include="SourceCode\ModuleWindow.h" />
     <ClInclude Include="SourceCode\Primitive.h" />
     <ClInclude Include="SourceCode\singleton.h" />

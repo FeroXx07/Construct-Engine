@@ -31,10 +31,10 @@
     <ClCompile Include="SourceCode\ModuleRenderer3D.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\ModuleSceneIntro.cpp">
+    <ClCompile Include="SourceCode\ModuleLevel.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\ModuleUI.cpp">
+    <ClCompile Include="SourceCode\ModuleEditor.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\ModuleWindow.cpp">
@@ -83,10 +83,10 @@
     <ClInclude Include="SourceCode\ModuleRenderer3D.h">
       <Filter>Modules</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\ModuleSceneIntro.h">
+    <ClInclude Include="SourceCode\ModuleLevel.h">
       <Filter>Modules</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\ModuleUI.h">
+    <ClInclude Include="SourceCode\ModuleEditor.h">
       <Filter>Modules</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\ModuleWindow.h">
