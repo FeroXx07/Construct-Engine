@@ -215,6 +215,7 @@
     <ClCompile Include="SourceCode\ModuleLevel.cpp" />
     <ClCompile Include="SourceCode\ModuleEditor.cpp" />
     <ClCompile Include="SourceCode\ModuleWindow.cpp" />
+    <ClCompile Include="SourceCode\Pipeline.cpp" />
     <ClCompile Include="SourceCode\Primitive.cpp" />
     <ClCompile Include="SourceCode\Timer.cpp" />
   </ItemGroup>
@@ -231,6 +232,7 @@
     <ClInclude Include="SourceCode\ModuleLevel.h" />
     <ClInclude Include="SourceCode\ModuleEditor.h" />
     <ClInclude Include="SourceCode\ModuleWindow.h" />
+    <ClInclude Include="SourceCode\Pipeline.h" />
     <ClInclude Include="SourceCode\Primitive.h" />
     <ClInclude Include="SourceCode\shader.h" />
     <ClInclude Include="SourceCode\singleton.h" />

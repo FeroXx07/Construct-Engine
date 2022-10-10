@@ -148,6 +148,9 @@
     <ClCompile Include="SourceCode\MathGeoLib\Time\Clock.cpp">
       <Filter>MathGeoLib\Time</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\Pipeline.cpp">
+      <Filter>MathGeoLib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ImGui">
@@ -218,6 +221,9 @@
     <ClInclude Include="SourceCode\shader.h" />
     <ClInclude Include="SourceCode\Vertex.h">
       <Filter>MathAndTools</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\Pipeline.h">
+      <Filter>MathGeoLib</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
