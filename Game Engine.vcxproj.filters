@@ -58,6 +58,96 @@
     <ClCompile Include="SourceCode\glmath.cpp">
       <Filter>MathAndTools</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Math\float4x4.cpp">
+      <Filter>MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Math\BitOps.cpp">
+      <Filter>MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Math\float2.cpp">
+      <Filter>MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Math\float3.cpp">
+      <Filter>MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Math\float3x3.cpp">
+      <Filter>MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Math\float3x4.cpp">
+      <Filter>MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Math\float4.cpp">
+      <Filter>MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Math\MathFunc.cpp">
+      <Filter>MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Math\MathLog.cpp">
+      <Filter>MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Math\MathOps.cpp">
+      <Filter>MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Math\Polynomial.cpp">
+      <Filter>MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Math\Quat.cpp">
+      <Filter>MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Math\SSEMath.cpp">
+      <Filter>MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Math\TransformOps.cpp">
+      <Filter>MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\AABB.cpp">
+      <Filter>MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\Capsule.cpp">
+      <Filter>MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\Circle.cpp">
+      <Filter>MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\Frustum.cpp">
+      <Filter>MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\Line.cpp">
+      <Filter>MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\LineSegment.cpp">
+      <Filter>MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\OBB.cpp">
+      <Filter>MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\Plane.cpp">
+      <Filter>MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\Polygon.cpp">
+      <Filter>MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\Polyhedron.cpp">
+      <Filter>MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\Ray.cpp">
+      <Filter>MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\Sphere.cpp">
+      <Filter>MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\Triangle.cpp">
+      <Filter>MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\TriangleMesh.cpp">
+      <Filter>MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Algorithm\Random\LCG.cpp">
+      <Filter>MathGeoLib\Algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\MathGeoLib\Time\Clock.cpp">
+      <Filter>MathGeoLib\Time</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ImGui">
@@ -68,6 +158,21 @@
     </Filter>
     <Filter Include="MathAndTools">
       <UniqueIdentifier>{af536429-b100-4df9-b0fb-352f3466afc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MathGeoLib">
+      <UniqueIdentifier>{03131e87-6001-4588-b1cb-3e2a52dfa9ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MathGeoLib\Algorithm">
+      <UniqueIdentifier>{efffc104-e1d8-40da-8ede-ddcd2712a55e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MathGeoLib\Geometry">
+      <UniqueIdentifier>{def24506-ad02-4e45-994e-ba02291f917f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MathGeoLib\Math">
+      <UniqueIdentifier>{a76d23d1-8b98-446d-bb79-dbb64bd40329}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MathGeoLib\Time">
+      <UniqueIdentifier>{166e0524-95df-471b-b7de-9195b133eb89}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -110,5 +215,11 @@
     <ClInclude Include="SourceCode\glmath.h">
       <Filter>MathAndTools</Filter>
     </ClInclude>
+    <ClInclude Include="SourceCode\shader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SourceCode\MathGeoLib\Geometry\TriangleMesh_IntersectRay_CPP.inl">
+      <Filter>MathGeoLib\Geometry</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -3,7 +3,8 @@
 #include "Globals.h"
 #include "Primitive.h"
 #include <list>
-
+#include "shader.h"
+#include "MathGeoLib/MathGeoLib.h"
 
 class ModuleLevel : public Module
 {
@@ -33,18 +34,14 @@ protected:
 	unsigned int fragmentShader = 0;
 	unsigned int shaderProgram = 0;
 
-	float vertices[12]= 
-	{
-		0.5f, 0.5f, 0.0f,  // top right
-		0.5f, -0.5f, 0.0f,  // bottom right
-		-0.5f, -0.5f, 0.0f,  // bottom left
-		-0.5f, 0.5f, 0.0f   // top left 
-	};
+	uint VBO = 0, VAO = 0, EBO = 0;
+	Shader* ourShader = nullptr;
+	GLint gScaleLocation;
+	GLint gTransLocation;
+	vec3 Vertices[3];
 
-	unsigned int indices[6] = {  // note that we start from 0!
-		0, 1, 3,  // first Triangle
-		1, 2, 3   // second Triangle
-	};
-
-	unsigned int VBO = 0, VAO = 0, EBO = 0;
+	float Scale = 0.0f;
+	float Delta = 0.005f;
+	
+	math::float4x4 translation;
 };

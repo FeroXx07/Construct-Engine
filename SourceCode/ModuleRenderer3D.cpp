@@ -99,12 +99,16 @@ bool ModuleRenderer3D::Init()
 		GLfloat MaterialDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
 		
+		//glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+		//glClearDepth(1.0f);
+		//glClearColor(0.f, 0.f, 0.f, 1.f);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
 		lights[0].Active(true);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
-
+		glEnable(GL_TEXTURE_2D);
 		// Init Glew
 		error = glewInit();
 		//Check for error
@@ -113,8 +117,12 @@ bool ModuleRenderer3D::Init()
 			LOG("Error initializing OpenGL! %s\n", glewGetErrorString(error));
 			ret = false;
 		}
-	}
+		std::string strVersion = (const char*)glGetString(GL_VERSION);
+		strVersion = strVersion.substr(0, strVersion.find(" "));
+		float number = std::atof(strVersion.c_str());
 
+	}
+	
 	// Projection matrix for
 	int height, width;
 	App->window->GetScreenSize(width, height);

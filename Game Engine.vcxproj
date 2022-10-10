@@ -113,7 +113,7 @@
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>$(SolutionDir)\SourceCode\SDL\include;$(SolutionDir)\SourceCode\imgui\include;$(SolutionDir)\SourceCode\MathGeoLib-1.5\src;$(SolutionDir)\SourceCode\JsonParser;$(SolutionDir)\SourceCode\Glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\SourceCode\SDL\include;$(SolutionDir)\SourceCode\imgui\include;$(SolutionDir)\SourceCode\JsonParser;$(SolutionDir)\SourceCode\Glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -153,7 +153,7 @@
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)\SourceCode\SDL\include;$(SolutionDir)\SourceCode\imgui\include;$(SolutionDir)\SourceCode\MathGeoLib-1.5\src;$(SolutionDir)\SourceCode\JsonParser;$(SolutionDir)\SourceCode\Glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\SourceCode\SDL\include;$(SolutionDir)\SourceCode\imgui\include;$(SolutionDir)\SourceCode\JsonParser;$(SolutionDir)\SourceCode\Glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -179,6 +179,36 @@
     <ClCompile Include="SourceCode\Light.cpp" />
     <ClCompile Include="SourceCode\log.cpp" />
     <ClCompile Include="SourceCode\Main.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Algorithm\Random\LCG.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\AABB.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\Capsule.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\Circle.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\Frustum.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\Line.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\LineSegment.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\OBB.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\Plane.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\Polygon.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\Polyhedron.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\Ray.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\Sphere.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\Triangle.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Geometry\TriangleMesh.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Math\BitOps.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Math\float2.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Math\float3.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Math\float3x3.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Math\float3x4.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Math\float4.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Math\float4x4.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Math\MathFunc.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Math\MathLog.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Math\MathOps.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Math\Polynomial.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Math\Quat.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Math\SSEMath.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Math\TransformOps.cpp" />
+    <ClCompile Include="SourceCode\MathGeoLib\Time\Clock.cpp" />
     <ClCompile Include="SourceCode\ModuleCamera3D.cpp" />
     <ClCompile Include="SourceCode\ModuleInput.cpp" />
     <ClCompile Include="SourceCode\ModuleRenderer3D.cpp" />
@@ -202,8 +232,12 @@
     <ClInclude Include="SourceCode\ModuleEditor.h" />
     <ClInclude Include="SourceCode\ModuleWindow.h" />
     <ClInclude Include="SourceCode\Primitive.h" />
+    <ClInclude Include="SourceCode\shader.h" />
     <ClInclude Include="SourceCode\singleton.h" />
     <ClInclude Include="SourceCode\Timer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SourceCode\MathGeoLib\Geometry\TriangleMesh_IntersectRay_CPP.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
