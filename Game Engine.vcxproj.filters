@@ -216,6 +216,9 @@
       <Filter>MathAndTools</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\shader.h" />
+    <ClInclude Include="SourceCode\Vertex.h">
+      <Filter>MathAndTools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="SourceCode\MathGeoLib\Geometry\TriangleMesh_IntersectRay_CPP.inl">

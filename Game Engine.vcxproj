@@ -235,6 +235,7 @@
     <ClInclude Include="SourceCode\shader.h" />
     <ClInclude Include="SourceCode\singleton.h" />
     <ClInclude Include="SourceCode\Timer.h" />
+    <ClInclude Include="SourceCode\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SourceCode\MathGeoLib\Geometry\TriangleMesh_IntersectRay_CPP.inl" />

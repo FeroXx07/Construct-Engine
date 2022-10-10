@@ -7,9 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-
-#include "Globals.h"
-
+ 
 class Shader
 {
 public:
@@ -106,8 +104,8 @@ private:
             if (!success)
             {
                 glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-                LOG("ERROR::SHADER_COMPILATION_ERROR of type : ");
-                LOG(type.c_str());
+                std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+                LOG("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n");
                 LOG(infoLog);
             }
         }
@@ -117,9 +115,7 @@ private:
             if (!success)
             {
                 glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-                LOG("ERROR::PROGRAM_LINKING_ERROR of type: ");
-                LOG(type.c_str());
-                LOG(infoLog);
+                std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
             }
         }
     }

@@ -36,12 +36,14 @@ protected:
 
 	uint VBO = 0, VAO = 0, EBO = 0;
 	Shader* ourShader = nullptr;
+
 	GLint gScaleLocation;
-	GLint gTransLocation;
-	vec3 Vertices[3];
+	GLint gRotLocation;
+	GLint gWorldLocation;
 
 	float Scale = 0.0f;
 	float Delta = 0.005f;
+	float AngleInRadians = 0.0f;
 	
-	math::float4x4 translation;
+	math::float4x4 matrix;
 };
