@@ -225,6 +225,7 @@
     <ClInclude Include="SourceCode\Pipeline.h">
       <Filter>MathGeoLib</Filter>
     </ClInclude>
+    <ClInclude Include="SourceCode\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SourceCode\MathGeoLib\Geometry\TriangleMesh_IntersectRay_CPP.inl">

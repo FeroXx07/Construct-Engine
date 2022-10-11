@@ -92,7 +92,15 @@ public:
 		verticalFov/orthographicHeight are all undefined after creating a new Frustum using this
 		default constructor. Remember to assign to them before use. [opaque-qtscript] @todo remove the opaque-qtscript attribute.
 		@see type, pos, front, up, nearPlaneDistance, farPlaneDistance, horizontalFov, verticalFov, orthographicWidth, orthographicHeight. */
-	Frustum() {}
+	Frustum() {
+		type = InvalidFrustum;
+		nearPlaneDistance = 0;
+		farPlaneDistance = 0;
+		horizontalFov = 0; 
+		orthographicWidth = 0;
+		verticalFov = 0;
+		orthographicHeight = 0;
+	}
 
 	int NumEdges() const { return 12; }
 

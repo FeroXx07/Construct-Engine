@@ -8,9 +8,9 @@ class Pipeline
 public:
     Pipeline();
     ~Pipeline();
-    void Scale(float ScaleX, float ScaleY, float ScaleZ);
-    void WorldPos(float x, float y, float z);
-    void Rotate(float RotateX, float RotateY, float RotateZ);
+    void Scale(const float ScaleX, const float ScaleY, const float ScaleZ);
+    void WorldPos(const float x, const float y, const float z);
+    void Rotate(const float RotateX, const float RotateY, const float RotateZ);
     const float4x4* GetTrans();
 private:
     float3 m_scale;

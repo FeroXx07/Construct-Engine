@@ -36,7 +36,7 @@ public:
 	/** This means that the values of the members l and r are both undefined after creating a new capsule using
 		this default constructor. Remember to assign to them before use.
 		@see l, r. */
-	Capsule() {}
+	Capsule() { r = 1.0f; }
 
 	/// Constructs a new capsule by explicitly specifying the member variables.
 	/** @param endPoints Specifies the line segment of the capsule.

@@ -36,7 +36,7 @@ public:
 	float z;
 
 	/// Constructs an uninitialized TranslateOp.
-	TranslateOp() {}
+	TranslateOp() { x = 0.0f; y = 0.0f; z = 0.0f; }
 
 	/// Constructs a TranslateOp that translates the given amount.
 	explicit TranslateOp(const float3 &offset);
@@ -75,7 +75,7 @@ public:
 	float z;
 
 	/// Constructs an uninitialized ScaleOp.
-	ScaleOp() {}
+	ScaleOp() { x = 0.0f; y = 0.0f; z = 0.0f; }
 
 	/// Constructs a ScaleOp with the given scale factors.
 	explicit ScaleOp(const float3 &scale);

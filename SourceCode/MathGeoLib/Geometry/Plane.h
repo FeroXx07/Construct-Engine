@@ -49,7 +49,7 @@ public:
 	/** This means that the values of the members normal and d are undefined after creating a new Plane using this
 		default constructor. Remember to assign to them before use.
 		@see normal, d. */
-	Plane() {}
+	Plane() { d = 0.0f; }
 	/// Constructs a plane by directly specifying the normal and distance parameters.
 	/** @param normal The direction the plane is facing. This vector must have been normalized in advance.
 		@param d The offset of this plane from the origin. The value -d gives the signed distance of this plane from the origin.

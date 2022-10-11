@@ -50,7 +50,7 @@ public:
 	/** This means that the values of the members pos, normal and r are all undefined after creating a new circle using
 		this default constructor. Remember to assign to them before use.
 		@see pos, normal, r. */
-	Circle() {}
+	Circle() { r = 1.0f; }
 
 	/// Constructs a new circle by explicitly specifying the member variables.
 	/** @param center The center point of the circle.

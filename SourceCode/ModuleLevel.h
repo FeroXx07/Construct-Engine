@@ -5,6 +5,7 @@
 #include <list>
 #include "shader.h"
 #include "MathGeoLib/MathGeoLib.h"
+#include "Pipeline.h"
 
 class ModuleLevel : public Module
 {
@@ -36,6 +37,7 @@ protected:
 
 	uint VBO = 0, VAO = 0, EBO = 0;
 	Shader* ourShader = nullptr;
+	unsigned int texture1, texture2;
 
 	GLint gScaleLocation;
 	GLint gRotLocation;

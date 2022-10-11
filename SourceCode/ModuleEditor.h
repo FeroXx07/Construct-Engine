@@ -24,10 +24,13 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-	void ConfigWindowUpdate();
-	void ConfigHardwareUpdate();
-	void ConsoleWindowUpdate();
-
+	// Updates the window of the configuration of the window options
+	void WindConfigWind();
+	// Updates the window of the configuration of the hardware options
+	void WindHardware();
+	// Updates the window of the configuration of the console logs
+	void WindConsole();
+	// Set ups the dark custom theme for ImGui
 	void SetupImGuiStyle();
 public:
 	// Our state

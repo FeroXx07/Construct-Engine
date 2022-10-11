@@ -56,7 +56,7 @@ public:
 	/** This means that the values of the members x and y are both undefined after creating a new float2 using
 		this default constructor. Remember to assign to them before use.
 		@see x, y. */
-	float2() {}
+	float2() { x = 0.0f; y = 0.0f; }
 
 #ifdef MATH_EXPLICIT_COPYCTORS
 	/// The float2 copy constructor.

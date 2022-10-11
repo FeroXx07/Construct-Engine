@@ -70,7 +70,7 @@ public:
 #endif
 
 	/// @note The default ctor does not initialize any member values.
-	Quat() {}
+	Quat() { x = 0.0f; y = 0.0f; z = 0.0f; w = 0.0f; }
 
 #ifdef MATH_EXPLICIT_COPYCTORS
 	/// The copy-ctor for Quat is the trivial copy-ctor, but it is explicitly written to be able to automatically pick up

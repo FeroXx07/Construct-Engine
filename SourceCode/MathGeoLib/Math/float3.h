@@ -66,7 +66,7 @@ public:
 	/** This means that the values of the members x, y and z are all undefined after creating a new float3 using
 		this default constructor. Remember to assign to them before use.
 		@see x, y, z. */
-	float3() {}
+	float3() { x = 0.0f; y = 0.0f; z = 0.0f; }
 
 #ifdef MATH_EXPLICIT_COPYCTORS
 	/// The float3 copy constructor.

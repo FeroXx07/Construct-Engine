@@ -36,7 +36,7 @@ public:
 	/** This means that the values of the members pos and r are undefined after creating a new Sphere using this
 		default constructor. Remember to assign to them before use.
 		@see pos, r. */
-	Sphere() {}
+	Sphere() { r = 0.0f; }
 
 	/// Constructs a sphere with a given position and radius.
 	/** @param radius A value > 0 constructs a sphere with positive volume. A value of <= 0 is valid, and constructs a degenerate sphere.

@@ -80,7 +80,7 @@ public:
 	/** This means that the values of the members x, y, z and w are all undefined after creating a new float4 using
 		this default constructor. Remember to assign to them before use.
 		@see x, y, z, w. */
-	float4() {}
+	float4() { x = 0.0f; y = 0.0f; z = 0.0f; w = 0.0f; }
 
 #ifdef MATH_EXPLICIT_COPYCTORS
 	/// The float4 copy constructor.

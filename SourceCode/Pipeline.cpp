@@ -11,17 +11,17 @@ Pipeline::~Pipeline()
 {
 }
 
-void Pipeline::Scale(float ScaleX, float ScaleY, float ScaleZ)
+void Pipeline::Scale(const float ScaleX, const float ScaleY, const float ScaleZ)
 {
 	this->m_scale = float3(ScaleX, ScaleY, ScaleZ);
 }
 
-void Pipeline::WorldPos(float x, float y, float z)
+void Pipeline::WorldPos(const float x, const float y, const float z)
 {
 	this->m_worldPos = float3(x, y, z);
 }
 
-void Pipeline::Rotate(float RotateX, float RotateY, float RotateZ)
+void Pipeline::Rotate(const float RotateX, const float RotateY, const float RotateZ)
 {
 	this->m_rotateInfo = float3(RotateX, RotateY, RotateZ);
 

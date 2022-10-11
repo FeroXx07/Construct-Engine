@@ -24,7 +24,7 @@ class Complex
 {
 public:
 	/// The default ctor does not initialize the Circle to any value.
-	Complex() {}
+	Complex() { i = 0.0f; r = 0.0f; }
 	Complex(float real, float imaginary);
 
 	float r;
