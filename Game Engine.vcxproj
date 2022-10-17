@@ -114,7 +114,7 @@
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>$(SolutionDir)\SourceCode\SDL\include;$(SolutionDir)\SourceCode\imgui\include;$(SolutionDir)\SourceCode\JsonParser;$(SolutionDir)\SourceCode\Glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\SourceCode\SDL\include;$(SolutionDir)\SourceCode\imgui\include;$(SolutionDir)\SourceCode\JsonParser;$(SolutionDir)\SourceCode\Glew\include;$(SolutionDir)\SourceCode\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;STB_IMAGE_IMPLEMENTATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -221,10 +221,12 @@
     <ClCompile Include="SourceCode\ModuleWindow.cpp" />
     <ClCompile Include="SourceCode\Pipeline.cpp" />
     <ClCompile Include="SourceCode\Primitive.cpp" />
+    <ClCompile Include="SourceCode\Texture.cpp" />
     <ClCompile Include="SourceCode\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\Application.h" />
+    <ClInclude Include="SourceCode\Camera.h" />
     <ClInclude Include="SourceCode\Color.h" />
     <ClInclude Include="SourceCode\glmath.h" />
     <ClInclude Include="SourceCode\Globals.h" />
@@ -241,6 +243,7 @@
     <ClInclude Include="SourceCode\shader.h" />
     <ClInclude Include="SourceCode\singleton.h" />
     <ClInclude Include="SourceCode\stb_image.h" />
+    <ClInclude Include="SourceCode\Texture.h" />
     <ClInclude Include="SourceCode\Timer.h" />
     <ClInclude Include="SourceCode\Vertex.h" />
   </ItemGroup>

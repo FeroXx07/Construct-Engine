@@ -1,8 +1,7 @@
 #ifndef __Vertex_H__
 #define __Vertex_H__
 #include "Color.h"
-#include "MathGeoLib/MathGeoLib.h"
-#include "glmath.h"
+#include <glm/glm.hpp>
 using namespace math;
 //struct Vertex
 //{
@@ -22,17 +21,17 @@ using namespace math;
 
 struct Vertex
 {
-	vec3 pos;
-	vec3 color;
+	glm::vec3 pos;
+	glm::vec3 color;
 
 	Vertex() {};
 	Vertex(float x, float y, float z) {
-		pos = vec3(x, y, z);
+		pos = glm::vec3(x, y, z);
 		// Normalized values between 0 and 1
 		float r = (float)rand() / (float)RAND_MAX;
 		float g = (float)rand() / (float)RAND_MAX;
 		float b = (float)rand() / (float)RAND_MAX;
-		color = vec3(r, g, b);
+		color = glm::vec3(r, g, b);
 	}
 
 };

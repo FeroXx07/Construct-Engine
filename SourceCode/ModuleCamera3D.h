@@ -1,7 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-#include "glmath.h"
+#include "Camera.h"
 
 class ModuleCamera3D : public Module
 {
@@ -13,21 +13,11 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
-	void Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference = false);
-	void LookAt(const vec3 &Spot);
-	void Move(const vec3 &Movement);
-	float* GetViewMatrix();
-	void ModifyViewMatrix(float matrix[9]);
-
-public:
-
-	void CalculateViewMatrix();
-
-public:
-	
-	vec3 X, Y, Z, Position, Reference;
-
-private:
-
-	mat4x4 ViewMatrix, ViewMatrixInverse;
+	std::vector<Camera*> cameras;
+	Camera* currentCamera = nullptr;
+	float lastX = 0;
+	float lastY = 0;
+	float lastScroll = 0;
+	bool firstMouse = true;
+	bool firstMouseScroll = true;
 };

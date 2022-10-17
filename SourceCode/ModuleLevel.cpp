@@ -4,8 +4,11 @@
 
 #include <gl/glew.h>
 #include "Vertex.h"
-#include "stb_image.h"
-#include "glmath.h"
+#include "Texture.h"
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 ModuleLevel::ModuleLevel(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -20,7 +23,7 @@ bool ModuleLevel::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 	ourShader = nullptr;
-	srand(getpid());
+	srand(_getpid());
 	//App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	//App->camera->LookAt(vec3(0, 0, 0));
 
@@ -87,7 +90,7 @@ bool ModuleLevel::Start()
 	// uncomment this call to draw in wireframe polygons.
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	debug_draw = true;
+	debug_draw = false;
 	
 	matrix = float4x4::identity;
 	return ret;
@@ -123,35 +126,7 @@ void ModuleLevel::EndDebugDraw()
 // Update
 update_status ModuleLevel::Update(float dt)
 {
-	/*AngleInRadians += Delta;
-	if ((AngleInRadians >= 1.5708f) || (AngleInRadians <= -1.5708f))
-		Delta *= -1.0f;*/
-
-	//matrix = math::float4x4(
-	//	cosf(AngleInRadians), -sinf(AngleInRadians), 0.0f, Scale * 2,
-	//	sinf(AngleInRadians), cosf(AngleInRadians), 0.0f, Scale,
-	//	0.0f, 0.0f, 1.0f, 0.0f,
-	//	0.0f, 0.0f, 0.0f, 1.0f);
-
 	Scale += 0.2f;
-	//Scale = 1.0f;
-	//Pipeline p;
-	//p.Scale(sinf(Scale * 0.1f), sinf(Scale * 0.1f), sinf(Scale * 0.1f));
-	//p.WorldPos(sinf(Scale), 0.0f, 0.0f);
-	//p.Rotate(sinf(Scale) * 90.0f, sinf(Scale) * 90.0f, sinf(Scale) * 90.0f);
-	//matrix = *p.GetTrans();
-	//glUniformMatrix4fv(gWorldLocation, 1, GL_TRUE, &matrix[0][0]);
-	//glUniformMatrix4fv(gWorldLocation, 1, GL_TRUE, (const GLfloat*)p.GetTrans());
-	/*float4x4 rotation(
-		cosf(Scale), 0.0f, -sinf(Scale), 0.0f,
-		0.0f, 1.0f, 0.0f, 0.0f,
-		sinf(Scale), 0.0f, cosf(Scale), 0.0f,
-		0.0f, 0.0f, 0.0f, 1.0f);
-	float4x4 translation(
-		1.0f, 0.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 1.0f, 2.0f,
-		0.0f, 0.0f, 0.0f, 1.0f);*/
 
 	matrix = float4x4::identity;
 	float4x4 rotation = matrix.RotateY(Scale);
@@ -159,31 +134,16 @@ update_status ModuleLevel::Update(float dt)
 	
 	int height, width;
 	App->window->GetScreenSize(width, height);
-	mat4x4 mModel;
-	mModel.rotate(Scale, vec3(0.0f, 1.0f, 0.0f));
-	mat4x4 mView;
-	mView.translate(0.0f, 0.0f, 0.0f);
-	mat4x4 mProj;
-	mProj.perspective(DEGTORAD * 45.0f, (float)width / (float)height, 0.1f, 100.0f);
-	//m.translate(0, 0, 2);
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::rotate(model, glm::radians(Scale), glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 projection;
+	projection = glm::perspective(glm::radians(App->camera->currentCamera->Zoom), (float)width / (float)height, 0.1f, 100.0f);
+	glm::mat4 view = App->camera->currentCamera->GetViewMatrix();
+	// note that we're translating the scene in the reverse direction of where we want to move
+	//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
-	float FOV = 90.0f;
-	float tanHalfFOV = tanf(DegToRad((FOV / 2.0f)));
-	float f = 1 / tanHalfFOV;
-	//glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.0f);
-	
-	
-	float4x4 projection = float4x4(
-		f, 0, 0, 0,
-		0, f, 0, 0,
-		0, 0, 1, 0, 
-		0, 0, 1, 1);
-
-	float4x4 finalMatrix = (rotation);
-	std::cout << finalMatrix << std::endl;
-	ourShader->setMat4("model", mModel);
-	ourShader->setMat4("view", mView);
-	ourShader->setMat4("projection", mProj);
+	glm::mat4x4 trans = projection * view * model;
+	ourShader->setMat4("trans", trans);
 	
 	return UPDATE_CONTINUE;
 }

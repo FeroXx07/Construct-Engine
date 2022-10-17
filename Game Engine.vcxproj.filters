@@ -151,6 +151,7 @@
     <ClCompile Include="SourceCode\Pipeline.cpp">
       <Filter>MathGeoLib</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ImGui">
@@ -224,6 +225,8 @@
     </ClInclude>
     <ClInclude Include="SourceCode\stb_image.h" />
     <ClInclude Include="SourceCode\Vertex.h" />
+    <ClInclude Include="SourceCode\Texture.h" />
+    <ClInclude Include="SourceCode\Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SourceCode\MathGeoLib\Geometry\TriangleMesh_IntersectRay_CPP.inl">
