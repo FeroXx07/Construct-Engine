@@ -7,7 +7,10 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
- 
+#include "MathGeoLib/MathGeoLib.h"
+#include "glmath.h"
+
+using namespace math;
 class Shader
 {
 public:
@@ -64,13 +67,14 @@ public:
         glAttachShader(ID, fragment);
         glLinkProgram(ID);
         checkCompileErrors(ID, "PROGRAM");
-        // delete the shaders as they're linked into our program now and no longer necessary
+        // delete the shaders as they're linked into our program now and no longer necessery
         glDeleteShader(vertex);
         glDeleteShader(fragment);
+
     }
     // activate the shader
     // ------------------------------------------------------------------------
-    void use()
+    void use() const
     {
         glUseProgram(ID);
     }
@@ -90,22 +94,67 @@ public:
     {
         glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
     }
-
+    // ------------------------------------------------------------------------
+    void setVec2(const std::string& name, float2& value) const
+    {
+        glUniform2fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+    }
+    void setVec2(const std::string& name, float x, float y) const
+    {
+        glUniform2f(glGetUniformLocation(ID, name.c_str()), x, y);
+    }
+    // ------------------------------------------------------------------------
+    void setVec3(const std::string& name, float3& value) const
+    {
+        glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+    }
+    void setVec3(const std::string& name, float x, float y, float z) const
+    {
+        glUniform3f(glGetUniformLocation(ID, name.c_str()), x, y, z);
+    }
+    // ------------------------------------------------------------------------
+    void setVec4(const std::string& name, float4& value) const
+    {
+        glUniform4fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+    }
+    void setVec4(const std::string& name, float x, float y, float z, float w) const
+    {
+        glUniform4f(glGetUniformLocation(ID, name.c_str()), x, y, z, w);
+    }
+    // ------------------------------------------------------------------------
+    //void setMat2(const std::string& name, float3x3& mat) const
+    //{
+    //    glUniformMatrix2fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+    //}
+    // ------------------------------------------------------------------------
+    void setMat3(const std::string& name, float3x3& mat) const
+    {
+        glUniformMatrix3fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+    }
+    // ------------------------------------------------------------------------
+    void setMat4(const std::string& name, float4x4& mat) const
+    {
+        glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+    }
+    void setMat4(const std::string& name, mat4x4& mat) const
+    {
+        glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0]);
+    }
 private:
     // utility function for checking shader compilation/linking errors.
     // ------------------------------------------------------------------------
-    void checkCompileErrors(unsigned int shader, std::string type)
+    void checkCompileErrors(GLuint shader, std::string type)
     {
-        int success;
-        char infoLog[1024];
+        GLint success;
+        GLchar infoLog[1024];
         if (type != "PROGRAM")
         {
             glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
             if (!success)
             {
                 glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-                std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
-                LOG("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n");
+                //std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+                LOG("ERROR::SHADER_COMPILATION_ERROR of type: ");
                 LOG(infoLog);
             }
         }
@@ -115,7 +164,9 @@ private:
             if (!success)
             {
                 glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-                std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+               // std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+                LOG("ERROR::PROGRAM_LINKING_ERROR of type: ");
+                LOG(infoLog);
             }
         }
     }
