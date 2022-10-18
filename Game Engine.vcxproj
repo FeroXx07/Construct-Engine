@@ -114,15 +114,15 @@
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>$(SolutionDir)\SourceCode\SDL\include;$(SolutionDir)\SourceCode\imgui\include;$(SolutionDir)\SourceCode\JsonParser;$(SolutionDir)\SourceCode\Glew\include;$(SolutionDir)\SourceCode\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;STB_IMAGE_IMPLEMENTATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)\SourceCode\SDL\include;$(SolutionDir)\SourceCode\imgui\include;$(SolutionDir)\SourceCode\JsonParser;$(SolutionDir)\SourceCode\Glew\include;$(SolutionDir)\SourceCode\glm;$(SolutionDir)\SourceCode\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <AdditionalLibraryDirectories>$(SolutionDir)\SourceCode\SDL\lib\x64;$(SolutionDir)\SourceCode\Glew\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\SourceCode\SDL\lib\x64;$(SolutionDir)\SourceCode\Glew\lib\Release\x64;$(SolutionDir)\SourceCode\assimp\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(CoreLibraryDependencies);SDL2.lib;SDL2main.lib;assimp-vc143-mt.lib;assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -156,8 +156,8 @@
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)\SourceCode\SDL\include;$(SolutionDir)\SourceCode\imgui\include;$(SolutionDir)\SourceCode\JsonParser;$(SolutionDir)\SourceCode\Glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;STB_IMAGE_IMPLEMENTATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)\SourceCode\SDL\include;$(SolutionDir)\SourceCode\imgui\include;$(SolutionDir)\SourceCode\JsonParser;$(SolutionDir)\SourceCode\Glew\include;$(SolutionDir)\SourceCode\glm;$(SolutionDir)\SourceCode\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -165,8 +165,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <AdditionalLibraryDirectories>$(SolutionDir)\SourceCode\SDL\lib\x64;$(SolutionDir)\SourceCode\Glew\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\SourceCode\SDL\lib\x64;$(SolutionDir)\SourceCode\Glew\lib\Release\x64;$(SolutionDir)\SourceCode\assimp\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(CoreLibraryDependencies);SDL2.lib;SDL2main.lib;assimp-vc143-mt.lib;assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -213,6 +213,9 @@
     <ClCompile Include="SourceCode\MathGeoLib\Math\SSEMath.cpp" />
     <ClCompile Include="SourceCode\MathGeoLib\Math\TransformOps.cpp" />
     <ClCompile Include="SourceCode\MathGeoLib\Time\Clock.cpp" />
+    <ClCompile Include="SourceCode\Mesh.cpp" />
+    <ClCompile Include="SourceCode\Model.cpp" />
+    <ClCompile Include="SourceCode\ModuleModels.cpp" />
     <ClCompile Include="SourceCode\ModuleCamera3D.cpp" />
     <ClCompile Include="SourceCode\ModuleInput.cpp" />
     <ClCompile Include="SourceCode\ModuleRenderer3D.cpp" />
@@ -221,7 +224,6 @@
     <ClCompile Include="SourceCode\ModuleWindow.cpp" />
     <ClCompile Include="SourceCode\Pipeline.cpp" />
     <ClCompile Include="SourceCode\Primitive.cpp" />
-    <ClCompile Include="SourceCode\Texture.cpp" />
     <ClCompile Include="SourceCode\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -231,6 +233,9 @@
     <ClInclude Include="SourceCode\glmath.h" />
     <ClInclude Include="SourceCode\Globals.h" />
     <ClInclude Include="SourceCode\Light.h" />
+    <ClInclude Include="SourceCode\Mesh.h" />
+    <ClInclude Include="SourceCode\Model.h" />
+    <ClInclude Include="SourceCode\ModuleModels.h" />
     <ClInclude Include="SourceCode\Module.h" />
     <ClInclude Include="SourceCode\ModuleCamera3D.h" />
     <ClInclude Include="SourceCode\ModuleInput.h" />
@@ -243,9 +248,7 @@
     <ClInclude Include="SourceCode\shader.h" />
     <ClInclude Include="SourceCode\singleton.h" />
     <ClInclude Include="SourceCode\stb_image.h" />
-    <ClInclude Include="SourceCode\Texture.h" />
     <ClInclude Include="SourceCode\Timer.h" />
-    <ClInclude Include="SourceCode\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SourceCode\MathGeoLib\Geometry\TriangleMesh_IntersectRay_CPP.inl" />

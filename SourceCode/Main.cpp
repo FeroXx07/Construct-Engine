@@ -2,10 +2,7 @@
 #include "Application.h"
 #include "Globals.h"
 
-//#include "SDL/include/SDL.h"
 #include <SDL.h>
-//#pragma comment( lib, "SDL/lib/x64/SDL2.lib" )
-//#pragma comment( lib, "SDL/lib/x64/SDL2main.lib" )
 #include <string>
 
 #include "singleton.h"
