@@ -337,15 +337,15 @@ struct aiNodeAnim {
 
 // ---------------------------------------------------------------------------
 /** Describes vertex-based animations for a single mesh or a group of
- *  meshes. Meshes carry the animation data for each frame in their
+ *  meshesList. Meshes carry the animation data for each frame in their
  *  aiMesh::mAnimMeshes array. The purpose of aiMeshAnim is to
  *  define keyframes linking each mesh attachment to a particular
  *  point in time. */
 struct aiMeshAnim {
     /** Name of the mesh to be animated. An empty string is not allowed,
-     *  animated meshes need to be named (not necessarily uniquely,
+     *  animated meshesList need to be named (not necessarily uniquely,
      *  the name can basically serve as wild-card to select a group
-     *  of meshes with similar animation setup)*/
+     *  of meshesList with similar animation setup)*/
     C_STRUCT aiString mName;
 
     /** Size of the #mKeys array. Must be 1, at least. */
@@ -371,9 +371,9 @@ struct aiMeshAnim {
 /** Describes a morphing animation of a given mesh. */
 struct aiMeshMorphAnim {
     /** Name of the mesh to be animated. An empty string is not allowed,
-     *  animated meshes need to be named (not necessarily uniquely,
+     *  animated meshesList need to be named (not necessarily uniquely,
      *  the name can basically serve as wildcard to select a group
-     *  of meshes with similar animation setup)*/
+     *  of meshesList with similar animation setup)*/
     C_STRUCT aiString mName;
 
     /** Size of the #mKeys array. Must be 1, at least. */

@@ -1,9 +1,11 @@
 #include "Model.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+
 Model::Model(string const& path, bool gamma) : gammaCorrection(gamma)
 {
-    LoadModel(path);
+    meshesSize = 0;
+    LoadModelFrom_aiScene(path);
 }
 
 Model::~Model()
@@ -12,94 +14,199 @@ Model::~Model()
 
 void Model::Draw(Shader& shader)
 {
-    for (unsigned int i = 0; i < meshes.size(); i++)
-        meshes[i].Draw(shader);
+    for (unsigned int i = 0; i < meshesList.size(); i++)
+        meshesList[i].Draw(shader);
 }
 
-void Model::LoadModel(string const& path)
+void Model::LoadModelFrom_aiScene(string const& path)
 {
-    // read file via ASSIMP
-    Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-    // check for errors
-    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
-    {
-        cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << endl;
-        return;
-    }
-    // retrieve the directory path of the filepath
-    directory = path.substr(0, path.find_last_of('/'));
+    //PHYSFS_File* myModel;
+    //char* buffer;
+    //myModel = PHYSFS_openRead(path.c_str());
+    //if (myModel)
+    //{
+    //    /*
+    //       PHYSFS_sint64 rc;
+    //       PHYSFS_readBytes(myModel, buffer, sizeof(buffer));
+    //       PHYSFS_ErrorCode err = PHYSFS_getLastErrorCode();
+    //       LOG(PHYSFS_getErrorByCode(err));*/
+    //    uint ret;
 
-    // process ASSIMP's root node recursively
-    ProcessNode(scene->mRootNode, scene);
+    //    // Check for end-of-file state on a PhysicsFS filehandle.
+    //    
+    //    if (!PHYSFS_eof(myModel))
+    //    {
+    //        // Get total length of a file in bytes
+    //        PHYSFS_sint64 file_size = PHYSFS_fileLength(myModel);
+    //        buffer = new char[file_size];
+
+    //        // Read data from a PhysicsFS firehandle. Returns a number of bytes read.
+    //        uint bytes = PHYSFS_readBytes(myModel, buffer, file_size);
+
+    //        if (bytes != file_size)
+    //        {
+    //            LOG("%s", path, "ERROR: %s", PHYSFS_getLastError());
+    //            delete buffer;
+    //        }
+    //        else
+    //            ret = bytes;
+    //    }
+    //    else
+    //        LOG("%s", path, "ERROR: %s", PHYSFS_getLastError());
+
+    //    // Close a PhysicsFS firehandle
+    //    PHYSFS_close(myModel);
+    //}
+
+        // read file via ASSIMP
+        Assimp::Importer importer;
+        //const aiScene* scene = importer.ReadFileFromMemory(buffer, sizeof(buffer), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+        const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+      
+        // check for errors
+        if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
+        {
+           // cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << endl;
+            LOG("ERROR::ASSIMP:: ");
+            LOG( importer.GetErrorString());
+            return;
+        }
+        // retrieve the directory path of the filepath
+        directory = path.substr(0, path.find_last_of('/'));
+
+        // process ASSIMP's root aiNode recursively
+        ProcessNode(scene->mRootNode, scene);
 }
 
-void Model::ProcessNode(aiNode* node, const aiScene* scene)
+void Model::ProcessNode(aiNode* aiNode, const aiScene* aiScene)
 {
-    // process each mesh located at the current node
-    for (unsigned int i = 0; i < node->mNumMeshes; i++)
+    // process each aiMesh located at the current aiNode
+    for (unsigned int i = 0; i < aiNode->mNumMeshes; i++)
     {
-        // the node object only contains indices to index the actual objects in the scene. 
-        // the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
-        aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-        meshes.push_back(ProcessMesh(mesh, scene));
+        // the aiNode object only contains indices to index the actual objects in the aiScene. 
+        // the aiScene contains all the data, aiNode is just to keep stuff organized (like relations between nodes).
+        aiMesh* mesh = aiScene->mMeshes[aiNode->mMeshes[i]];
+        meshesList.push_back(CreateMesh(mesh, aiScene));
+        ++meshesSize;
     }
-    // after we've processed all of the meshes (if any) we then recursively process each of the children nodes
-    for (unsigned int i = 0; i < node->mNumChildren; i++)
+    // after we've processed all of the meshesList (if any) we then recursively process each of the children nodes
+    for (unsigned int i = 0; i < aiNode->mNumChildren; i++)
     {
-        ProcessNode(node->mChildren[i], scene);
+        ProcessNode(aiNode->mChildren[i], aiScene);
     }
 
 }
 
-// Scene is always the same, <scene> contains arrays of data for which <mesh> contains indices for those arrays
-Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) 
+// Scene is always the same, <aiScene> contains arrays of data for which <aiMesh> contains indices for those arrays
+Mesh Model::CreateMesh(aiMesh* aiMesh, const aiScene* aiScene) 
 {
     // data to fill
     vector<Vertex> vertices;
     vector<GLuint> indices;
     vector<Texture> textures;
 
-    // walk through each of the mesh's vertices
-    for (GLuint i = 0; i < mesh->mNumVertices; i++)
+    //// iterate over all faces in this mesh
+    //for (unsigned int j = 0; j < aiMesh->mNumFaces; ++j)
+    //{
+    //    Vertex mVertex;
+    //    glm::vec3 vec3; 
+    //    auto const& face = aiMesh->mFaces[j];
+    //    //normally you want just triangles, so iterate over all 3 vertices of the face:
+    //    for (int k = 0; k < 3; ++k) {
+    //        // Now do the magic with 'face.mIndices[k]'
+    //        auto const& vertex = aiMesh->mVertices[face.mIndices[k]];
+    //        //positions
+    //        vec3.x = vertex.x;
+    //        vec3.y = vertex.y;
+    //        vec3.z = vertex.z;
+    //        mVertex.Position = vec3;
+
+    //        // Same for the normals.
+    //        auto const& normal = aiMesh->mNormals[face.mIndices[k]];
+    //        vec3.x = normal.x;
+    //        vec3.y = normal.y;
+    //        vec3.z = normal.z;
+    //        mVertex.Normal = vec3;
+
+    //        // Color of material
+    //        // ...
+
+    //        // And FINALLY: The UV coordinates!
+    //        if (aiMesh->HasTextureCoords(0)) {
+    //            glm::vec2 vec;
+    //            // The following line fixed the issue for me now:
+    //            auto const& uv = aiMesh->mTextureCoords[0][face.mIndices[k]];
+    //            vec.x = uv.x;
+    //            vec.y = uv.y;
+    //            mVertex.TexCoords = vec;
+
+    //            if (aiMesh->HasTangentsAndBitangents())
+    //            {
+    //                auto const& tang = aiMesh->mTangents[face.mIndices[k]];
+    //                // tangent
+    //                vec3.x = tang.x;
+    //                vec3.y = tang.y;
+    //                vec3.z = tang.z;
+    //                mVertex.Tangent = vec3;
+
+    //                auto const& biTang = aiMesh->mBitangents[face.mIndices[k]];
+    //                // bitangent
+    //                vec3.x = biTang.x;
+    //                vec3.y = biTang.y;
+    //                vec3.z = biTang.z;
+    //                mVertex.Bitangent = vec3;
+    //            }
+    //        }
+    //    }
+    //    vertices.push_back(mVertex);
+    //}
+
+    //// a face is a aiMesh its triangle
+    //for (unsigned int i = 0; i < aiMesh->mNumFaces; i++)
+    //{
+    //    aiFace face = aiMesh->mFaces[i];
+    //    // retrieve all indices of the face and store them in the indices vec3
+    //    for (unsigned int j = 0; j < face.mNumIndices; j++)
+    //        indices.push_back(face.mIndices[j]);
+
+    //}
+    for (GLuint i = 0; i < aiMesh->mNumVertices; i++)
     {
         Vertex vertex;
-        glm::vec3 vector; // we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
+        glm::vec3 vec3; 
         
         // positions
-        vector.x = mesh->mVertices[i].x;
-        vector.y = mesh->mVertices[i].y;
-        vector.z = mesh->mVertices[i].z;
-        vertex.Position = vector;
+        vec3.x = aiMesh->mVertices[i].x;
+        vec3.y = aiMesh->mVertices[i].y;
+        vec3.z = aiMesh->mVertices[i].z;
+        vertex.Position = vec3;
 
         // normals
-        if (mesh->HasNormals())
+        if (aiMesh->HasNormals())
         {
-            vector.x = mesh->mNormals[i].x;
-            vector.y = mesh->mNormals[i].y;
-            vector.z = mesh->mNormals[i].z;
-            vertex.Normal = vector;
+            vec3.x = aiMesh->mNormals[i].x;
+            vec3.y = aiMesh->mNormals[i].y;
+            vec3.z = aiMesh->mNormals[i].z;
+            vertex.Normal = vec3;
         }
 
         // texture coordinates
-        if (mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
+        if (aiMesh->mTextureCoords[0])
         {
             glm::vec2 vec;
-            // a vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't 
-            // use models where a vertex can have multiple texture coordinates so we always take the first set (0).
-            vec.x = mesh->mTextureCoords[0][i].x;
-            vec.y = mesh->mTextureCoords[0][i].y;
+            vec.x = aiMesh->mTextureCoords[0][i].x;
+            vec.y = aiMesh->mTextureCoords[0][i].y;
             vertex.TexCoords = vec;
             // tangent
-            vector.x = mesh->mTangents[i].x;
-            vector.y = mesh->mTangents[i].y;
-            vector.z = mesh->mTangents[i].z;
-            vertex.Tangent = vector;
+            vec3.x = aiMesh->mTangents[i].x;
+            vec3.y = aiMesh->mTangents[i].y;
+            vec3.z = aiMesh->mTangents[i].z;
+            vertex.Tangent = vec3;
             // bitangent
-            vector.x = mesh->mBitangents[i].x;
-            vector.y = mesh->mBitangents[i].y;
-            vector.z = mesh->mBitangents[i].z;
-            vertex.Bitangent = vector;
+            vec3.x = aiMesh->mBitangents[i].x;
+            vec3.y = aiMesh->mBitangents[i].y;
+            vec3.z = aiMesh->mBitangents[i].z;
+            vertex.Bitangent = vec3;
         }
         else
             vertex.TexCoords = glm::vec2(0.0f, 0.0f);
@@ -107,23 +214,19 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
         vertices.push_back(vertex);
     }
 
-    // now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
-    for (unsigned int i = 0; i < mesh->mNumFaces; i++)
+    // a face is a aiMesh its triangle
+    for (unsigned int i = 0; i < aiMesh->mNumFaces; i++)
     {
-        aiFace face = mesh->mFaces[i];
-        // retrieve all indices of the face and store them in the indices vector
+        aiFace face = aiMesh->mFaces[i];
+        // retrieve all indices of the face and store them in the indices vec3
         for (unsigned int j = 0; j < face.mNumIndices; j++)
             indices.push_back(face.mIndices[j]);
+
     }
 
+
     // process materials
-    aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-    // we assume a convention for sampler names in the shaders. Each diffuse texture should be named
-    // as 'texture_diffuseN' where N is a sequential number ranging from 1 to MAX_SAMPLER_NUMBER. 
-    // Same applies to other texture as the following list summarizes:
-    // diffuse: texture_diffuseN
-    // specular: texture_specularN
-    // normal: texture_normalN
+    aiMaterial* material = aiScene->mMaterials[aiMesh->mMaterialIndex];
 
     // 1. diffuse maps
     vector<Texture> diffuseMaps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
@@ -138,11 +241,44 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
     std::vector<Texture> heightMaps = LoadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
     textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
-    // return a mesh object created from the extracted mesh data
-    return Mesh(vertices, indices, textures);
+    // new Mesh
+    return Mesh(vertices, indices, textures, aiMesh->mName.C_Str());
 }
 
-GLuint TextureFromFile(const char* path, const string& directory, bool gamma)
+vector<Texture> Model::LoadMaterialTextures(aiMaterial* aiMaterial, aiTextureType aiTextureType, string typeName)
+{
+    vector<Texture> textures;
+    LOG("Material %s", aiMaterial->GetName().C_Str());
+    for (unsigned int i = 0; i < aiMaterial->GetTextureCount(aiTextureType); i++)
+    {
+        aiString str;
+        aiMaterial->GetTexture(aiTextureType, i, &str);
+        LOG("Texture %s", str.C_Str());
+        bool skip = false;
+        for (unsigned int j = 0; j < textures_loaded.size(); j++)
+        {
+            // Check if we have alreday loaded this texture before
+            if (std::strcmp(textures_loaded[j].path.data(), str.C_Str()) == 0)
+            {
+                textures.push_back(textures_loaded[j]);
+                skip = true;
+                break;
+            }
+        }
+        if (!skip)
+        {   // if texture hasn't been loaded already, load it
+            Texture texture;
+            texture.id = LoadTextureFromFile(str.C_Str(), this->directory);
+            texture.type = typeName;
+            texture.path = str.C_Str();
+            textures.push_back(texture);
+            textures_loaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
+        }
+    }
+    return textures;
+}
+
+GLuint LoadTextureFromFile(const char* path, const string& directory, bool gamma)
 {
     string filename = string(path);
     filename = directory + '/' + filename;

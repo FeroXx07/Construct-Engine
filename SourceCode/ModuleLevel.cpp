@@ -54,8 +54,12 @@ bool ModuleLevel::Start()
 
 	// tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
 	stbi_set_flip_vertically_on_load(true);
-	ourShader = new Shader("Resources/Shaders/model_loading.vert", "Resources/Shaders/model_loading.frag"); // you can name your shader files however you like
-	ourModel = new Model("Resources/backpack/backpack.obj");
+	//ourShader = new Shader("Resources/Shaders/model_loading.vert", "Resources/Shaders/model_loading.frag"); // you can name your shader files however you like
+	ourShader = new Shader("Resources/Shaders/simple.vert", "Resources/Shaders/simple.frag"); // you can name your shader files however you like
+	
+	//ourModel = new Model("Resources/backpack/backpack.obj");
+	ourModel = new Model("Resources/Meshes/BirdFountain.fbx");
+	//ourModel = new Model("Resources/backpack/backpack.obj");
 	////// set up vertex data (and buffer(s)) and configure vertex attributes
 
 	//glGenVertexArrays(1, (GLuint*)&VAO);

@@ -106,9 +106,9 @@ bool ModuleRenderer3D::Init()
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_DEPTH_TEST);
 
-		/*glEnable(GL_CULL_FACE);
-		glFrontFace(GL_CW);
-		glCullFace(GL_BACK);*/
+		//glEnable(GL_CULL_FACE);
+		//glFrontFace(GL_CW);
+		//glCullFace(GL_BACK);
 		
 		lights[0].Active(true);
 		glEnable(GL_LIGHTING);
@@ -187,4 +187,8 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	//glMatrixMode(GL_MODELVIEW);
 	//glLoadIdentity();
+}
+
+void ModuleRenderer3D::DrawAllMeshes()
+{
 }

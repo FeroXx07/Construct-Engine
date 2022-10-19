@@ -1,13 +1,18 @@
 #include "Mesh.h"
 
-Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures)
+Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures, const char* name)
 {
     this->vertices = vertices;
     this->indices = indices;
     this->textures = textures;
+    this->name = name;
 
+    LOG("New <%s> created", name);
+    LOG("<%s> with %d vertices", name, vertices.size());
+    LOG("<%s> with %d indices", name, indices.size());
+    LOG("<%s> with %d textures", name, textures.size());
     // now that we have all the required data, set the vertex buffers and its attribute pointers.
-    SetupMesh();
+    GenerateBuffers();
 }
 Mesh::~Mesh()
 {
@@ -19,6 +24,10 @@ Mesh::~Mesh()
 
 void Mesh::Draw(Shader& shader)
 {
+    LOG("Drawing Mesh <%s>", name.c_str());
+    LOG("<%s> with %d vertices", name.c_str(), vertices.size());
+    LOG("<%s> with %d indices", name.c_str(), indices.size());
+    LOG("<%s> with %d textures", name.c_str(), textures.size());
     // bind appropriate textures
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
@@ -55,7 +64,7 @@ void Mesh::Draw(Shader& shader)
     glActiveTexture(GL_TEXTURE0);
 }
 
-void Mesh::SetupMesh()
+void Mesh::GenerateBuffers()
 {
     // create buffers/arrays
     glGenVertexArrays(1, &VAO);

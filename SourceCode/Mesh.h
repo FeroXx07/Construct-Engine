@@ -10,11 +10,15 @@ using namespace std;
 
 struct Vertex {
 
+    // Crucial data
     glm::vec3 Position;    // position
     glm::vec3 Normal;      // normal
     glm::vec2 TexCoords;   // texCoords
+
+    // Data to enchance normal maps and lightning...
     glm::vec3 Tangent;     // tangent
     glm::vec3 Bitangent;   // bitangent
+
     //bone indexes which will influence this vertex
     int m_BoneIDs[MAX_BONE_INFLUENCE];
     //weights from each bone
@@ -24,27 +28,28 @@ struct Vertex {
 struct Texture {
     GLuint id;
     string type;
-    string path; // we store the path of the texture to compare with other textures
+    // Path to compare with other textures
+    string path; 
 };
 
 class Mesh {
 public:
-    // mesh Data
+    // Vectors of data
     vector<Vertex>       vertices;
     vector<GLuint> indices;
     vector<Texture>      textures;
     GLuint VAO;
 
-    Mesh(vector<Vertex> vertices, vector<GLuint> indices, vector<Texture> textures);
+    Mesh(vector<Vertex> vertices, vector<GLuint> indices, vector<Texture> textures, const char* name);
     ~Mesh();
-    // render the mesh
+  
     void Draw(Shader& shader);
 
 private:
-    // render data 
+    // Buffers
     GLuint VBO, EBO;
-
-    // initializes all the buffer objects/arrays
-    void SetupMesh();
+    string name = " ";
+    // Init the buffers once data is loaded
+    void GenerateBuffers();
 };
 #endif

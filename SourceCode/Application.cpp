@@ -41,7 +41,7 @@ Application::~Application()
 bool Application::Init()
 {
 	bool ret = true;
-
+	
 	// Call Init() in all modules
 	for (auto item = list_modules.begin(); item != list_modules.end(); ++item)
 	{

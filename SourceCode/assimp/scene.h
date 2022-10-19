@@ -116,10 +116,10 @@ struct ASSIMP_API aiNode {
     /** The child nodes of this node. nullptr if mNumChildren is 0. */
     C_STRUCT aiNode** mChildren;
 
-    /** The number of meshes of this node. */
+    /** The number of meshesList of this node. */
     unsigned int mNumMeshes;
 
-    /** The meshes of this node. Each entry is an index into the
+    /** The meshesList of this node. Each entry is an index into the
       * mesh list of the #aiScene.
       */
     unsigned int* mMeshes;
@@ -203,7 +203,7 @@ struct ASSIMP_API aiNode {
 
 /**
  * This flag is currently only set by the aiProcess_JoinIdenticalVertices step.
- * It indicates that the vertices of the output meshes aren't in the internal
+ * It indicates that the vertices of the output meshesList aren't in the internal
  * verbose format anymore. In the verbose format all vertices are unique,
  * no vertex is ever referenced by more than one face.
  */
@@ -258,10 +258,10 @@ struct aiScene
     */
     C_STRUCT aiNode* mRootNode;
 
-    /** The number of meshes in the scene. */
+    /** The number of meshesList in the scene. */
     unsigned int mNumMeshes;
 
-    /** The array of meshes.
+    /** The array of meshesList.
     *
     * Use the indices given in the aiNode structure to access
     * this array. The array is mNumMeshes in size. If the
@@ -360,7 +360,7 @@ struct aiScene
     //! Destructor
     ASSIMP_API ~aiScene();
 
-    //! Check whether the scene contains meshes
+    //! Check whether the scene contains meshesList
     //! Unless no special scene flags are set this will always be true.
     inline bool HasMeshes() const {
         return mMeshes != nullptr && mNumMeshes > 0;

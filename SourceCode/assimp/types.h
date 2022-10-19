@@ -478,7 +478,7 @@ enum aiDefaultLogStream {
 #define DLS_DEBUGGER aiDefaultLogStream_DEBUGGER
 
 // ----------------------------------------------------------------------------------
-/** Stores the memory requirements for different components (e.g. meshes, materials,
+/** Stores the memory requirements for different components (e.g. meshesList, materials,
  *  animations) of an import. All sizes are in bytes.
  *  @see Importer::GetMemoryRequirements()
 */

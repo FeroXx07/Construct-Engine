@@ -18,7 +18,8 @@ enum main_states
 
 int main(int argc, char ** argv)
 {
-	
+	PHYSFS_init(*argv);
+	PHYSFS_mount("Assets.zip", "/", 1);
 	LOG("Starting game engine...\n");
 	
 	int main_return = EXIT_FAILURE;
@@ -87,5 +88,6 @@ int main(int argc, char ** argv)
 	delete App;
 	LOG("Exiting game engine ...\n",);
 	logger.destroy();
+	PHYSFS_deinit();
 	return main_return;
 }

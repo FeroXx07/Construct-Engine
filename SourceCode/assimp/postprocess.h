@@ -73,11 +73,11 @@ enum aiPostProcessSteps
 {
 
     // -------------------------------------------------------------------------
-    /** <hr>Calculates the tangents and bitangents for the imported meshes.
+    /** <hr>Calculates the tangents and bitangents for the imported meshesList.
      *
      * Does nothing if a mesh does not have normals. You might want this post
      * processing step to be executed if you plan to use tangent space calculations
-     * such as normal mapping  applied to the meshes. There's an importer property,
+     * such as normal mapping  applied to the meshesList. There's an importer property,
      * <tt>#AI_CONFIG_PP_CT_MAX_SMOOTHING_ANGLE</tt>, which allows you to specify
      * a maximum smoothing angle for the algorithm. However, usually you'll
      * want to leave it at the default value.
@@ -86,7 +86,7 @@ enum aiPostProcessSteps
 
     // -------------------------------------------------------------------------
     /** <hr>Identifies and joins identical vertex data sets within all
-     *  imported meshes.
+     *  imported meshesList.
      *
      * After this step is run, each mesh contains unique vertices,
      * so a vertex may be used by multiple faces. You usually want
@@ -114,7 +114,7 @@ enum aiPostProcessSteps
     aiProcess_MakeLeftHanded = 0x4,
 
     // -------------------------------------------------------------------------
-    /** <hr>Triangulates all faces of all meshes.
+    /** <hr>Triangulates all faces of all meshesList.
      *
      * By default the imported mesh data might contain faces with more than 3
      * indices. For rendering you'll usually want all faces to be triangles.
@@ -124,7 +124,7 @@ enum aiPostProcessSteps
      * solution:
      * <ul>
      * <li>Specify both #aiProcess_Triangulate and #aiProcess_SortByPType </li>
-     * <li>Ignore all point and line meshes when you process assimp's output</li>
+     * <li>Ignore all point and line meshesList when you process assimp's output</li>
      * </ul>
      */
     aiProcess_Triangulate = 0x8,
@@ -156,7 +156,7 @@ enum aiPostProcessSteps
     aiProcess_RemoveComponent = 0x10,
 
     // -------------------------------------------------------------------------
-    /** <hr>Generates normals for all faces of all meshes.
+    /** <hr>Generates normals for all faces of all meshesList.
      *
      * This is ignored if normals are already there at the time this flag
      * is evaluated. Model importers try to load them from the source file, so
@@ -187,7 +187,7 @@ enum aiPostProcessSteps
     aiProcess_GenSmoothNormals = 0x40,
 
     // -------------------------------------------------------------------------
-    /** <hr>Splits large meshes into smaller sub-meshes.
+    /** <hr>Splits large meshesList into smaller sub-meshesList.
     *
     * This is quite useful for real-time rendering, where the number of triangles
     * which can be maximally processed in a single draw-call is limited
@@ -217,13 +217,13 @@ enum aiPostProcessSteps
     * referencing one material.
     *
     * In either case, for rendering, you can
-    * simply render all meshes in order - you don't need to pay
+    * simply render all meshesList in order - you don't need to pay
     * attention to local transformations and the node hierarchy.
     * Animations are removed during this step.
     * This step is intended for applications without a scenegraph.
     * The step CAN cause some problems: if e.g. a mesh of the asset
     * contains normals and another, using the same material index, does not,
-    * they will be brought together, but the first meshes's part of
+    * they will be brought together, but the first meshesList's part of
     * the normal list is zeroed. However, these artifacts are rare.
     * @note The <tt>#AI_CONFIG_PP_PTV_NORMALIZE</tt> configuration property
     * can be set to normalize the scene's spatial dimension to the -1...1
@@ -279,7 +279,7 @@ enum aiPostProcessSteps
     /** <hr>Reorders triangles for better vertex cache locality.
      *
      * The step tries to improve the ACMR (average post-transform vertex cache
-     * miss ratio) for all meshes. The implementation runs in O(n) and is
+     * miss ratio) for all meshesList. The implementation runs in O(n) and is
      * roughly based on the 'tipsify' algorithm (see <a href="
      * http://www.cs.princeton.edu/gfx/pubs/Sander_2007_%3ETR/tipsy.pdf">this
      * paper</a>).
@@ -295,8 +295,8 @@ enum aiPostProcessSteps
      *
      * This is especially useful in combination with the
      * #aiProcess_PreTransformVertices and #aiProcess_OptimizeMeshes flags.
-     * Both join small meshes with equal characteristics, but they can't do
-     * their work if two meshes have different materials. Because several
+     * Both join small meshesList with equal characteristics, but they can't do
+     * their work if two meshesList have different materials. Because several
      * material settings are lost during Assimp's import filters,
      * (and because many exporters don't check for redundant materials), huge
      * models often have materials which are are defined several times with
@@ -312,7 +312,7 @@ enum aiPostProcessSteps
     aiProcess_RemoveRedundantMaterials = 0x1000,
 
     // -------------------------------------------------------------------------
-    /** <hr>This step tries to determine which meshes have normal vectors
+    /** <hr>This step tries to determine which meshesList have normal vectors
      * that are facing inwards and inverts them.
      *
      * The algorithm is simple but effective:
@@ -339,8 +339,8 @@ enum aiPostProcessSteps
     aiProcess_PopulateArmatureData = 0x4000,
 
     // -------------------------------------------------------------------------
-    /** <hr>This step splits meshes with more than one primitive type in
-     *  homogeneous sub-meshes.
+    /** <hr>This step splits meshesList with more than one primitive type in
+     *  homogeneous sub-meshesList.
      *
      *  The step is executed after the triangulation step. After the step
      *  returns, just one bit is set in aiMesh::mPrimitiveTypes. This is
@@ -353,7 +353,7 @@ enum aiPostProcessSteps
     aiProcess_SortByPType = 0x8000,
 
     // -------------------------------------------------------------------------
-    /** <hr>This step searches all meshes for degenerate primitives and
+    /** <hr>This step searches all meshesList for degenerate primitives and
      *  converts them to proper lines or points.
      *
      * A face is 'degenerate' if one or more of its points are identical.
@@ -375,12 +375,12 @@ enum aiPostProcessSteps
      *   <li>Specify the #aiProcess_FindDegenerates flag.
      *   </li>
      *   <li>Specify the #aiProcess_SortByPType flag. This moves line and
-     *     point primitives to separate meshes.
+     *     point primitives to separate meshesList.
      *   </li>
      *   <li>Set the <tt>#AI_CONFIG_PP_SBP_REMOVE</tt> importer property to
      *       @code aiPrimitiveType_POINTS | aiPrimitiveType_LINES
      *       @endcode to cause SortByPType to reject point
-     *       and line meshes from the scene.
+     *       and line meshesList from the scene.
      *   </li>
      * </ul>
      *
@@ -396,14 +396,14 @@ enum aiPostProcessSteps
     aiProcess_FindDegenerates = 0x10000,
 
     // -------------------------------------------------------------------------
-    /** <hr>This step searches all meshes for invalid data, such as zeroed
+    /** <hr>This step searches all meshesList for invalid data, such as zeroed
      *  normal vectors or invalid UV coords and removes/fixes them. This is
      *  intended to get rid of some common exporter errors.
      *
      * This is especially useful for normals. If they are invalid, and
      * the step recognizes this, they will be removed and can later
      * be recomputed, i.e. by the #aiProcess_GenSmoothNormals flag.<br>
-     * The step will also remove meshes that are infinitely small and reduce
+     * The step will also remove meshesList that are infinitely small and reduce
      * animation tracks consisting of hundreds if redundant keys to a single
      * key. The <tt>AI_CONFIG_PP_FID_ANIM_ACCURACY</tt> config property decides
      * the accuracy of the check for duplicate animation tracks.
@@ -445,22 +445,22 @@ enum aiPostProcessSteps
     aiProcess_TransformUVCoords = 0x80000,
 
     // -------------------------------------------------------------------------
-    /** <hr>This step searches for duplicate meshes and replaces them
+    /** <hr>This step searches for duplicate meshesList and replaces them
      *  with references to the first mesh.
      *
      *  This step takes a while, so don't use it if speed is a concern.
      *  Its main purpose is to workaround the fact that many export
-     *  file formats don't support instanced meshes, so exporters need to
-     *  duplicate meshes. This step removes the duplicates again. Please
+     *  file formats don't support instanced meshesList, so exporters need to
+     *  duplicate meshesList. This step removes the duplicates again. Please
      *  note that Assimp does not currently support per-node material
-     *  assignment to meshes, which means that identical meshes with
+     *  assignment to meshesList, which means that identical meshesList with
      *  different materials are currently *not* joined, although this is
      *  planned for future versions.
      */
     aiProcess_FindInstances = 0x100000,
 
     // -------------------------------------------------------------------------
-    /** <hr>A post-processing step to reduce the number of meshes.
+    /** <hr>A post-processing step to reduce the number of meshesList.
      *
      *  This will, in fact, reduce the number of draw calls.
      *
@@ -492,7 +492,7 @@ enum aiPostProcessSteps
      *  This flag is designed to be used with #aiProcess_OptimizeMeshes for best
      *  results.
      *
-     *  @note 'Crappy' scenes with thousands of extremely small meshes packed
+     *  @note 'Crappy' scenes with thousands of extremely small meshesList packed
      *  in deeply nested nodes exist for almost all file formats.
      *  #aiProcess_OptimizeMeshes in combination with #aiProcess_OptimizeGraph
      *  usually fixes them all and makes them renderable.
@@ -535,7 +535,7 @@ enum aiPostProcessSteps
     aiProcess_FlipWindingOrder  = 0x1000000,
 
     // -------------------------------------------------------------------------
-    /** <hr>This step splits meshes with many bones into sub-meshes so that each
+    /** <hr>This step splits meshesList with many bones into sub-meshesList so that each
      * sub-mesh has fewer or as many bones as a given limit.
     */
     aiProcess_SplitByBoneCount  = 0x2000000,
@@ -544,8 +544,8 @@ enum aiPostProcessSteps
     /** <hr>This step removes bones losslessly or according to some threshold.
      *
      *  In some cases (i.e. formats that require it) exporters are forced to
-     *  assign dummy bone weights to otherwise static meshes assigned to
-     *  animated meshes. Full, weight-based skinning is expensive while
+     *  assign dummy bone weights to otherwise static meshesList assigned to
+     *  animated meshesList. Full, weight-based skinning is expensive while
      *  animating nodes is extremely cheap, so this step is offered to clean up
      *  the data in that regard.
      *
@@ -588,7 +588,7 @@ enum aiPostProcessSteps
     aiProcess_ForceGenNormals = 0x20000000,
 
     // -------------------------------------------------------------------------
-    /** <hr>Drops normals for all faces of all meshes.
+    /** <hr>Drops normals for all faces of all meshesList.
      *
      * This is ignored if no normals are present.
      * Face normals are shared between all points of a single face,

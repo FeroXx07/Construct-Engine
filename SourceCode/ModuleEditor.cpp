@@ -65,15 +65,22 @@ bool ModuleEditor::Start()
 
 	maxDataHistogram = 60;
 
-	std::ifstream f("LICENSE"); //taking file as inputstream
-	if (f) {
-		std::ostringstream ss;
-		ss << f.rdbuf(); // reading data
-		licenseStr = ss.str();
+	PHYSFS_File* fp;
+	fp = PHYSFS_openRead("Assets/MyLicenses/LICENSE");
+	if (fp)
+	{
+		char buffer[128];
+		PHYSFS_sint64 rc;
+		do
+		{
+			rc = PHYSFS_readBytes(fp, buffer, sizeof(buffer));
+			std::string s(buffer);
+			licenseStr += s.substr(0, rc);
+		} while (!(rc < sizeof(buffer)));
 	}
+	PHYSFS_close(fp);
 
 	show_demo_window = false;
-
 	SetupImGuiStyle();
 	return true;
 }

@@ -3,6 +3,7 @@
 #include "Globals.h"
 #include "glmath.h"
 #include "Light.h"
+#include "Model.h"
 
 #define MAX_LIGHTS 8
 
@@ -14,17 +15,13 @@ public:
 
 	bool Init();
 	update_status PreUpdate(float dt);
-	//void UpdateImGui();
 	update_status PostUpdate(float dt);
 	bool CleanUp();
-
 	void OnResize(int width, int height);
 
+	void DrawAllMeshes();
 public:
 
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
-	mat3x3 NormalMatrix;
-	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
-
 };

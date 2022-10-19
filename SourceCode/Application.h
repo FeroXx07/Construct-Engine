@@ -15,7 +15,7 @@
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include <iostream>
-
+#include "physfs/physfs.h"
 // for convenience
 using json = nlohmann::json;
 // Return variable name as str

@@ -56,7 +56,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 extern "C" {
 #endif
 
-// Name for default materials (2nd is used if meshes have UV coords)
+// Name for default materials (2nd is used if meshesList have UV coords)
 #define AI_DEFAULT_MATERIAL_NAME "DefaultMaterial"
 
 // ---------------------------------------------------------------------------
@@ -146,7 +146,7 @@ enum aiTextureMapping {
      *
      *  #AI_MATKEY_UVWSRC property specifies from which UV channel
      *  the texture coordinates are to be taken from (remember,
-     *  meshes can have more than one UV channel).
+     *  meshesList can have more than one UV channel).
     */
     aiTextureMapping_UV = 0x0,
 

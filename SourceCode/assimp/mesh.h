@@ -118,9 +118,9 @@ extern "C" {
  * <br>
  * aiMesh::mPrimitiveTypes can be queried to quickly examine which types of
  * primitive are actually present in a mesh. The #aiProcess_SortByPType flag
- * executes a special post-processing algorithm which splits meshes with
+ * executes a special post-processing algorithm which splits meshesList with
  * *different* primitive types mixed up (e.g. lines and triangles) in several
- * 'clean' sub-meshes. Furthermore there is a configuration option (
+ * 'clean' sub-meshesList. Furthermore there is a configuration option (
  * #AI_CONFIG_PP_SBP_REMOVE) to force #aiProcess_SortByPType to remove
  * specific kinds of primitives from the imported scene, completely and forever.
  * In many cases you'll probably want to set this setting to
@@ -376,7 +376,7 @@ struct aiBone {
 /** @brief Enumerates the types of geometric primitives supported by Assimp.
  *
  *  @see aiFace Face data structure
- *  @see aiProcess_SortByPType Per-primitive sorting of meshes
+ *  @see aiProcess_SortByPType Per-primitive sorting of meshesList
  *  @see aiProcess_Triangulate Automatic triangulation
  *  @see AI_CONFIG_PP_SBP_REMOVE Removal of specific primitive types.
  */
@@ -446,8 +446,8 @@ enum aiPrimitiveType {
  *
  *  You may think of an #aiAnimMesh as a `patch` for the host mesh, which
  *  replaces only certain vertex data streams at a particular time.
- *  Each mesh stores n attached attached meshes (#aiMesh::mAnimMeshes).
- *  The actual relationship between the time line and anim meshes is
+ *  Each mesh stores n attached attached meshesList (#aiMesh::mAnimMeshes).
+ *  The actual relationship between the time line and anim meshesList is
  *  established by #aiMeshAnim, which references singular mesh attachments
  *  by their ID and binds them to a time offset.
 */
@@ -458,7 +458,7 @@ struct aiAnimMesh {
     /** Replacement for aiMesh::mVertices. If this array is non-nullptr,
      *  it *must* contain mNumVertices entries. The corresponding
      *  array in the host mesh must be non-nullptr as well - animation
-     *  meshes may neither add or nor remove vertex components (if
+     *  meshesList may neither add or nor remove vertex components (if
      *  a replacement array is nullptr and the corresponding source
      *  array is not, the source data is taken instead)*/
     C_STRUCT aiVector3D *mVertices;
@@ -606,7 +606,7 @@ struct aiMesh {
     /** Bitwise combination of the members of the #aiPrimitiveType enum.
      * This specifies which types of primitives are present in the mesh.
      * The "SortByPrimitiveType"-Step can be used to make sure the
-     * output meshes consist of one primitive type each.
+     * output meshesList consist of one primitive type each.
      */
     unsigned int mPrimitiveTypes;
 
@@ -724,27 +724,27 @@ struct aiMesh {
     /** Name of the mesh. Meshes can be named, but this is not a
      *  requirement and leaving this field empty is totally fine.
      *  There are mainly three uses for mesh names:
-     *   - some formats name nodes and meshes independently.
-     *   - importers tend to split meshes up to meet the
+     *   - some formats name nodes and meshesList independently.
+     *   - importers tend to split meshesList up to meet the
      *      one-material-per-mesh requirement. Assigning
-     *      the same (dummy) name to each of the result meshes
+     *      the same (dummy) name to each of the result meshesList
      *      aids the caller at recovering the original mesh
      *      partitioning.
-     *   - Vertex animations refer to meshes by their names.
+     *   - Vertex animations refer to meshesList by their names.
      **/
     C_STRUCT aiString mName;
 
-    /** The number of attachment meshes. Note! Currently only works with Collada loader. */
+    /** The number of attachment meshesList. Note! Currently only works with Collada loader. */
     unsigned int mNumAnimMeshes;
 
-    /** Attachment meshes for this mesh, for vertex-based animation.
-     *  Attachment meshes carry replacement data for some of the
+    /** Attachment meshesList for this mesh, for vertex-based animation.
+     *  Attachment meshesList carry replacement data for some of the
      *  mesh'es vertex components (usually positions, normals).
      *  Note! Currently only works with Collada loader.*/
     C_STRUCT aiAnimMesh **mAnimMeshes;
 
     /**
-     *  Method of morphing when anim-meshes are specified.
+     *  Method of morphing when anim-meshesList are specified.
      *  @see aiMorphingMethod to learn more about the provided morphing targets.
      */
     unsigned int mMethod;

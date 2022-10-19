@@ -81,9 +81,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 // ---------------------------------------------------------------------------
-/** @brief Global setting to disable generation of skeleton dummy meshes
+/** @brief Global setting to disable generation of skeleton dummy meshesList
  *
- * Skeleton dummy meshes are generated as a visualization aid in cases which
+ * Skeleton dummy meshesList are generated as a visualization aid in cases which
  * the input data contains no geometry, but only animation data.
  * Property data type: bool. Default value: false
  */
@@ -213,12 +213,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // ---------------------------------------------------------------------------
 /** @brief Configures the #aiProcess_PreTransformVertices step to
  *  keep the scene hierarchy. Meshes are moved to worldspace, but
- *  no optimization is performed (read: meshes with equal materials are not
- *  joined. The total number of meshes won't change).
+ *  no optimization is performed (read: meshesList with equal materials are not
+ *  joined. The total number of meshesList won't change).
  *
  * This option could be of use for you if the scene hierarchy contains
  * important additional information which you intend to parse.
- * For rendering, you can still render all meshes in the scene without
+ * For rendering, you can still render all meshesList in the scene without
  * any transformations.
  * Property type: bool. Default value: false.
  */
@@ -229,7 +229,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /** @brief Configures the #aiProcess_PreTransformVertices step to normalize
  *  all vertex components into the [-1,1] range. That is, a bounding box
  *  for the whole scene is computed, the maximum component is taken and all
- *  meshes are scaled appropriately (uniformly of course!).
+ *  meshesList are scaled appropriately (uniformly of course!).
  *  This might be useful if you don't know the spatial dimension of the input
  *  data*/
 #define AI_CONFIG_PP_PTV_NORMALIZE  \
@@ -378,7 +378,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * The size is given in vertices. Of course you can't know how the vertex
  * format will exactly look like after the import returns, but you can still
- * guess what your meshes will probably have.
+ * guess what your meshesList will probably have.
  * @note The default value is #PP_ICL_PTCACHE_SIZE. That results in slight
  * performance improvements for most nVidia/AMD cards since 2002.
  * Property type: integer.
@@ -415,7 +415,7 @@ enum aiComponent
      * aiComponent_TEXCOORDn(N) to specify the N'th set  */
     aiComponent_TEXCOORDS = 0x10,
 
-    /** Removes all bone weights from all meshes.
+    /** Removes all bone weights from all meshesList.
      * The scenegraph nodes corresponding to the bones are NOT removed.
      * use the #aiProcess_OptimizeGraph step to do this */
     aiComponent_BONEWEIGHTS = 0x20,
@@ -438,7 +438,7 @@ enum aiComponent
      * use the #aiProcess_OptimizeGraph step to do this */
     aiComponent_CAMERAS = 0x200,
 
-    /** Removes all meshes (aiScene::mMeshes). */
+    /** Removes all meshesList (aiScene::mMeshes). */
     aiComponent_MESHES = 0x400,
 
     /** Removes all materials. One default material will
@@ -480,7 +480,7 @@ enum aiComponent
  *
  *  This is a bitwise combination of the aiPrimitiveType flags.
  *  Specifying all of them is illegal, of course. A typical use would
- *  be to exclude all line and point meshes from the import. This
+ *  be to exclude all line and point meshesList from the import. This
  *  is an integer property, its default value is 0.
  */
 #define AI_CONFIG_PP_SBP_REMOVE             \
@@ -798,7 +798,7 @@ enum aiComponent
 
 // ---------------------------------------------------------------------------
 /** @brief  Configures the AC loader to collect all surfaces which have the
- *    "Backface cull" flag set in separate meshes.
+ *    "Backface cull" flag set in separate meshesList.
  *
  *  Property type: bool. Default value: true.
  */
@@ -962,7 +962,7 @@ enum aiComponent
 // ---------------------------------------------------------------------------
 /** @brief Ogre Importer will try to find referenced materials from this file.
  *
- * Ogre meshes reference with material names, this does not tell Assimp the file
+ * Ogre meshesList reference with material names, this does not tell Assimp the file
  * where it is located in. Assimp will try to find the source file in the following
  * order: <material-name>.material, <mesh-filename-base>.material and
  * lastly the material name defined by this config property.
@@ -1011,7 +1011,7 @@ enum aiComponent
 
 // ---------------------------------------------------------------------------
 /** @brief Specifies whether the IFC loader will use its own, custom triangulation
- *   algorithm to triangulate wall and floor meshes.
+ *   algorithm to triangulate wall and floor meshesList.
  *
  * If this property is set to false, walls will be either triangulated by
  * #aiProcess_Triangulate or will be passed through as huge polygons with
@@ -1019,7 +1019,7 @@ enum aiComponent
  * a dummy edge). It is highly recommended to set this property to true
  * if you want triangulated data because #aiProcess_Triangulate is known to
  * have problems with the kind of polygons that the IFC loader spits out for
- * complicated meshes.
+ * complicated meshesList.
  * Property type: Bool. Default value: true.
  */
 #define AI_CONFIG_IMPORT_IFC_CUSTOM_TRIANGULATION "IMPORT_IFC_CUSTOM_TRIANGULATION"
