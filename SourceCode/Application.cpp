@@ -4,7 +4,7 @@ Application::Application()
 {
 	window = new ModuleWindow(this);
 	input = new ModuleInput(this);
-	level = new ModuleLevel(this);
+	scene = new ModuleScene(this);
 	renderer3D = new ModuleRenderer3D(this);
 	camera = new ModuleCamera3D(this);
     uiManager = new ModuleEditor(this, false);
@@ -20,7 +20,7 @@ Application::Application()
 
 	// Scenes
 	AddModule(modelsManager);
-	AddModule(level);
+	AddModule(scene);
 	AddModule(uiManager);
 
 	// Renderer last!

@@ -7,6 +7,7 @@
 
 #include "singleton.h"
 
+#include <optick.h>
 enum main_states
 {
 	MAIN_CREATION,
@@ -18,8 +19,8 @@ enum main_states
 
 int main(int argc, char ** argv)
 {
+	OPTICK_FRAME("MainThread");
 	PHYSFS_init(*argv);
-	PHYSFS_mount("Assets.zip", "/", 1);
 	LOG("Starting game engine...\n");
 	
 	int main_return = EXIT_FAILURE;

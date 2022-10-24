@@ -11,13 +11,13 @@ using namespace std;
 struct Vertex {
 
     // Crucial data
-    glm::vec3 Position;    // position
-    glm::vec3 Normal;      // normal
-    glm::vec2 TexCoords;   // texCoords
+    glm::vec3 m_Position;    // position
+    glm::vec3 m_Normal;      // normal
+    glm::vec2 m_TexCoords;   // texCoords
 
     // Data to enchance normal maps and lightning...
-    glm::vec3 Tangent;     // tangent
-    glm::vec3 Bitangent;   // bitangent
+    glm::vec3 m_Tangent;     // tangent
+    glm::vec3 m_Bitangent;   // bitangent
 
     //bone indexes which will influence this vertex
     int m_BoneIDs[MAX_BONE_INFLUENCE];

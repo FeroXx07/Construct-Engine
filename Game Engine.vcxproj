@@ -114,15 +114,15 @@
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>$(SolutionDir)\SourceCode\SDL\include;$(SolutionDir)\SourceCode\imgui\include;$(SolutionDir)\SourceCode\JsonParser;$(SolutionDir)\SourceCode\Glew\include;$(SolutionDir)\SourceCode\glm;$(SolutionDir)\SourceCode\physfs;$(SolutionDir)\SourceCode\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\SourceCode\SDL\include;$(SolutionDir)\SourceCode\imgui\include;$(SolutionDir)\SourceCode\JsonParser;$(SolutionDir)\SourceCode\Glew\include;$(SolutionDir)\SourceCode\glm;$(SolutionDir)\SourceCode\physfs;$(SolutionDir)\SourceCode\;$(SolutionDir)\SourceCode\Optick\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <AdditionalLibraryDirectories>$(SolutionDir)\SourceCode\SDL\lib\x64;$(SolutionDir)\SourceCode\Glew\lib\Release\x64;$(SolutionDir)\SourceCode\assimp\lib;$(SolutionDir)\SourceCode\physfs\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);SDL2.lib;SDL2main.lib;assimp-vc143-mt.lib;assimp-vc143-mtd.lib;physfs.lib;physfs-static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\SourceCode\SDL\lib\x64;$(SolutionDir)\SourceCode\Glew\lib\Release\x64;$(SolutionDir)\SourceCode\assimp\lib;$(SolutionDir)\SourceCode\physfs\lib;$(SolutionDir)\SourceCode\Optick\lib\x64\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(CoreLibraryDependencies);SDL2.lib;SDL2main.lib;assimp-vc143-mt.lib;assimp-vc143-mtd.lib;physfs.lib;physfs-static.lib;OptickCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -156,7 +156,7 @@
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)\SourceCode\SDL\include;$(SolutionDir)\SourceCode\imgui\include;$(SolutionDir)\SourceCode\JsonParser;$(SolutionDir)\SourceCode\Glew\include;$(SolutionDir)\SourceCode\glm;$(SolutionDir)\SourceCode\physfs;$(SolutionDir)\SourceCode\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\SourceCode\SDL\include;$(SolutionDir)\SourceCode\imgui\include;$(SolutionDir)\SourceCode\JsonParser;$(SolutionDir)\SourceCode\Glew\include;$(SolutionDir)\SourceCode\glm;$(SolutionDir)\SourceCode\physfs;$(SolutionDir)\SourceCode\;$(SolutionDir)\SourceCode\Optick\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -165,13 +165,15 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <AdditionalLibraryDirectories>$(SolutionDir)\SourceCode\SDL\lib\x64;$(SolutionDir)\SourceCode\Glew\lib\Release\x64;$(SolutionDir)\SourceCode\assimp\lib;$(SolutionDir)\SourceCode\physfs\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);SDL2.lib;SDL2main.lib;assimp-vc143-mt.lib;assimp-vc143-mtd.lib;physfs.lib;physfs-static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\SourceCode\SDL\lib\x64;$(SolutionDir)\SourceCode\Glew\lib\Release\x64;$(SolutionDir)\SourceCode\assimp\lib;$(SolutionDir)\SourceCode\physfs\lib;$(SolutionDir)\SourceCode\Optick\lib\x64\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(CoreLibraryDependencies);SDL2.lib;SDL2main.lib;assimp-vc143-mt.lib;assimp-vc143-mtd.lib;physfs.lib;physfs-static.lib;OptickCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="SourceCode\Application.cpp" />
     <ClCompile Include="SourceCode\Color.cpp" />
+    <ClCompile Include="SourceCode\Component.cpp" />
+    <ClCompile Include="SourceCode\GameObject.cpp" />
     <ClCompile Include="SourceCode\glmath.cpp" />
     <ClCompile Include="SourceCode\imgui\imgui.cpp" />
     <ClCompile Include="SourceCode\imgui\imgui_demo.cpp" />
@@ -219,7 +221,7 @@
     <ClCompile Include="SourceCode\ModuleCamera3D.cpp" />
     <ClCompile Include="SourceCode\ModuleInput.cpp" />
     <ClCompile Include="SourceCode\ModuleRenderer3D.cpp" />
-    <ClCompile Include="SourceCode\ModuleLevel.cpp" />
+    <ClCompile Include="SourceCode\ModuleScene.cpp" />
     <ClCompile Include="SourceCode\ModuleEditor.cpp" />
     <ClCompile Include="SourceCode\ModuleWindow.cpp" />
     <ClCompile Include="SourceCode\Pipeline.cpp" />
@@ -230,6 +232,8 @@
     <ClInclude Include="SourceCode\Application.h" />
     <ClInclude Include="SourceCode\Camera.h" />
     <ClInclude Include="SourceCode\Color.h" />
+    <ClInclude Include="SourceCode\Component.h" />
+    <ClInclude Include="SourceCode\GameObject.h" />
     <ClInclude Include="SourceCode\glmath.h" />
     <ClInclude Include="SourceCode\Globals.h" />
     <ClInclude Include="SourceCode\Light.h" />
@@ -240,7 +244,7 @@
     <ClInclude Include="SourceCode\ModuleCamera3D.h" />
     <ClInclude Include="SourceCode\ModuleInput.h" />
     <ClInclude Include="SourceCode\ModuleRenderer3D.h" />
-    <ClInclude Include="SourceCode\ModuleLevel.h" />
+    <ClInclude Include="SourceCode\ModuleScene.h" />
     <ClInclude Include="SourceCode\ModuleEditor.h" />
     <ClInclude Include="SourceCode\ModuleWindow.h" />
     <ClInclude Include="SourceCode\Pipeline.h" />

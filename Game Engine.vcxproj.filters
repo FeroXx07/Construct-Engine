@@ -31,7 +31,7 @@
     <ClCompile Include="SourceCode\ModuleRenderer3D.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\ModuleLevel.cpp">
+    <ClCompile Include="SourceCode\ModuleScene.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\ModuleEditor.cpp">
@@ -162,6 +162,12 @@
     <ClCompile Include="SourceCode\log.cpp">
       <Filter>MathAndTools</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\GameObject.cpp">
+      <Filter>GameObjects And Components</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\Component.cpp">
+      <Filter>GameObjects And Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ImGui">
@@ -194,6 +200,9 @@
     <Filter Include="OpenGL Classes\Mesh Classes">
       <UniqueIdentifier>{1f2dbe1c-1fd8-4ac0-bf49-68954794fd11}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameObjects And Components">
+      <UniqueIdentifier>{fd940d27-1900-4095-a742-c2b33fa67da9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\Module.h">
@@ -208,7 +217,7 @@
     <ClInclude Include="SourceCode\ModuleRenderer3D.h">
       <Filter>Modules</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\ModuleLevel.h">
+    <ClInclude Include="SourceCode\ModuleScene.h">
       <Filter>Modules</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\ModuleEditor.h">
@@ -259,6 +268,12 @@
     </ClInclude>
     <ClInclude Include="SourceCode\stb_image.h">
       <Filter>OpenGL Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\GameObject.h">
+      <Filter>GameObjects And Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\Component.h">
+      <Filter>GameObjects And Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

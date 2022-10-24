@@ -33,7 +33,7 @@ public:
 
     Model(string const& path, bool gamma = false);
     ~Model();
-
+ 
     // draws the model, and all its meshesList
     void Draw(Shader& shader);
 

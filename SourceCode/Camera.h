@@ -80,11 +80,14 @@ public:
             Position -= Right * velocity;
         if (direction == RIGHT)
             Position += Right * velocity;
+       // LOG("Camera pos (%f, %f, %f) ", Position.x, Position.y, Position.z);
     }
 
     // processes input received from a mouse input system. Expects the offset value in both the x and y direction.
     void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true)
     {
+        LOG("X offset is %f: ", xoffset);
+        LOG("Y offset is %f: ", yoffset);
         xoffset *= MouseSensitivity;
         yoffset *= MouseSensitivity;
 

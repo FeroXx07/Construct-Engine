@@ -114,7 +114,7 @@ Mesh Model::CreateMesh(aiMesh* aiMesh, const aiScene* aiScene)
         vec3.x = aiMesh->mVertices[i].x;
         vec3.y = aiMesh->mVertices[i].y;
         vec3.z = aiMesh->mVertices[i].z;
-        vertex.Position = vec3;
+        vertex.m_Position = vec3;
 
         // normals
         if (aiMesh->HasNormals())
@@ -122,7 +122,7 @@ Mesh Model::CreateMesh(aiMesh* aiMesh, const aiScene* aiScene)
             vec3.x = aiMesh->mNormals[i].x;
             vec3.y = aiMesh->mNormals[i].y;
             vec3.z = aiMesh->mNormals[i].z;
-            vertex.Normal = vec3;
+            vertex.m_Normal = vec3;
         }
 
         // texture coordinates
@@ -131,20 +131,20 @@ Mesh Model::CreateMesh(aiMesh* aiMesh, const aiScene* aiScene)
             glm::vec2 vec;
             vec.x = aiMesh->mTextureCoords[0][i].x;
             vec.y = aiMesh->mTextureCoords[0][i].y;
-            vertex.TexCoords = vec;
+            vertex.m_TexCoords = vec;
             // tangent
             vec3.x = aiMesh->mTangents[i].x;
             vec3.y = aiMesh->mTangents[i].y;
             vec3.z = aiMesh->mTangents[i].z;
-            vertex.Tangent = vec3;
+            vertex.m_Tangent = vec3;
             // bitangent
             vec3.x = aiMesh->mBitangents[i].x;
             vec3.y = aiMesh->mBitangents[i].y;
             vec3.z = aiMesh->mBitangents[i].z;
-            vertex.Bitangent = vec3;
+            vertex.m_Bitangent = vec3;
         }
         else
-            vertex.TexCoords = glm::vec2(0.0f, 0.0f);
+            vertex.m_TexCoords = glm::vec2(0.0f, 0.0f);
 
         vertices.push_back(vertex);
     }
