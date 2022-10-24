@@ -53,13 +53,13 @@ bool ModuleLevel::Start()
 	//};
 
 	// tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
-	stbi_set_flip_vertically_on_load(true);
-	//ourShader = new Shader("Resources/Shaders/model_loading.vert", "Resources/Shaders/model_loading.frag"); // you can name your shader files however you like
-	ourShader = new Shader("Resources/Shaders/simple.vert", "Resources/Shaders/simple.frag"); // you can name your shader files however you like
+	stbi_set_flip_vertically_on_load(false);
+	ourShader = new Shader("Resources/Shaders/model_loading.vert", "Resources/Shaders/model_loading.frag"); // you can name your shader files however you like
+	//ourShader = new Shader("Resources/Shaders/simple.vert", "Resources/Shaders/simple.frag"); // you can name your shader files however you like
 	
 	//ourModel = new Model("Resources/backpack/backpack.obj");
-	ourModel = new Model("Resources/Meshes/BirdFountain.fbx");
-	//ourModel = new Model("Resources/backpack/backpack.obj");
+	//ourModel = new Model("Resources/Meshes/BirdFountain.fbx");
+	ourModel = new Model("Resources/Meshes/omozra.fbx");
 	////// set up vertex data (and buffer(s)) and configure vertex attributes
 
 	//glGenVertexArrays(1, (GLuint*)&VAO);
@@ -141,7 +141,7 @@ update_status ModuleLevel::Update(float dt)
 
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::rotate(model, glm::radians(Scale), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+	model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
 	ourShader->setMat4("model", model);
 
 	glm::mat4 projection;

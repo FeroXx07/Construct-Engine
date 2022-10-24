@@ -58,24 +58,24 @@ void Model::LoadModelFrom_aiScene(string const& path)
     //    PHYSFS_close(myModel);
     //}
 
-        // read file via ASSIMP
-        Assimp::Importer importer;
-        //const aiScene* scene = importer.ReadFileFromMemory(buffer, sizeof(buffer), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-        const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-      
-        // check for errors
-        if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
-        {
-           // cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << endl;
-            LOG("ERROR::ASSIMP:: ");
-            LOG( importer.GetErrorString());
-            return;
-        }
-        // retrieve the directory path of the filepath
-        directory = path.substr(0, path.find_last_of('/'));
+    // read file via ASSIMP
+    Assimp::Importer importer;
+    //const aiScene* scene = importer.ReadFileFromMemory(buffer, sizeof(buffer), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+    
+    // check for errors
+    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
+    {
+        // cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << endl;
+        LOG("ERROR::ASSIMP:: ");
+        LOG( importer.GetErrorString());
+        return;
+    }
+    // retrieve the directory path of the filepath
+    directory = path.substr(0, path.find_last_of('/'));
 
-        // process ASSIMP's root aiNode recursively
-        ProcessNode(scene->mRootNode, scene);
+    // process ASSIMP's root aiNode recursively
+    ProcessNode(scene->mRootNode, scene);
 }
 
 void Model::ProcessNode(aiNode* aiNode, const aiScene* aiScene)
@@ -105,71 +105,6 @@ Mesh Model::CreateMesh(aiMesh* aiMesh, const aiScene* aiScene)
     vector<GLuint> indices;
     vector<Texture> textures;
 
-    //// iterate over all faces in this mesh
-    //for (unsigned int j = 0; j < aiMesh->mNumFaces; ++j)
-    //{
-    //    Vertex mVertex;
-    //    glm::vec3 vec3; 
-    //    auto const& face = aiMesh->mFaces[j];
-    //    //normally you want just triangles, so iterate over all 3 vertices of the face:
-    //    for (int k = 0; k < 3; ++k) {
-    //        // Now do the magic with 'face.mIndices[k]'
-    //        auto const& vertex = aiMesh->mVertices[face.mIndices[k]];
-    //        //positions
-    //        vec3.x = vertex.x;
-    //        vec3.y = vertex.y;
-    //        vec3.z = vertex.z;
-    //        mVertex.Position = vec3;
-
-    //        // Same for the normals.
-    //        auto const& normal = aiMesh->mNormals[face.mIndices[k]];
-    //        vec3.x = normal.x;
-    //        vec3.y = normal.y;
-    //        vec3.z = normal.z;
-    //        mVertex.Normal = vec3;
-
-    //        // Color of material
-    //        // ...
-
-    //        // And FINALLY: The UV coordinates!
-    //        if (aiMesh->HasTextureCoords(0)) {
-    //            glm::vec2 vec;
-    //            // The following line fixed the issue for me now:
-    //            auto const& uv = aiMesh->mTextureCoords[0][face.mIndices[k]];
-    //            vec.x = uv.x;
-    //            vec.y = uv.y;
-    //            mVertex.TexCoords = vec;
-
-    //            if (aiMesh->HasTangentsAndBitangents())
-    //            {
-    //                auto const& tang = aiMesh->mTangents[face.mIndices[k]];
-    //                // tangent
-    //                vec3.x = tang.x;
-    //                vec3.y = tang.y;
-    //                vec3.z = tang.z;
-    //                mVertex.Tangent = vec3;
-
-    //                auto const& biTang = aiMesh->mBitangents[face.mIndices[k]];
-    //                // bitangent
-    //                vec3.x = biTang.x;
-    //                vec3.y = biTang.y;
-    //                vec3.z = biTang.z;
-    //                mVertex.Bitangent = vec3;
-    //            }
-    //        }
-    //    }
-    //    vertices.push_back(mVertex);
-    //}
-
-    //// a face is a aiMesh its triangle
-    //for (unsigned int i = 0; i < aiMesh->mNumFaces; i++)
-    //{
-    //    aiFace face = aiMesh->mFaces[i];
-    //    // retrieve all indices of the face and store them in the indices vec3
-    //    for (unsigned int j = 0; j < face.mNumIndices; j++)
-    //        indices.push_back(face.mIndices[j]);
-
-    //}
     for (GLuint i = 0; i < aiMesh->mNumVertices; i++)
     {
         Vertex vertex;
@@ -254,11 +189,16 @@ vector<Texture> Model::LoadMaterialTextures(aiMaterial* aiMaterial, aiTextureTyp
         aiString str;
         aiMaterial->GetTexture(aiTextureType, i, &str);
         LOG("Texture %s", str.C_Str());
+
+        string tmp = str.C_Str();
+        tmp = tmp.substr(tmp.find_last_of("/\\") + 1);
+        LOG("Debug %s", tmp.c_str());
+
         bool skip = false;
         for (unsigned int j = 0; j < textures_loaded.size(); j++)
         {
             // Check if we have alreday loaded this texture before
-            if (std::strcmp(textures_loaded[j].path.data(), str.C_Str()) == 0)
+            if (std::strcmp(textures_loaded[j].path.data(), tmp.c_str()) == 0)
             {
                 textures.push_back(textures_loaded[j]);
                 skip = true;
@@ -268,9 +208,9 @@ vector<Texture> Model::LoadMaterialTextures(aiMaterial* aiMaterial, aiTextureTyp
         if (!skip)
         {   // if texture hasn't been loaded already, load it
             Texture texture;
-            texture.id = LoadTextureFromFile(str.C_Str(), this->directory);
-            texture.type = typeName;
-            texture.path = str.C_Str();
+            texture.id = LoadTextureFromFile(tmp.c_str(), this->directory);
+            texture.type = typeName;    
+            texture.path = tmp.c_str();
             textures.push_back(texture);
             textures_loaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
         }
