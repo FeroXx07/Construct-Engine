@@ -25,7 +25,7 @@ class ModuleComponentSys;
 class ComponentTransform;
 
 using namespace std;
-GLuint LoadTextureFromFile(const char* path, const string& directory, bool gamma = false);
+GLuint LoadTextureFromFile(const char* path, const string& directory, uint& height, uint& width, uint &nComponents, bool gamma = false);
 class ModelLoader
 {
 public:

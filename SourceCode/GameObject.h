@@ -3,6 +3,8 @@
 #include "Component.h"
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
+#include "ComponentMaterial.h"
+
 #include <string>
 #include <vector>
 
@@ -34,17 +36,21 @@ protected:
 	// data for all components
 	ComponentMesh* m_ComponentMesh;
 	ComponentTransform* m_ComponentTransform;
+	ComponentMaterial* m_ComponentMaterial;
 
 public:
 	// flags for every component, indicating whether this object "has it"
 	bool m_HasComponentMesh = false;
 	bool m_HasComponentTransform = false;
+	bool m_HasComponentMaterial= false;
 
 	// Components assignators
 	void AssignComponent(ComponentMesh* comp);
 	void AssignComponent(ComponentTransform* comp);
+	void AssignComponent(ComponentMaterial* comp);
 	ComponentMesh* GetMesh();
 	ComponentTransform* GetTransform();
+	ComponentMaterial* GetMaterial();
 
 public:
 	bool gui_IsSelected = false;

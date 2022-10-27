@@ -1,11 +1,11 @@
 #include "GameObject.h"
 
-GameObject::GameObject() : m_Parent(nullptr), m_ComponentMesh(nullptr), m_ComponentTransform(nullptr), m_HasComponentMesh(0), m_HasComponentTransform(0)
+GameObject::GameObject() : m_Parent(nullptr), m_ComponentMesh(nullptr), m_ComponentTransform(nullptr), m_ComponentMaterial(nullptr), m_HasComponentMesh(0), m_HasComponentTransform(0)
 {
 	m_Name = "No Name!!";
 }
 
-GameObject::GameObject(string name) : m_Name(name), m_Parent(nullptr), m_ComponentMesh(nullptr), m_ComponentTransform(nullptr), m_HasComponentMesh(0), m_HasComponentTransform(0)
+GameObject::GameObject(string name) : m_Name(name), m_Parent(nullptr), m_ComponentMesh(nullptr), m_ComponentTransform(nullptr), m_ComponentMaterial(nullptr), m_HasComponentMesh(0), m_HasComponentTransform(0)
 {
 }
 
@@ -26,6 +26,13 @@ GameObject::~GameObject()
 	{
 		delete m_ComponentTransform;
 		m_ComponentTransform = nullptr;
+	}
+	
+	// Delete material component
+	if (m_ComponentMaterial != nullptr)
+	{
+		delete m_ComponentMaterial;
+		m_ComponentMaterial = nullptr;
 	}
 }
 
@@ -93,14 +100,20 @@ bool GameObject::IsGameObjectChild(GameObject* possibleChild)
 void GameObject::AssignComponent(ComponentMesh* comp)
 {
 	m_ComponentMesh = comp;
-	m_HasComponentMesh = 1;
+	m_HasComponentMesh = true;
 }
 
 void GameObject::AssignComponent(ComponentTransform* comp)
 {
 	m_ComponentTransform = comp;
-	m_HasComponentTransform = 1;
+	m_HasComponentTransform = true;
 	comp->m_Dirty = true;
+}
+
+void GameObject::AssignComponent(ComponentMaterial* comp)
+{
+	m_ComponentMaterial = comp;
+	m_HasComponentMaterial = true;
 }
 
 ComponentMesh* GameObject::GetMesh()
@@ -115,6 +128,14 @@ ComponentTransform* GameObject::GetTransform()
 {
 	if (m_HasComponentTransform)
 		return m_ComponentTransform;
+	else
+		return nullptr;
+}
+
+ComponentMaterial* GameObject::GetMaterial()
+{
+	if (m_HasComponentMaterial)
+		return m_ComponentMaterial;
 	else
 		return nullptr;
 }

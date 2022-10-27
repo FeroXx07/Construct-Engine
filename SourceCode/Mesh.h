@@ -30,6 +30,9 @@ struct Texture {
     string type;
     // Path to compare with other textures
     string path; 
+    uint width;
+    uint height;
+    uint nComponents;
 };
 
 class Mesh {

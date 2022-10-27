@@ -173,6 +173,7 @@
     <ClCompile Include="SourceCode\Application.cpp" />
     <ClCompile Include="SourceCode\Color.cpp" />
     <ClCompile Include="SourceCode\Component.cpp" />
+    <ClCompile Include="SourceCode\ComponentMaterial.cpp" />
     <ClCompile Include="SourceCode\ComponentMesh.cpp" />
     <ClCompile Include="SourceCode\ComponentTransform.cpp" />
     <ClCompile Include="SourceCode\GameObject.cpp" />
@@ -236,6 +237,7 @@
     <ClInclude Include="SourceCode\Camera.h" />
     <ClInclude Include="SourceCode\Color.h" />
     <ClInclude Include="SourceCode\Component.h" />
+    <ClInclude Include="SourceCode\ComponentMaterial.h" />
     <ClInclude Include="SourceCode\ComponentMesh.h" />
     <ClInclude Include="SourceCode\ComponentTransform.h" />
     <ClInclude Include="SourceCode\GameObject.h" />

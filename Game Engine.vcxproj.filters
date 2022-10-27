@@ -177,6 +177,9 @@
     <ClCompile Include="SourceCode\Component.cpp">
       <Filter>GameObjects And Components\Components</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\ComponentMaterial.cpp">
+      <Filter>GameObjects And Components\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ImGui">
@@ -312,6 +315,9 @@
       <Filter>GUI Panels</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\Component.h">
+      <Filter>GameObjects And Components\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\ComponentMaterial.h">
       <Filter>GameObjects And Components\Components</Filter>
     </ClInclude>
   </ItemGroup>

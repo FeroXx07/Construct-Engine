@@ -46,6 +46,8 @@ inline void PanelInspector::Update()
 		if (m_SelectedNode->m_HasComponentMesh)
 			m_SelectedNode->GetMesh()->OnEditor();
 	
+		if (m_SelectedNode->m_HasComponentMaterial)
+			m_SelectedNode->GetMaterial()->OnEditor();
 	}
 	else
 	{

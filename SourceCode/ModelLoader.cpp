@@ -6,6 +6,7 @@
 #include "GameObject.h"
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
+#include "ComponentMaterial.h"
 
 #include "ModuleComponentSys.h"
 ModelLoader::ModelLoader(ModuleComponentSys* sys, bool gamma) : gammaCorrection(gamma)
@@ -67,14 +68,18 @@ void ModelLoader::ProcessNode(aiNode* aiNode, const aiScene* aiScene, GameObject
         child->AssignComponent(compMesh);
         compMesh->GetMesh()->totalFaces = mesh->mNumFaces;
 
-        // Create a ComponentTrandform and fill it
+        // Create a ComponentTransform and fill it
         ComponentTransform* compTrans = new ComponentTransform();
         this->GetTransformationFromNode(aiNode, compTrans);
         compTrans->CalculateLocal();
         child->AssignComponent(compTrans);
         
-        // Add the ComponentMesh to the meshSystem
-
+        // Create a ComponentMaterial and fill it
+        
+        ComponentMaterial* compMaterial = new ComponentMaterial();
+        child->AssignComponent(compMaterial);
+        compMaterial->PassTextures(compMesh->GetMesh()->textures);
+        compMaterial->m_MaterialName = aiScene->mMaterials[mesh->mMaterialIndex]->GetName().C_Str();
       /*  meshesList.push_back(CreateMesh(mesh, aiScene));*/
         ++meshesSize;
     }
@@ -199,7 +204,7 @@ vector<Texture> ModelLoader::LoadMaterialTextures(aiMaterial* aiMaterial, aiText
         if (!skip)
         {   // if texture hasn't been loaded already, load it
             Texture texture;
-            texture.id = LoadTextureFromFile(tmp.c_str(), this->directory);
+            texture.id = LoadTextureFromFile(tmp.c_str(), this->directory, texture.height, texture.width, texture.nComponents);
             texture.type = typeName;    
             texture.path = tmp.c_str();
             textures.push_back(texture);
@@ -249,7 +254,7 @@ bool ModelLoader::IsDummyNode(const aiNode& assimpNode)
     return (strstr(assimpNode.mName.C_Str(), "_$AssimpFbx$_") != nullptr && assimpNode.mNumChildren == 1);
 }
 
-GLuint LoadTextureFromFile(const char* path, const string& directory, bool gamma)
+GLuint LoadTextureFromFile(const char* path, const string& directory, uint& height_, uint& width_, uint& nComponents_, bool gamma)
 {
     string filename = string(path);
     filename = directory + '/' + filename;
@@ -259,6 +264,9 @@ GLuint LoadTextureFromFile(const char* path, const string& directory, bool gamma
 
     int width, height, nrComponents;
     unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
+    height_ = height;
+    width_ = width;
+    nComponents_ = nrComponents;
     if (data)
     {
         GLenum format;
