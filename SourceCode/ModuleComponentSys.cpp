@@ -61,43 +61,13 @@ void ModuleComponentSys::DrawGameObject(Shader& shader, GameObject* node, glm::m
 	if (!isRoot)
 	{
 		ComponentTransform* transform = node->GetTransform();
-		world = transform->GetCombination(node->GetParent()->GetTransform()->m_World);
+		world = transform->GetCombination(node->GetParent()->GetTransform()->m_WorldMat);
 		if (node->m_HasComponentMesh)
 		{
 			ComponentMesh* mesh = node->GetMesh();
 			shader.setMat4("model", world);
 			mesh->GetMesh()->RenderMesh(shader);
-
-			if (mesh->m_DisplayNormals)
-			{
-				glm::mat4 view = App->camera->currentCamera->GetViewMatrix();
-				glMatrixMode(GL_PROJECTION);
-				glLoadMatrixf((const GLfloat*)&App->scene->projection[0]);
-				glMatrixMode(GL_MODELVIEW);
-				glm::mat4 MV = view * transform->m_TransMat;
-				glLoadMatrixf((const GLfloat*)&MV[0]);
-				glUseProgram(0);
-				glColor3f(0, 0, 1);
-				glLineWidth(2.0f);
-				glBegin(GL_LINES);
-				for (auto index : mesh->GetMesh()->indices)
-				{
-					glm::vec3 p = mesh->GetMesh()->vertices[index].m_Position;
-					glVertex3f(p.x, p.y, p.z);
-					glm::vec3 o = glm::normalize(mesh->GetMesh()->vertices[index].m_Normal);
-					p += o * 0.1f;
-					glVertex3f(p.x, p.y, p.z);
-				}
-				/*for (int i = 0; i < mesh->GetMesh()->indices.size(); i++) {
-					glm::vec3 p = mesh->GetMesh()->vertices[mesh->GetMesh()->indices]];
-					glVertex3fv(&p.x);
-					glm::vec3 o = glm::normalize(indexed_normals[indices[i]]);
-					p += o * 0.1f;
-					glVertex3fv(&p.x);
-				}*/
-				glEnd();
-				glLineWidth(1.0f);
-			}
+			DrawNormals(mesh, transform);
 			shader.use();
 		}
 	}
@@ -106,6 +76,66 @@ void ModuleComponentSys::DrawGameObject(Shader& shader, GameObject* node, glm::m
 		DrawGameObject(shader, c, world);
 	}
 	
+}
+
+void ModuleComponentSys::DrawGameObject(Shader& shader, GameObject* node)
+{
+	bool isRoot = false;
+	if (node->GetParent() == nullptr)
+		isRoot = true;
+
+	if (!isRoot)
+	{
+		ComponentTransform* transform = node->GetTransform();
+		if (node->m_HasComponentMesh)
+		{
+			ComponentMesh* mesh = node->GetMesh();
+			//transform->Update();
+			shader.setMat4("model", transform->m_WorldMat);
+			mesh->GetMesh()->RenderMesh(shader);
+			DrawNormals(mesh, transform);
+			shader.use();
+		}
+	}
+
+	for (auto c : node->m_Children)
+	{
+		DrawGameObject(shader, c);
+	}
+}
+
+void ModuleComponentSys::DrawNormals(ComponentMesh* mesh, ComponentTransform* transform)
+{
+	if (mesh->m_DisplayNormals)
+	{
+		glm::mat4 view = App->camera->currentCamera->GetViewMatrix();
+		glMatrixMode(GL_PROJECTION);
+		glLoadMatrixf((const GLfloat*)&App->scene->projection[0]);
+		glMatrixMode(GL_MODELVIEW);
+		glm::mat4 MV = view * transform->m_WorldMat;
+		glLoadMatrixf((const GLfloat*)&MV[0]);
+		glUseProgram(0);
+		glColor3f(0, 0, 1);
+		glLineWidth(2.0f);
+		glBegin(GL_LINES);
+		for (auto index : mesh->GetMesh()->indices)
+		{
+			glm::vec3 p = mesh->GetMesh()->vertices[index].m_Position;
+			glVertex3f(p.x, p.y, p.z);
+			glm::vec3 o = glm::normalize(mesh->GetMesh()->vertices[index].m_Normal);
+			p += o * 0.1f;
+			glVertex3f(p.x, p.y, p.z);
+		}
+		/*for (int i = 0; i < mesh->GetMesh()->indices.size(); i++) {
+			glm::vec3 p = mesh->GetMesh()->vertices[mesh->GetMesh()->indices]];
+			glVertex3fv(&p.x);
+			glm::vec3 o = glm::normalize(indexed_normals[indices[i]]);
+			p += o * 0.1f;
+			glVertex3fv(&p.x);
+		}*/
+		glEnd();
+		glLineWidth(1.0f);
+	}
 }
 
 

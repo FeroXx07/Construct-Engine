@@ -15,7 +15,10 @@ public:
 	bool Start();
 	update_status Update(float dt);
 	//void DrawGameObject(Shader& shader, GameObject* rootNode, bool dirty = false);
-	void DrawGameObject(Shader& shader, GameObject* rootNode, glm::mat4x4 world = glm::mat4x4(1.0f));
+
+	void DrawGameObject(Shader& shader, GameObject* rootNode, glm::mat4x4 world);
+	void DrawGameObject(Shader& shader, GameObject* rootNode);
+	void DrawNormals(ComponentMesh* mesh, ComponentTransform* transform);
 	bool CleanUp();
 
 	//MeshSystem* m_MeshSystem = nullptr;

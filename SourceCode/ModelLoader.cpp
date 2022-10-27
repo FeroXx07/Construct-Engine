@@ -45,13 +45,22 @@ void ModelLoader::LoadModelFrom_aiScene(string const& path, GameObject* parent)
     directory = path.substr(0, path.find_last_of('/'));
 
     // process ASSIMP's root aiNode recursively
-    ProcessNode(scene->mRootNode, scene, parent);
+    ProcessNode(scene->mRootNode, scene, parent, *parent->GetTransform());
 }
 
-void ModelLoader::ProcessNode(aiNode* aiNode, const aiScene* aiScene, GameObject* parent)
+void ModelLoader::ProcessNode(aiNode* aiNode, const aiScene* aiScene, GameObject* parent, ComponentTransform parentWorld)
 {
     GameObject* child = nullptr;
     Mesh* myMesh = nullptr;
+
+    // We create transforms outside the loop because we also need the dummy nodes 
+    // which have some translations, pre-rotations and rotations that are needed
+    ComponentTransform transform = ComponentTransform();
+    this->GetTransformationFromNode(aiNode, &transform);
+    transform.ComposeLocalMatrix();
+    transform.m_WorldMat = parentWorld.m_WorldMat * transform.m_LocalMat;
+    transform.DecomposeWorldMatrix();
+
     // process each aiMesh located at the current aiNode
     for (unsigned int i = 0; i < aiNode->mNumMeshes; i++)
     {
@@ -68,14 +77,10 @@ void ModelLoader::ProcessNode(aiNode* aiNode, const aiScene* aiScene, GameObject
         child->AssignComponent(compMesh);
         compMesh->GetMesh()->totalFaces = mesh->mNumFaces;
 
-        // Create a ComponentTransform and fill it
-        ComponentTransform* compTrans = new ComponentTransform();
-        this->GetTransformationFromNode(aiNode, compTrans);
-        compTrans->CalculateLocal();
-        child->AssignComponent(compTrans);
+        // Create a ComponentTransform and assign it
+        child->AssignComponent(new ComponentTransform(transform));
         
         // Create a ComponentMaterial and fill it
-        
         ComponentMaterial* compMaterial = new ComponentMaterial();
         child->AssignComponent(compMaterial);
         compMaterial->PassTextures(compMesh->GetMesh()->textures);
@@ -83,12 +88,15 @@ void ModelLoader::ProcessNode(aiNode* aiNode, const aiScene* aiScene, GameObject
       /*  meshesList.push_back(CreateMesh(mesh, aiScene));*/
         ++meshesSize;
     }
+
     if (child == nullptr)
         child = parent;
+
     // after we've processed all of the meshesList (if any) we then recursively process each of the children nodes
     for (unsigned int i = 0; i < aiNode->mNumChildren; i++)
     {
-        ProcessNode(aiNode->mChildren[i], aiScene, child);
+        // Pass the world transform to the child
+        ProcessNode(aiNode->mChildren[i], aiScene, child, transform);
     }
 
 }
@@ -220,32 +228,33 @@ void ModelLoader::GetTransformationFromNode(aiNode* node, ComponentTransform* tr
     // All those transformations will be collapsed to the first non-dummy node.
     aiVector3D translation, scaling;
     aiQuaternion rotation;
+   
     node->mTransformation.Decompose(scaling, rotation, translation);
 
     trans->m_Translation = glm::vec3(translation.x, translation.y, translation.z);
     trans->m_Scaling = glm::vec3(scaling.x, scaling.y, scaling.z);
     trans->m_Rotation = glm::quat(rotation.w, rotation.x, rotation.y, rotation.z);
 
-    while (IsDummyNode(*node))
-    {
-        // As dummies will only have one child, selecting the next one to process is easy.
-        aiNode* dummy = node->mChildren[0];
+    //if (IsDummyNode(*node))
+    //{
+    //    // As dummies will only have one child, selecting the next one to process is easy.
+    //    aiNode* dummy = node->mChildren[0];
 
-        aiVector3D dTranslation, dScaling;
-        aiQuaternion dRotation;
+    //    aiVector3D dTranslation, dScaling;
+    //    aiQuaternion dRotation;
 
-        // Getting the Transform stored in the dummy node.
-        dummy->mTransformation.Decompose(dScaling, dRotation, dTranslation);
+    //    // Getting the Transform stored in the dummy node.
+    //    dummy->mTransformation.Decompose(dScaling, dRotation, dTranslation);
 
-        glm::vec3 dummyPosition = glm::vec3(dTranslation.x, dTranslation.y, dTranslation.z);
-        glm::vec3 dummyScaling = glm::vec3(dScaling.x, dScaling.y, dScaling.z);
-        glm::quat dummyRotation = glm::quat(dRotation.x, dRotation.y, dRotation.z, dRotation.w);
+    //    glm::vec3 dummyPosition = glm::vec3(dTranslation.x, dTranslation.y, dTranslation.z);
+    //    glm::vec3 dummyScaling = glm::vec3(dScaling.x, dScaling.y, dScaling.z);
+    //    glm::quat dummyRotation = glm::quat(dRotation.x, dRotation.y, dRotation.z, dRotation.w);
 
-        // Adding the dummy's Transform to the current one.
-        trans->m_Translation += dummyPosition;
-        trans->m_Rotation = trans->m_Rotation * dummyRotation;
-        trans->m_Scaling = { trans->m_Scaling.x * dummyScaling.x, trans->m_Scaling.y * dummyScaling.y, trans->m_Scaling.z * dummyScaling.z };
-    }
+    //    // Adding the dummy's Transform to the current one.
+    //    trans->m_Translation += dummyPosition;
+    //    trans->m_Rotation = trans->m_Rotation * dummyRotation;
+    //    trans->m_Scaling = { trans->m_Scaling.x * dummyScaling.x, trans->m_Scaling.y * dummyScaling.y, trans->m_Scaling.z * dummyScaling.z };
+    //}
 }
 
 bool ModelLoader::IsDummyNode(const aiNode& assimpNode)

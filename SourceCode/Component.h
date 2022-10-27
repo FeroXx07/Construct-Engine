@@ -32,7 +32,7 @@ protected:
 	ComponentType m_Type;
 	bool m_isActive = false;
 	GameObject* m_GameObject = nullptr;
-
+	bool m_hasGameObject = false;
 protected:
 	virtual void Start();
 	virtual void Enable();

@@ -72,8 +72,8 @@ bool ModuleEditor::Start()
 //	//ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
 //	//IM_ASSERT(font != NULL);
 //
-	/*ImFont* font = io->Fonts->AddFontFromFileTTF("SourceCode/imgui/fonts/Roboto-Regular.ttf", 16.0f);
-	IM_ASSERT(font != NULL);*/
+	ImFont* font = io->Fonts->AddFontFromFileTTF("SourceCode/imgui/fonts/Roboto-Regular.ttf", 16.0f);
+	IM_ASSERT(font != NULL);
 
 	
 

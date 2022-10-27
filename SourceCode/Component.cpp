@@ -28,6 +28,7 @@ GameObject& Component::GetGameObject()
 
 void Component::SetGameObject(GameObject& go)
 {
+	m_hasGameObject = true;
 	m_GameObject = &go;
 }
 

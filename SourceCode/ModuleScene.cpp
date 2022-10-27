@@ -42,7 +42,8 @@ bool ModuleScene::Start()
 	//ourModel = new Model("Resources/Meshes/BirdFountain.fbx");
 	m_ModelLoader = new ModelLoader(App->componentsManager);
 	//m_ModelLoader->LoadModelFrom_aiScene("Resources/Meshes/omozra.fbx", this->root);
-	m_ModelLoader->LoadModelFrom_aiScene("Resources/Meshes/BakerHouse.fbx", this->root);
+	//m_ModelLoader->LoadModelFrom_aiScene("Resources/Meshes/BakerHouse.fbx", this->root);
+	m_ModelLoader->LoadModelFrom_aiScene("Resources/street/street2.fbx", this->root);
 
 	debug_draw = false;
 

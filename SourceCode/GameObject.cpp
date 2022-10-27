@@ -51,6 +51,9 @@ Component* GameObject::GetComponent(ComponentType type)
 	}
 		break;
 	case ComponentType::MATERIAL:
+	{
+		if (m_HasComponentMaterial) { return m_ComponentMaterial; };
+	}
 		break;
 	default:
 		break;
@@ -101,6 +104,7 @@ void GameObject::AssignComponent(ComponentMesh* comp)
 {
 	m_ComponentMesh = comp;
 	m_HasComponentMesh = true;
+	comp->SetGameObject(*this);
 }
 
 void GameObject::AssignComponent(ComponentTransform* comp)
@@ -108,12 +112,14 @@ void GameObject::AssignComponent(ComponentTransform* comp)
 	m_ComponentTransform = comp;
 	m_HasComponentTransform = true;
 	comp->m_Dirty = true;
+	comp->SetGameObject(*this);
 }
 
 void GameObject::AssignComponent(ComponentMaterial* comp)
 {
 	m_ComponentMaterial = comp;
 	m_HasComponentMaterial = true;
+	comp->SetGameObject(*this);
 }
 
 ComponentMesh* GameObject::GetMesh()

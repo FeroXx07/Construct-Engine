@@ -19,14 +19,20 @@ public:
 
 	void Update();
 	void OnEditor();
-	void CalculateLocal();
+
+	void ComposeLocalMatrix();
+	void DecomposeWorldMatrix();
 
 	glm::mat4x4 GetCombination(glm::mat4x4 transform);
 	bool m_Dirty = false;
-	glm::mat4x4 m_World;
-	glm::mat4x4 m_TransMat;
+	glm::mat4x4 m_WorldMat;
+	glm::mat4x4 m_LocalMat;
+
 	glm::vec3 m_Translation, m_Scaling;
 	glm::quat m_Rotation;
+
+	glm::vec3 m_WorldTranslation, m_WorldScaling;
+	glm::quat m_WorldRotation;
 	
 };
 #endif
