@@ -2,10 +2,11 @@
 #include "Module.h"
 #include "Globals.h"
 
-#include <list>
-
 #include "shader.h"
-#include "Model.h"
+#include "ModelLoader.h"
+#include "GameObject.h"
+
+#include <list>
 
 class ModuleScene : public Module
 {
@@ -18,20 +19,13 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
+	GameObject* CreateGameObject();
+	GameObject* root = nullptr;
 
-public:
-	bool hasCheckPoint = false;
-
-protected:
 	bool debug_draw = true;
-	void BeginDebugDraw();
-	void DebugDraw();
-	void EndDebugDraw();
-
-	uint VBO = 0, VAO = 0, EBO = 0;
 	Shader* ourShader = nullptr;
-	unsigned int texture1, texture2;
-
 	float Scale = 0.0f;
-	Model* ourModel = nullptr;
+	ModelLoader* m_ModelLoader = nullptr;
+
+	glm::mat4 projection;
 };

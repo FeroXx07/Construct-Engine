@@ -43,12 +43,12 @@ public:
     Mesh(vector<Vertex> vertices, vector<GLuint> indices, vector<Texture> textures, const char* name);
     ~Mesh();
   
-    void Draw(Shader& shader);
-
+    void RenderMesh(Shader& shader);
+    string name = " ";
+    uint totalFaces = 0;
 private:
     // Buffers
     GLuint VBO, EBO;
-    string name = " ";
     // Init the buffers once data is loaded
     void GenerateBuffers();
 };

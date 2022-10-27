@@ -43,7 +43,7 @@ void Singleton<T>::destroy()
 	Singleton<T>::m_instance = 0;
 }
 
-#endif
+
 
 struct Notifier
 {
@@ -71,3 +71,4 @@ struct Notifier
 };
 
 extern Singleton<Notifier> logger;
+#endif

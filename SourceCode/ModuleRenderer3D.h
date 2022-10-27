@@ -3,7 +3,7 @@
 #include "Globals.h"
 #include "glmath.h"
 #include "Light.h"
-#include "Model.h"
+#include "ModelLoader.h"
 
 #define MAX_LIGHTS 8
 

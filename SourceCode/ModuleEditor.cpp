@@ -7,8 +7,20 @@
 #include <SDL_opengl.h>
 #endif
 #include "singleton.h"
-ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, start_enabled), title("")
+
+#include "PanelConfig.h"
+#include "PanelConsole.h"
+#include "PanelHierarchy.h"
+#include "PanelInspector.h"
+#include "ModuleScene.h"
+
+ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
+	m_PanelConfig = nullptr;
+	m_PanelConsole = nullptr;
+	m_PanelHierarchy = nullptr;
+	m_PanelInspector = nullptr;
+	m_CurrentSelectedNode = nullptr;
 }
 
 ModuleEditor::~ModuleEditor()
@@ -63,7 +75,7 @@ bool ModuleEditor::Start()
 	/*ImFont* font = io->Fonts->AddFontFromFileTTF("SourceCode/imgui/fonts/Roboto-Regular.ttf", 16.0f);
 	IM_ASSERT(font != NULL);*/
 
-	maxDataHistogram = 60;
+	
 
 	PHYSFS_File* fp;
 	fp = PHYSFS_openRead("Assets/MyLicenses/LICENSE");
@@ -82,6 +94,11 @@ bool ModuleEditor::Start()
 
 	show_demo_window = false;
 	SetupImGuiStyle();
+
+	m_PanelConfig = new PanelConfig(App->window, 60);
+	m_PanelConsole = new PanelConsole();
+	m_PanelHierarchy = new PanelHierarchy(App->scene);
+	m_PanelInspector = new PanelInspector();
 	return true;
 }
 
@@ -179,122 +196,37 @@ void ModuleEditor::SetupImGuiStyle()
 // Load assets
 bool ModuleEditor::CleanUp()
 {
-
+	if (m_PanelConfig != nullptr)
+	{
+		delete m_PanelConfig;
+		m_PanelConfig = nullptr;
+	}
+	
+	if (m_PanelConsole != nullptr)
+	{
+		delete m_PanelConsole;
+		m_PanelConsole = nullptr;
+	}
+	
+	if (m_PanelHierarchy != nullptr)
+	{
+		delete m_PanelHierarchy;
+		m_PanelHierarchy = nullptr;
+	}
+	
+	if (m_PanelInspector != nullptr)
+	{
+		delete m_PanelInspector;
+		m_PanelInspector = nullptr;
+	}
 	return true;
 }
 
-void ModuleEditor::WindConfigWind()
-{
-	Uint32 treeFlags = ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_Framed;
-	ImGui::Begin("Configuration");
-	if (ImGui::TreeNodeEx("Application", treeFlags | ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		ImGui::Text("Max range limit: ");
-		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), std::to_string(maxDataHistogram).c_str());
-		sprintf_s(title, 25, "Framerate %.1f", fps_log[fps_log.size() - 1]);
-		ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
-		sprintf_s(title, 25, "Milliseconds %.1f", ms_log[ms_log.size() - 1]);
-		ImGui::PlotHistogram("##milliseconds", &ms_log[0], ms_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
-		ImGui::TreePop();
-	}
-	if (ImGui::TreeNodeEx("Window", treeFlags))
-	{
-		int height, width;
-		App->window->GetScreenSize(width, height);
-		float b = App->window->GetBrightness();
-
-		ImGui::SliderFloat("Brightness", &b, 0.0f, 1.0f, "%.1f");
-		if (b != App->window->GetBrightness())
-			App->window->SetBrightness(b);
-
-		ImGui::SliderInt("Width", &width, 640, 1920);
-		ImGui::SliderInt("Height", &height, 480, 1080);
-		if (width != App->window->GetScreenWidth() || height != App->window->GetScreenHeight())
-			App->window->SetScreenSize(width, height);
-
-		ImGui::Text("Refresh rate: ");
-		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), std::to_string(ms_log[ms_log.size() - 1]).c_str());
-
-		bool fullscreen = App->window->GetFullScreen();
-		bool resizable = App->window->GetResizable();
-		bool borderless = App->window->GetBorderless();
-		bool fullscreenDesktop = App->window->GetFullScreen_Desktop();
-
-		if (ImGui::Checkbox("Fullscreen", &fullscreen)) 
-			App->window->SetFullScreen(fullscreen);
-
-		ImGui::SameLine();
-		if (ImGui::Checkbox("Resizable", &resizable))
-			App->window->SetResizable(resizable);
-		if (ImGui::IsItemHovered())
-			ImGui::SetTooltip("Restart to apply");
-
-		if (ImGui::Checkbox("Borderless", &borderless))
-			App->window->SetBorderless(borderless);
-
-		ImGui::SameLine();
-		if (ImGui::Checkbox("Fullscreen Desktop", &fullscreenDesktop))
-			App->window->SetFullScreen_Desktop(fullscreenDesktop);
-		ImGui::TreePop();
-	}
-	//ImGui::End();
-	
-}
-
-void ModuleEditor::WindHardware()
-{
-	char sdlVer[25];
-	SDL_version ver; SDL_GetVersion(&ver);
-	
-	Uint32 treeFlags = ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_Framed;
-	if (ImGui::TreeNodeEx("Hardware", treeFlags))
-	{
-		ImGui::Text("SDL Version: "); 
-		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%d.%d.%d", ver.major, ver.minor, ver.patch);
-		ImGui::Separator();
-
-		ImGui::Text("CPUs: ");
-		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%d (Cache: %dkb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
-		ImGui::Separator();
-
-		ImGui::Text("System RAM: ");
-		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%dGb", SDL_GetSystemRAM()/1000);
-
-		ImGui::TreePop();
-	}
-	ImGui::End();
-}
-
-void ModuleEditor::WindConsole()
-{
-	ImGui::Begin("Console");
-	std::queue<std::string> temp = logger.GetInstance()->queue;
-	while (!temp.empty())
-	{
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "[LOG]");
-		//ImGui::SameLine();
-		ImGui::TextWrapped(temp.front().c_str());
-		ImGui::Separator();
-		temp.pop();
-	}
-	ImGui::End();
-}
 
 update_status ModuleEditor::PreUpdate(float dt)
 {
-	fps_log.push_back(io->Framerate);
-	ms_log.push_back(io->Framerate);
-	if (fps_log.size() >= maxDataHistogram)
-		fps_log.erase(fps_log.begin());
-	if (ms_log.size() >= maxDataHistogram)
-		ms_log.erase(ms_log.begin());
-	//ImGui::PlotHistogram()
-
+	this->m_CurrentSelectedNode = m_PanelHierarchy->GetSelectedNode();
+	m_PanelInspector->SetNode(this->m_CurrentSelectedNode);
 	return UPDATE_CONTINUE;
 }
 
@@ -309,39 +241,6 @@ update_status ModuleEditor::Update(float dt)
 	// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
 	if (show_demo_window)
 		ImGui::ShowDemoWindow(&show_demo_window);
-
-	//// 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
-	//{
-	//	static float f = 0.0f;
-	//	static int counter = 0;
-
-	//	ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-	//	ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-	//	ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-	//	ImGui::Checkbox("Another Window", &show_another_window);
-
-	//	ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-	//	ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-	//	if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-	//		counter++;
-	//	ImGui::SameLine();
-	//	ImGui::Text("counter = %d", counter);
-
-	//	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	//	ImGui::End();
-	//}
-
-	//// 3. Show another simple window.
-	//if (show_another_window)
-	//{
-	//	ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-	//	ImGui::Text("Hello from another window!");
-	//	if (ImGui::Button("Close Me"))
-	//		show_another_window = false;
-	//	ImGui::End();
-	//}
 
 	// Top Menu Bar
 	ImGui::BeginMainMenuBar();
@@ -417,9 +316,11 @@ update_status ModuleEditor::Update(float dt)
 	}
 	ImGui::EndMainMenuBar();
 
-	WindConfigWind();
-	WindHardware();
-	WindConsole();
+	m_PanelConfig->Update();
+	m_PanelConsole->Update();
+	m_PanelHierarchy->Update();
+	m_PanelInspector->Update();
+	
 	return UPDATE_CONTINUE;
 }
 

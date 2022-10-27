@@ -173,6 +173,8 @@
     <ClCompile Include="SourceCode\Application.cpp" />
     <ClCompile Include="SourceCode\Color.cpp" />
     <ClCompile Include="SourceCode\Component.cpp" />
+    <ClCompile Include="SourceCode\ComponentMesh.cpp" />
+    <ClCompile Include="SourceCode\ComponentTransform.cpp" />
     <ClCompile Include="SourceCode\GameObject.cpp" />
     <ClCompile Include="SourceCode\glmath.cpp" />
     <ClCompile Include="SourceCode\imgui\imgui.cpp" />
@@ -180,6 +182,7 @@
     <ClCompile Include="SourceCode\imgui\imgui_draw.cpp" />
     <ClCompile Include="SourceCode\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="SourceCode\imgui\imgui_impl_sdl.cpp" />
+    <ClCompile Include="SourceCode\imgui\imgui_stdlib.cpp" />
     <ClCompile Include="SourceCode\imgui\imgui_tables.cpp" />
     <ClCompile Include="SourceCode\imgui\imgui_widgets.cpp" />
     <ClCompile Include="SourceCode\Light.cpp" />
@@ -216,8 +219,8 @@
     <ClCompile Include="SourceCode\MathGeoLib\Math\TransformOps.cpp" />
     <ClCompile Include="SourceCode\MathGeoLib\Time\Clock.cpp" />
     <ClCompile Include="SourceCode\Mesh.cpp" />
-    <ClCompile Include="SourceCode\Model.cpp" />
-    <ClCompile Include="SourceCode\ModuleModels.cpp" />
+    <ClCompile Include="SourceCode\ModelLoader.cpp" />
+    <ClCompile Include="SourceCode\ModuleComponentSys.cpp" />
     <ClCompile Include="SourceCode\ModuleCamera3D.cpp" />
     <ClCompile Include="SourceCode\ModuleInput.cpp" />
     <ClCompile Include="SourceCode\ModuleRenderer3D.cpp" />
@@ -233,13 +236,15 @@
     <ClInclude Include="SourceCode\Camera.h" />
     <ClInclude Include="SourceCode\Color.h" />
     <ClInclude Include="SourceCode\Component.h" />
+    <ClInclude Include="SourceCode\ComponentMesh.h" />
+    <ClInclude Include="SourceCode\ComponentTransform.h" />
     <ClInclude Include="SourceCode\GameObject.h" />
     <ClInclude Include="SourceCode\glmath.h" />
     <ClInclude Include="SourceCode\Globals.h" />
     <ClInclude Include="SourceCode\Light.h" />
     <ClInclude Include="SourceCode\Mesh.h" />
-    <ClInclude Include="SourceCode\Model.h" />
-    <ClInclude Include="SourceCode\ModuleModels.h" />
+    <ClInclude Include="SourceCode\ModelLoader.h" />
+    <ClInclude Include="SourceCode\ModuleComponentSys.h" />
     <ClInclude Include="SourceCode\Module.h" />
     <ClInclude Include="SourceCode\ModuleCamera3D.h" />
     <ClInclude Include="SourceCode\ModuleInput.h" />
@@ -247,6 +252,11 @@
     <ClInclude Include="SourceCode\ModuleScene.h" />
     <ClInclude Include="SourceCode\ModuleEditor.h" />
     <ClInclude Include="SourceCode\ModuleWindow.h" />
+    <ClInclude Include="SourceCode\Panel.h" />
+    <ClInclude Include="SourceCode\PanelConfig.h" />
+    <ClInclude Include="SourceCode\PanelConsole.h" />
+    <ClInclude Include="SourceCode\PanelHierarchy.h" />
+    <ClInclude Include="SourceCode\PanelInspector.h" />
     <ClInclude Include="SourceCode\Pipeline.h" />
     <ClInclude Include="SourceCode\Primitive.h" />
     <ClInclude Include="SourceCode\shader.h" />

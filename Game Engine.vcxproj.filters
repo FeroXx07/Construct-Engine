@@ -153,10 +153,10 @@
     <ClCompile Include="SourceCode\Mesh.cpp">
       <Filter>OpenGL Classes\Mesh Classes</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\Model.cpp">
+    <ClCompile Include="SourceCode\ModelLoader.cpp">
       <Filter>OpenGL Classes\Mesh Classes</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\ModuleModels.cpp">
+    <ClCompile Include="SourceCode\ModuleComponentSys.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\log.cpp">
@@ -165,8 +165,17 @@
     <ClCompile Include="SourceCode\GameObject.cpp">
       <Filter>GameObjects And Components</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\ComponentMesh.cpp">
+      <Filter>GameObjects And Components\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\ComponentTransform.cpp">
+      <Filter>GameObjects And Components\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\imgui\imgui_stdlib.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
     <ClCompile Include="SourceCode\Component.cpp">
-      <Filter>GameObjects And Components</Filter>
+      <Filter>GameObjects And Components\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -202,6 +211,15 @@
     </Filter>
     <Filter Include="GameObjects And Components">
       <UniqueIdentifier>{fd940d27-1900-4095-a742-c2b33fa67da9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI Panels">
+      <UniqueIdentifier>{507dc050-7566-42b8-a7b1-b2608d1fdd22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObjects And Components\Components">
+      <UniqueIdentifier>{450957f6-a5f6-4fd0-b762-64bd09f3b9ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObjects And Components\Systems">
+      <UniqueIdentifier>{7c9196f4-1403-49de-8ce2-7d591bdb327e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -257,10 +275,10 @@
     <ClInclude Include="SourceCode\Mesh.h">
       <Filter>OpenGL Classes\Mesh Classes</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\Model.h">
+    <ClInclude Include="SourceCode\ModelLoader.h">
       <Filter>OpenGL Classes\Mesh Classes</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\ModuleModels.h">
+    <ClInclude Include="SourceCode\ModuleComponentSys.h">
       <Filter>Modules</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\Globals.h">
@@ -272,8 +290,29 @@
     <ClInclude Include="SourceCode\GameObject.h">
       <Filter>GameObjects And Components</Filter>
     </ClInclude>
+    <ClInclude Include="SourceCode\PanelConfig.h">
+      <Filter>GUI Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\Panel.h">
+      <Filter>GUI Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\PanelConsole.h">
+      <Filter>GUI Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\ComponentMesh.h">
+      <Filter>GameObjects And Components\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\ComponentTransform.h">
+      <Filter>GameObjects And Components\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\PanelHierarchy.h">
+      <Filter>GUI Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\PanelInspector.h">
+      <Filter>GUI Panels</Filter>
+    </ClInclude>
     <ClInclude Include="SourceCode\Component.h">
-      <Filter>GameObjects And Components</Filter>
+      <Filter>GameObjects And Components\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

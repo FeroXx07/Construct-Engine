@@ -8,7 +8,7 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModuleEditor.h"
-#include "ModuleModels.h"
+#include "ModuleComponentSys.h"
 
 #include <string>
 #include <list>
@@ -32,7 +32,7 @@ public:
 	ModuleRenderer3D* renderer3D;
 	ModuleCamera3D* camera;
 	ModuleEditor* uiManager;
-	ModuleModels* modelsManager;
+	ModuleComponentSys* componentsManager;
 
 private:
 

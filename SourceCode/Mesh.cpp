@@ -6,7 +6,7 @@ Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture
     this->indices = indices;
     this->textures = textures;
     this->name = name;
-
+    totalFaces = 0;
     LOG("New <%s> created", name);
     LOG("<%s> with %d vertices", name, vertices.size());
     LOG("<%s> with %d indices", name, indices.size());
@@ -22,7 +22,7 @@ Mesh::~Mesh()
 }
 
 
-void Mesh::Draw(Shader& shader)
+void Mesh::RenderMesh(Shader& shader)
 {
     LOG("Drawing Mesh <%s>", name.c_str());
     LOG("<%s> with %d vertices", name.c_str(), vertices.size());

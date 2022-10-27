@@ -1,9 +1,10 @@
+#ifndef __ModuleEditor_H__
+#define __ModuleEditor_H__
 
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
 
-#pragma once
 #include "Module.h"
 #include "Globals.h"
 #include <vector>
@@ -12,6 +13,10 @@
 #include<sstream>
 #include<string>
 
+class PanelConfig;
+class PanelConsole;
+class PanelHierarchy;
+class PanelInspector;
 class ModuleEditor : public Module
 {
 public:
@@ -24,12 +29,6 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-	// Updates the window of the configuration of the window options
-	void WindConfigWind();
-	// Updates the window of the configuration of the hardware options
-	void WindHardware();
-	// Updates the window of the configuration of the console logs
-	void WindConsole();
 	// Set ups the dark custom theme for ImGui
 	void SetupImGuiStyle();
 public:
@@ -38,14 +37,23 @@ public:
 	bool show_demo_window = true;
 	bool show_another_window = false;
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 0.00f);
-
-private:
-	std::vector<float> fps_log;
-	std::vector<float> ms_log;
-	char title[25];
-	int maxDataHistogram = 0;
-
+	
 	std::string licenseStr;
 	
+	GameObject* m_CurrentSelectedNode = nullptr;
+
+	// Updates the window of the configuration of the window options
+	// Updates the window of the configuration of the hardware options
+	PanelConfig* m_PanelConfig = nullptr;
+
+	// Updates the window of the configuration of the console logs
+	PanelConsole* m_PanelConsole = nullptr;
+
+	// Updates the window of the nodes displayer
+	PanelHierarchy* m_PanelHierarchy = nullptr;
+
+	// Updates the window of the components of the selected node
+	PanelInspector* m_PanelInspector = nullptr;
 };
 
+#endif

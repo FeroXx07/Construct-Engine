@@ -80,7 +80,7 @@ public:
             Position -= Right * velocity;
         if (direction == RIGHT)
             Position += Right * velocity;
-       // LOG("Camera pos (%f, %f, %f) ", Position.x, Position.y, Position.z);
+       LOG("Camera pos (%f, %f, %f) ", Position.x, Position.y, Position.z);
     }
 
     // processes input received from a mouse input system. Expects the offset value in both the x and y direction.
