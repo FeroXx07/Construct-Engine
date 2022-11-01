@@ -7,7 +7,7 @@ using namespace std;
 #include "shader.h"
 
 #define MAX_BONE_INFLUENCE 4
-
+class ComponentMaterial;
 struct Vertex {
 
     // Crucial data
@@ -33,8 +33,9 @@ struct Texture {
     uint width;
     uint height;
     uint nComponents;
+    bool isEnabled = true;
 };
-
+typedef std::vector<Texture> TextureVector;
 class Mesh {
 public:
     // Vectors of data
@@ -47,6 +48,7 @@ public:
     ~Mesh();
   
     int RenderMesh(Shader& shader, bool checkerTex = false);
+    int RenderMesh(Shader& shader, ComponentMaterial* mat);
     string name = " ";
     uint totalFaces = 0;
 private:

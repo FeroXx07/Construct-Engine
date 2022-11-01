@@ -21,6 +21,7 @@ public:
 
 	GameObject* CreateGameObject(string const& path, string name);
 	GameObject* CreateEmptyGameObject(string name);
+	
 	GameObject* root = nullptr;
 
 	bool debug_draw = true;

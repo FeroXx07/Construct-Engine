@@ -95,7 +95,7 @@ bool ModuleEditor::Start()
 	show_demo_window = false;
 	SetupImGuiStyle();
 
-	m_PanelConfig = new PanelConfig(App->window, 60);
+	m_PanelConfig = new PanelConfig(App->window, App->renderer3D, 60);
 	m_PanelConsole = new PanelConsole();
 	m_PanelHierarchy = new PanelHierarchy(App->scene);
 	m_PanelInspector = new PanelInspector();

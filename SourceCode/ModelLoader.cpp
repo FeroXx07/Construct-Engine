@@ -60,6 +60,45 @@ void ModelLoader::LoadModelFrom_aiScene(string const& path, GameObject* parent)
     ProcessNode(scene->mRootNode, scene, parent, *parent->GetTransform());
 }
 
+void ModelLoader::LoadTextureIntoGameObject(string const& path, GameObject* go)
+{
+    std::string recomputedPath = path;
+    std::replace(recomputedPath.begin(), recomputedPath.end(), '\\', '/');
+    directory = recomputedPath.substr(0, recomputedPath.find_last_of('/'));
+    if (go->m_HasComponentMaterial)
+    {
+        ComponentMaterial* mat = go->GetMaterial();
+
+        // For now all drag and drop texture are diffuse
+        string typeDefault = "texture_diffuse";
+        string tmp = path;
+        tmp = tmp.substr(tmp.find_last_of("/\\") + 1);
+        LOG("Debug %s", tmp.c_str());
+
+        bool skip = false;
+        for (unsigned int j = 0; j < textures_loaded.size(); j++)
+        {
+            // Check if we have alreday loaded this texture before
+            if (std::strcmp(textures_loaded[j].path.data(), tmp.c_str()) == 0)
+            {
+                mat->m_Textures->push_back(textures_loaded[j]);
+                skip = true;
+                break;
+            }
+        }
+        if (!skip)
+        {   // if texture hasn't been loaded already, load it
+            Texture texture;
+            texture.id = LoadTextureFromFile(tmp.c_str(), this->directory, texture.height, texture.width, texture.nComponents);
+            texture.type = typeDefault;
+            texture.path = tmp.c_str();
+            mat->m_Textures->push_back(texture);
+            textures_loaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
+        }
+    }
+    
+}
+
 void ModelLoader::ProcessNode(aiNode* aiNode, const aiScene* aiScene, GameObject* parent, ComponentTransform parentWorld)
 {
     GameObject* child = nullptr;
@@ -312,7 +351,7 @@ GLuint LoadTextureFromFile(const char* path, const string& directory, uint& heig
     }
     else
     {
-        std::cout << "Texture failed to load at path: " << path << std::endl;
+        LOG("Texture failed to load at path : %s", path);
         stbi_image_free(data);
     }
 

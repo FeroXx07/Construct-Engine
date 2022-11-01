@@ -13,6 +13,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "Globals.h"
+#include <stdexcept>
 using namespace math;
 class Shader
 {
@@ -48,6 +49,7 @@ public:
         }
         catch (std::ifstream::failure& e)
         {
+            LOG("ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ: ", e.what());
             std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ: " << e.what() << std::endl;
         }
         const char* vShaderCode = vertexCode.c_str();
@@ -90,6 +92,7 @@ public:
     // ------------------------------------------------------------------------
     void setInt(const std::string& name, int value) const
     {
+        int exists = glGetUniformLocation(ID, name.c_str());
         glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
     }
     // ------------------------------------------------------------------------
@@ -160,7 +163,7 @@ private:
             if (!success)
             {
                 glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-                //std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+                std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
                 LOG("ERROR::SHADER_COMPILATION_ERROR of type: ");
                 LOG(infoLog);
             }
@@ -171,7 +174,7 @@ private:
             if (!success)
             {
                 glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-               // std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+                std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
                 LOG("ERROR::PROGRAM_LINKING_ERROR of type: ");
                 LOG(infoLog);
             }

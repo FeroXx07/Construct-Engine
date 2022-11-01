@@ -12,8 +12,8 @@ public:
 
 	void PassTextures(vector<Texture> &t);
 	void OnEditor();
-	vector<Texture> m_Textures;
-
+	//vector<Texture> m_Textures;
+	TextureVector* m_Textures = nullptr;
 	bool m_DisplayChecker_Tex = false;
 	string m_MaterialName = "No_Name";
 };

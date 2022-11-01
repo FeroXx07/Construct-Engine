@@ -78,12 +78,20 @@ bool ModuleRenderer3D::Init()
 			ret = false;
 		}
 
-		LOG("Using Glew %s", glewGetString(GLEW_VERSION));
+		glewVersion = LOGr("Using Glew %s", glewGetString(GLEW_VERSION));
+		glewVersion = glewVersion.substr(glewVersion.find_last_of(":") + 1);
 		// Should be 2.0
-		LOG("Vendor: %s", glGetString(GL_VENDOR));
-		LOG("Renderer: %s", glGetString(GL_RENDERER));
-		const char * ab = LOGr("OpenGL version supported %s", glGetString(GL_VERSION));
-		LOG("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+		vendor = LOGr("Vendor: %s", glGetString(GL_VENDOR));
+		vendor = vendor.substr(vendor.find_last_of(":") + 1);
+
+		rendInfo = LOGr("Renderer: %s", glGetString(GL_RENDERER));
+		rendInfo = rendInfo.substr(rendInfo.find_last_of(":") + 1);
+
+		supportedOpenGLversion = LOGr("OpenGL version supported %s", glGetString(GL_VERSION));
+		supportedOpenGLversion = supportedOpenGLversion.substr(supportedOpenGLversion.find_last_of(":") + 1);
+
+		GLSL = LOGr("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+		GLSL = GLSL.substr(GLSL.find_last_of(":") + 1);
 
 		GLfloat LightModelAmbient[] = {0.0f, 0.0f, 0.0f, 1.0f};
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);

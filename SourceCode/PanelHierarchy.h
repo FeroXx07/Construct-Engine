@@ -17,6 +17,7 @@ public:
     void ChangeSelectionNode(GameObject* newSelectedNode);
     GameObject* GetSelectedNode();
     GameObject* m_SelectedNode = nullptr;
+    GameObject* m_HoveredNode = nullptr;
 	ModuleScene* m_Scene = nullptr;
 	bool m_IsDraggingNode = false;
 };
@@ -30,6 +31,7 @@ inline PanelHierarchy::~PanelHierarchy()
 {
 	m_Scene = nullptr;
     m_SelectedNode = nullptr;
+    m_HoveredNode = nullptr;
 }
 
 inline void PanelHierarchy::Start()
@@ -58,6 +60,10 @@ inline void PanelHierarchy::DrawGameObjNode(GameObject* node, ImGuiTreeNodeFlags
     // Change state if clicked
     if (ImGui::TreeNodeEx(node->m_Name.c_str(), node_flags))
     {
+        if (ImGui::IsItemHovered)
+        {
+            m_HoveredNode = node;
+        }
         if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
         {
             ChangeSelectionNode(node);
@@ -95,12 +101,12 @@ inline void PanelHierarchy::DrawGameObjNode(GameObject* node, ImGuiTreeNodeFlags
            
             ImGui::EndDragDropTarget();
         }
-
+        ImGui::TreePop();
         for (auto children : node->m_Children)
         {
             DrawGameObjNode(children, flags);
         }
-        ImGui::TreePop();
+        
         
     }
     

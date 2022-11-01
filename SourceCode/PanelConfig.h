@@ -1,13 +1,14 @@
-#ifndef _PANELCONFIG_H
-#define _PANELCONFIG_H
+#ifndef _PanerlConfig_H
+#define _PanerlConfig_H
 #include "Panel.h"
 #include "ModuleWindow.h"
+#include "ModuleRenderer3D.h"
 #include <vector>
 
 class PanelConfig : public Panel
 {
 public:
-	PanelConfig(ModuleWindow* window, int maxDataHistogram = 60);
+	PanelConfig(ModuleWindow* window, ModuleRenderer3D* renderer, int maxDataHistogram = 60);
 	~PanelConfig();
 
 	void Start();
@@ -20,11 +21,13 @@ public:
 	char m_Title[25];
 
 	ModuleWindow* m_Window;
+	ModuleRenderer3D* m_Renderer;
 };
 
-inline PanelConfig::PanelConfig(ModuleWindow* window, int maxDataHistogram) : Panel(true), m_Title("")
+inline PanelConfig::PanelConfig(ModuleWindow* window, ModuleRenderer3D* renderer, int maxDataHistogram) : Panel(true), m_Title("")
 {
 	this->m_Window = window;
+	this->m_Renderer = renderer;
 	this->m_MaxDataHistogram = maxDataHistogram;
 }
 
@@ -33,6 +36,7 @@ inline PanelConfig::~PanelConfig()
 	m_FpsLog.clear();
 	m_MsLog.clear();
 	m_Window = nullptr;
+	m_Renderer = nullptr;
 }
 
 
@@ -125,8 +129,35 @@ inline void PanelConfig::Update()
 		ImGui::Text("System RAM: ");
 		ImGui::SameLine();
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%dGb", SDL_GetSystemRAM() / 1000);
+		ImGui::Separator();
+
+		ImGui::Text("Glew Version: ");
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), m_Renderer->glewVersion.c_str());
+		ImGui::Separator();
+
+		ImGui::Text("Vendor : ");
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), m_Renderer->vendor.c_str());
+		ImGui::Separator();
+
+		ImGui::Text("Renderer : ");
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), m_Renderer->rendInfo.c_str());
+		ImGui::Separator();
+
+		ImGui::Text("Supported OpenGL version : ");
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), m_Renderer->supportedOpenGLversion.c_str());
+		ImGui::Separator();
+
+		ImGui::Text("GLSL version : ");
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), m_Renderer->GLSL.c_str());
+		ImGui::Separator();
 
 		ImGui::TreePop();
+
 	}
 	ImGui::End();
 }

@@ -46,13 +46,9 @@ void ModuleComponentSys::DrawGameObject(Shader& shader, GameObject* node, glm::m
 			if (node->m_HasComponentMaterial)
 			{
 				ComponentMaterial* material = node->GetMaterial();
-				if (material->m_DisplayChecker_Tex)
-					mesh->GetMesh()->RenderMesh(shader, true);
-				else
-					mesh->GetMesh()->RenderMesh(shader, false);
+				mesh->GetMesh()->RenderMesh(shader, material);
 			}
-			else
-				mesh->GetMesh()->RenderMesh(shader, true);
+
 			DrawNormals(mesh, local);
 			shader.use();
 		}
@@ -64,40 +60,12 @@ void ModuleComponentSys::DrawGameObject(Shader& shader, GameObject* node, glm::m
 	
 }
 
-//void ModuleComponentSys::DrawGameObject(Shader& shader, GameObject* node)
-//{
-//	bool isRoot = false;
-//	if (node->GetParent() == nullptr)
-//		isRoot = true;
-//
-//	if (!isRoot)
-//	{
-//		if (node->m_Name == "City_building_041")
-//			LOG("City_building_041");
-//		ComponentTransform* transform = node->GetTransform();
-//		transform->Update();
-//		shader.setMat4("model", transform->m_WorldMat);
-//		if (node->m_HasComponentMesh)
-//		{
-//			ComponentMesh* mesh = node->GetMesh();
-//			if (node->m_HasComponentMaterial)
-//			{
-//				ComponentMaterial* material = node->GetMaterial();
-//				if (material->m_DisplayChecker_Tex)
-//					mesh->GetMesh()->RenderMesh(shader, true);
-//				else
-//					mesh->GetMesh()->RenderMesh(shader, false);
-//			}
-//			DrawNormals(mesh, transform);
-//			shader.use();
-//		}
-//	}
-//
-//	for (auto c : node->m_Children)
-//	{
-//		DrawGameObject(shader, c);
-//	}
-//}
+void ModuleComponentSys::AddTextureToGameObject(string const& path)
+{
+	if (App->uiManager->m_CurrentSelectedNode != nullptr)
+		App->scene->m_ModelLoader->LoadTextureIntoGameObject(path, App->uiManager->m_CurrentSelectedNode);
+}
+
 
 void ModuleComponentSys::DrawNormals(ComponentMesh* mesh, ComponentTransform* transform)
 {
@@ -134,11 +102,6 @@ void ModuleComponentSys::UpdateAllTransforms(GameObject* rootNode)
 
 bool ModuleComponentSys::CleanUp()
 {
-	/*if (m_MeshSystem != nullptr)
-	{
-		delete m_MeshSystem;
-		m_MeshSystem = nullptr;
-	}*/
 	return true;
 }
 

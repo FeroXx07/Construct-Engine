@@ -46,6 +46,7 @@ public:
 
     // loads from aiScene
     void LoadModelFrom_aiScene(string const& path, GameObject* parent);
+    void LoadTextureIntoGameObject(string const& path, GameObject* go);
 private:
   
     // processes a aiNode in a recursive fashion. Processes each individual aiMesh located at the aiNode and repeats this process on its children nodes (if any).

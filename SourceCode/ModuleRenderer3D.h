@@ -21,4 +21,10 @@ public:
 
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
+	string glewVersion = " ";
+	string vendor = " ";
+	string supportedOpenGLversion = " ";
+	string rendInfo = " ";
+	string GLSL = " ";
+	string currentOpGLversion = " ";
 };

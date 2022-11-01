@@ -1,5 +1,6 @@
 #include "Mesh.h"
-
+#include "ComponentMaterial.h"
+#include "ComponentMesh.h"
 Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures, const char* name)
 {
     this->vertices = vertices;
@@ -78,6 +79,50 @@ int  Mesh::RenderMesh(Shader& shader, bool checkerTex)
         }
     }
     
+
+    // draw mesh
+    glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLES, static_cast<GLuint>(indices.size()), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+
+    // restore the texture to a "neutral" state
+    glActiveTexture(GL_TEXTURE0);
+    return 1;
+}
+
+int  Mesh::RenderMesh(Shader& shader, ComponentMaterial* mat)
+{
+    TextureVector* tex = mat->m_Textures;
+   
+    // bind appropriate textures
+    unsigned int diffuseNr = 1;
+    unsigned int specularNr = 1;
+    unsigned int normalNr = 1;
+    unsigned int heightNr = 1;
+    for (unsigned int i = 0; i < tex->size(); i++)
+    {        
+        glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
+        // retrieve texture number (the N in diffuse_textureN)
+        string number;
+        string name = tex->at(i).type; // calculate the N-component per texture type and concatenate it to the texture's type string to get the appropriate uniform name
+        if (name == "texture_diffuse")
+            number = std::to_string(diffuseNr++);
+        else if (name == "texture_specular")
+            number = std::to_string(specularNr++); // transfer unsigned int to string
+        else if (name == "texture_normal")
+            number = std::to_string(normalNr++); // transfer unsigned int to string
+        else if (name == "texture_height")
+            number = std::to_string(heightNr++); // transfer unsigned int to string
+        else if (name == "Checkers")
+            continue;
+        /*     if (textures.size() == 1)
+                    return 0;*/
+                    // now set the sampler to the correct texture unit
+        shader.setInt(("material" + name + number).c_str(), i);
+        //glUniform1i(glGetUniformLocation(shader.ID, (name + number).c_str()), i);
+        // and finally bind the texture
+        glBindTexture(GL_TEXTURE_2D, tex->at(i).id);
+    }
 
     // draw mesh
     glBindVertexArray(VAO);

@@ -123,10 +123,27 @@ update_status ModuleInput::PreUpdate(float dt)
 					SDL_MESSAGEBOX_INFORMATION,
 					"File dropped on window",
 					m_DroppedFile, App->window->window);
-				std::string recomputedPath = m_DroppedFile;
-				std::replace(recomputedPath.begin(), recomputedPath.end(), '\\', '/');
-				recomputedPath = recomputedPath.substr(recomputedPath.find_last_of("/\\") + 1);
-				App->scene->CreateGameObject(m_DroppedFile, recomputedPath);
+				// Get the name and extension
+				std::string nameAndExtension = m_DroppedFile;
+
+				// Create comparators
+				std::string fbx = ".fbx";
+				std::string FBX = ".FBX";
+				std::string png = ".png";
+
+				// Store only the name and extension
+				std::replace(nameAndExtension.begin(), nameAndExtension.end(), '\\', '/');
+				nameAndExtension = nameAndExtension.substr(nameAndExtension.find_last_of("/\\") + 1);
+
+				// Compare
+				size_t foundFbx = nameAndExtension.find(fbx);
+				size_t foundFBX = nameAndExtension.find(FBX);
+				size_t foundPng = nameAndExtension.find(png);
+
+				if (foundFbx != string::npos || foundFBX != string::npos)
+					App->scene->CreateGameObject(m_DroppedFile, nameAndExtension); // Create gameobject
+				else if (foundPng != string::npos)
+					App->componentsManager->AddTextureToGameObject(m_DroppedFile); // Add texture to the selected node
 				SDL_free(m_DroppedFile);
 				break;
 			}
