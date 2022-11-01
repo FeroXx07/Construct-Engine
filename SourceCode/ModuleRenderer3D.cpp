@@ -106,7 +106,7 @@ bool ModuleRenderer3D::Init()
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_DEPTH_TEST);
 
-		//glEnable(GL_CULL_FACE);
+		glEnable(GL_CULL_FACE);
 		//glFrontFace(GL_CW);
 		//glCullFace(GL_BACK);
 		
@@ -189,6 +189,3 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	//glLoadIdentity();
 }
 
-void ModuleRenderer3D::DrawAllMeshes()
-{
-}

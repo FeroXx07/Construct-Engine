@@ -17,7 +17,6 @@ public:
     void ChangeSelectionNode(GameObject* newSelectedNode);
     GameObject* GetSelectedNode();
     GameObject* m_SelectedNode = nullptr;
-    GameObject* m_HoveredNode = nullptr;
 	ModuleScene* m_Scene = nullptr;
 	bool m_IsDraggingNode = false;
 };
@@ -31,7 +30,6 @@ inline PanelHierarchy::~PanelHierarchy()
 {
 	m_Scene = nullptr;
     m_SelectedNode = nullptr;
-    m_HoveredNode = nullptr;
 }
 
 inline void PanelHierarchy::Start()
@@ -58,15 +56,8 @@ inline void PanelHierarchy::DrawGameObjNode(GameObject* node, ImGuiTreeNodeFlags
         node_flags |= ImGuiTreeNodeFlags_Selected;
 
     // Change state if clicked
-    // bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, "Selectable Node %d", i);
     if (ImGui::TreeNodeEx(node->m_Name.c_str(), node_flags))
     {
-        if (ImGui::IsItemHovered)
-        {
-            m_HoveredNode = node;
-        }
-          
-
         if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
         {
             ChangeSelectionNode(node);
@@ -87,8 +78,6 @@ inline void PanelHierarchy::DrawGameObjNode(GameObject* node, ImGuiTreeNodeFlags
             {
                 string idS = (const char*)data->Data;
                 int idI = std::stoi(idS);
-                /*LOG("Source: %s",a->m_Name.c_str());
-                LOG("Target: %s",node->m_Name.c_str());*/
                 for (auto chl : this->m_Scene->root->m_Children)
                 {
                     if (chl->id == idI)
@@ -102,19 +91,11 @@ inline void PanelHierarchy::DrawGameObjNode(GameObject* node, ImGuiTreeNodeFlags
                         chl->GetTransform()->SetLocalMatrix(inverse);
                     }
                 }
-               
-              /*  a->SetParent(node);
-                a->GetParent()->SetChild(a);*/
             }
            
             ImGui::EndDragDropTarget();
         }
 
-   
-        if (node->m_Name == "City_building_030")
-        {
-            bool a = true;
-        }
         for (auto children : node->m_Children)
         {
             DrawGameObjNode(children, flags);

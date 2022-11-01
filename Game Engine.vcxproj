@@ -177,7 +177,6 @@
     <ClCompile Include="SourceCode\ComponentMesh.cpp" />
     <ClCompile Include="SourceCode\ComponentTransform.cpp" />
     <ClCompile Include="SourceCode\GameObject.cpp" />
-    <ClCompile Include="SourceCode\glmath.cpp" />
     <ClCompile Include="SourceCode\imgui\imgui.cpp" />
     <ClCompile Include="SourceCode\imgui\imgui_demo.cpp" />
     <ClCompile Include="SourceCode\imgui\imgui_draw.cpp" />
@@ -229,7 +228,6 @@
     <ClCompile Include="SourceCode\ModuleEditor.cpp" />
     <ClCompile Include="SourceCode\ModuleWindow.cpp" />
     <ClCompile Include="SourceCode\Pipeline.cpp" />
-    <ClCompile Include="SourceCode\Primitive.cpp" />
     <ClCompile Include="SourceCode\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -241,7 +239,6 @@
     <ClInclude Include="SourceCode\ComponentMesh.h" />
     <ClInclude Include="SourceCode\ComponentTransform.h" />
     <ClInclude Include="SourceCode\GameObject.h" />
-    <ClInclude Include="SourceCode\glmath.h" />
     <ClInclude Include="SourceCode\Globals.h" />
     <ClInclude Include="SourceCode\Light.h" />
     <ClInclude Include="SourceCode\Mesh.h" />
@@ -260,7 +257,6 @@
     <ClInclude Include="SourceCode\PanelHierarchy.h" />
     <ClInclude Include="SourceCode\PanelInspector.h" />
     <ClInclude Include="SourceCode\Pipeline.h" />
-    <ClInclude Include="SourceCode\Primitive.h" />
     <ClInclude Include="SourceCode\shader.h" />
     <ClInclude Include="SourceCode\singleton.h" />
     <ClInclude Include="SourceCode\stb_image.h" />

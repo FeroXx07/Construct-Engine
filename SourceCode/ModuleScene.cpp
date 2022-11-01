@@ -44,8 +44,7 @@ bool ModuleScene::Start()
 	m_ModelLoader = new ModelLoader(App->componentsManager);
 	//m_ModelLoader->LoadModelFrom_aiScene("Resources/Meshes/omozra.fbx", this->root);
 	//m_ModelLoader->LoadModelFrom_aiScene("Resources/Meshes/BakerHouse.fbx", this->root);
-	//m_ModelLoader->LoadModelFrom_aiScene("Resources/street/street2.fbx", this->root);
-	bool e = PHYSFS_exists("warrior.fbx");
+	//m_ModelLoader->LoadModelFrom_aiScene("Resources/street/street2.fbx", this->root);;
 	
 	CreateGameObject("Assets/street/street2.fbx", "street2");
 	debug_draw = false;
@@ -63,14 +62,11 @@ bool ModuleScene::CleanUp()
 
 	if (m_ModelLoader != nullptr)
 		delete m_ModelLoader;
-	//glDeleteVertexArrays(1, &VAO);
-	//glDeleteBuffers(1, &VBO);
-	//glDeleteBuffers(1, &EBO);
-
+	
 	return true;
 }
 
-GameObject* ModuleScene::CreateGameObject(string const& path, string name)
+void ModuleScene::CreateGameObject(string const& path, string name)
 {
 	//name = name.substr(name.find_last_of("/\\") + 1);
 	//GameObject* go = new GameObject(name);
@@ -78,7 +74,20 @@ GameObject* ModuleScene::CreateGameObject(string const& path, string name)
 	//ComponentTransform* trans = new ComponentTransform();
 	//go->AssignComponent(trans);
 	m_ModelLoader->LoadModelFrom_aiScene(path, this->root);
-	return nullptr;
+}
+
+GameObject* ModuleScene::CreateEmptyGameObject(string name)
+{
+	// Create new GameObject
+	GameObject* go = new GameObject(name);
+	go->SetParent(this->root);
+	this->root->SetChild(go);
+	// Create a ComponentTransform and assign it
+	ComponentTransform* transform = new ComponentTransform();
+	transform->SetLocalMatrix(glm::mat4(1.0f));
+	transform->SetWorldMatrix(this->root->GetTransform()->GetWorld()*glm::mat4(1.0f));
+	go->AssignComponent(transform);
+	return go;
 }
 
 // Update
@@ -96,8 +105,9 @@ update_status ModuleScene::Update(float dt)
 	//model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
 	//ourShader->setMat4("model", model);
 
-	
-	projection = glm::perspective(glm::radians(App->camera->currentCamera->Zoom), (float)width / (float)height, 0.1f, 100.0f);
+	float nearPlane = 0.1f;
+	float farPlane = 100.0f * 1.5f;
+	projection = glm::perspective(glm::radians(App->camera->currentCamera->Zoom), (float)width / (float)height, nearPlane, farPlane);
 	ourShader->setMat4("projection", projection);
 
 	glm::mat4 view = App->camera->currentCamera->GetViewMatrix();

@@ -76,9 +76,9 @@ bool ModuleEditor::Start()
 	IM_ASSERT(font != NULL);
 
 	
-
+	PHYSFS_mount("Licenses", "/", 1);
 	PHYSFS_File* fp;
-	fp = PHYSFS_openRead("Assets/MyLicenses/LICENSE");
+	fp = PHYSFS_openRead("LICENSE.md");
 	if (fp)
 	{
 		char buffer[128];
@@ -264,8 +264,11 @@ void ModuleEditor::MenuBarUpdate()
 
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("Shapes"))
+		if (ImGui::BeginMenu("Create GameObjects"))
 		{
+			if (ImGui::MenuItem("Creat Empty"))
+				App->scene->CreateEmptyGameObject("Empty GameObject");
+
 			if (ImGui::MenuItem("Creat Cube"))
 				App->scene->CreateGameObject("Resources/Meshes/Cube.fbx", "Cube");
 

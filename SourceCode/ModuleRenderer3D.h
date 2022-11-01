@@ -1,7 +1,6 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-#include "glmath.h"
 #include "Light.h"
 #include "ModelLoader.h"
 
@@ -18,8 +17,6 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 	void OnResize(int width, int height);
-
-	void DrawAllMeshes();
 public:
 
 	Light lights[MAX_LIGHTS];

@@ -52,8 +52,10 @@ void ModelLoader::LoadModelFrom_aiScene(string const& path, GameObject* parent)
         return;
     }
     // retrieve the directory path of the filepath
-    directory = path.substr(0, path.find_last_of('/'));
-
+    std::string recomputedPath = path;
+    std::replace(recomputedPath.begin(), recomputedPath.end(), '\\', '/');
+    directory = recomputedPath.substr(0, recomputedPath.find_last_of('/'));
+   
     // process ASSIMP's root aiNode recursively
     ProcessNode(scene->mRootNode, scene, parent, *parent->GetTransform());
 }

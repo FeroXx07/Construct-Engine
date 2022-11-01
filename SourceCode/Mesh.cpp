@@ -16,9 +16,9 @@ Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture
 }
 Mesh::~Mesh()
 {
-   /* glDeleteVertexArrays(1, &VAO);
+    glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);*/
+    glDeleteBuffers(1, &EBO);
 }
 
 

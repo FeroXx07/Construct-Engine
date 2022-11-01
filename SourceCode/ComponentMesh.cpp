@@ -36,12 +36,6 @@ void ComponentMesh::OnEditor()
 		ImGui::SameLine();
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%u", m_Mesh->totalFaces);
 		ImGui::Separator();
-		/*ImGui::InputFloat3("Position", &m_Translation[0], "%.3f", iflags);
-		glm::vec3 euler;
-		extractEulerAngleXYZ(m_TransMat, euler.x, euler.y, euler.z);
-		euler = glm::degrees(euler);
-		ImGui::InputFloat3("Rotation", &euler[0], "%.3f", iflags);
-		ImGui::InputFloat3("Scaling", &m_Scaling[0], "%.3f", iflags);*/
 	}
 }
 
@@ -57,34 +51,3 @@ Mesh* ComponentMesh::GetMesh()
 	else
 		return nullptr;
 }
-
-//MeshSystem::MeshSystem()
-//{
-//}
-//
-//MeshSystem::~MeshSystem()
-//{
-//	m_ComponentsMeshList.clear();
-//}
-//
-//void MeshSystem::AddComponentMeshToSystem(ComponentMesh* newC)
-//{
-//	bool alreadyExists = false;
-//	for (auto c : m_ComponentsMeshList)
-//		if (c == newC)
-//			alreadyExists = true;
-//
-//	if (alreadyExists == false)
-//	{
-//		m_ComponentsMeshList.push_back(newC);
-//	}
-//}
-//void MeshSystem::DrawAllMeshes(Shader& shader)
-//{
-//	//for (unsigned int i = 0; i < meshesList.size(); i++)
-//	//	meshesList[i].Draw(shader);
-//	for (auto m : m_ComponentsMeshList)
-//		if (m->GetIsActive())
-//			m->GetMesh()->Draw(shader);
-//}
-

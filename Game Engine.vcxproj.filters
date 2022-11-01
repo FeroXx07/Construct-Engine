@@ -45,16 +45,10 @@
     <ClCompile Include="SourceCode\Timer.cpp">
       <Filter>MathAndTools</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\Primitive.cpp">
-      <Filter>MathAndTools</Filter>
-    </ClCompile>
     <ClCompile Include="SourceCode\Light.cpp">
       <Filter>MathAndTools</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\Color.cpp">
-      <Filter>MathAndTools</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceCode\glmath.cpp">
       <Filter>MathAndTools</Filter>
     </ClCompile>
     <ClCompile Include="SourceCode\MathGeoLib\Math\float4x4.cpp">
@@ -251,16 +245,10 @@
     <ClInclude Include="SourceCode\Timer.h">
       <Filter>MathAndTools</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\Primitive.h">
-      <Filter>MathAndTools</Filter>
-    </ClInclude>
     <ClInclude Include="SourceCode\Light.h">
       <Filter>MathAndTools</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\Color.h">
-      <Filter>MathAndTools</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\glmath.h">
       <Filter>MathAndTools</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\Pipeline.h">

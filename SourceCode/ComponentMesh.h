@@ -20,15 +20,4 @@ public:
 private:
 	Mesh* m_Mesh = nullptr;
 };
-
-//struct MeshSystem
-//{
-//	MeshSystem();
-//	~MeshSystem();
-//
-//	vector<ComponentMesh*> m_ComponentsMeshList;
-//	void AddComponentMeshToSystem(ComponentMesh* newC);
-//	void DrawAllMeshes(Shader& shader);
-//};
-
 #endif
