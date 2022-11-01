@@ -2,6 +2,7 @@
 #define _PanelHierarchy_H
 #include "Panel.h"
 #include "ModuleScene.h"
+#include "ComponentTransform.h"
 
 class PanelHierarchy : public Panel
 {
@@ -95,6 +96,10 @@ inline void PanelHierarchy::DrawGameObjNode(GameObject* node, ImGuiTreeNodeFlags
                         // Source
                         chl->SetParent(node);
                         node->SetChild(chl);
+                        glm::mat4 inverse = glm::inverse(node->GetTransform()->GetWorld());
+                        glm::mat4 mat = chl->GetTransform()->GetLocal();
+                        inverse *= mat;
+                        chl->GetTransform()->SetLocalMatrix(inverse);
                     }
                 }
                
