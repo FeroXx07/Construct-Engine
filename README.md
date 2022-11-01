@@ -16,6 +16,7 @@ All the licenses can be found in the license folder of the repository.
 - Mouse wheel zooms in and out.
 - Pressing “f” focuses the camera to the geometry.
 - Holding SHIFT duplicates movement speed.
+- Drag and slide the in the component inspector window to change Transform data like Position, Scaling and Rotation.
 
 ## License
 MIT License
