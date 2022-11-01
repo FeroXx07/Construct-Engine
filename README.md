@@ -17,6 +17,7 @@ All the licenses can be found in the license folder of the repository.
 - Pressing “f” focuses the camera to the geometry.
 - Holding SHIFT duplicates movement speed.
 
+## License
 MIT License
 
 Copyright (c) 2022 Ali Hassan Shahid
