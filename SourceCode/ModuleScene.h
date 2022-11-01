@@ -19,7 +19,7 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-	void CreateGameObject(string const& path, string name);
+	GameObject* CreateGameObject(string const& path, string name);
 	GameObject* CreateEmptyGameObject(string name);
 	GameObject* root = nullptr;
 

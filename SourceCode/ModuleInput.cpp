@@ -123,7 +123,10 @@ update_status ModuleInput::PreUpdate(float dt)
 					SDL_MESSAGEBOX_INFORMATION,
 					"File dropped on window",
 					m_DroppedFile, App->window->window);
-				App->scene->CreateGameObject(m_DroppedFile, m_DroppedFile);
+				std::string recomputedPath = m_DroppedFile;
+				std::replace(recomputedPath.begin(), recomputedPath.end(), '\\', '/');
+				recomputedPath = recomputedPath.substr(recomputedPath.find_last_of("/\\") + 1);
+				App->scene->CreateGameObject(m_DroppedFile, recomputedPath);
 				SDL_free(m_DroppedFile);
 				break;
 			}
