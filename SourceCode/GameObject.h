@@ -12,6 +12,7 @@ using namespace std;
 class GameObject
 {
 public:
+	int id;
 	GameObject();
 	GameObject(string name);
 	~GameObject();
@@ -21,10 +22,12 @@ public:
 	//	Finds all components of given type in the whole	scene (parent and children)
 	vector<Component*> FindAllComponentsOfType(ComponentType type);
 
-	void SetParentAndChild(GameObject* parent);
+	void SetParent(GameObject* parent);
+	void SetChild(GameObject* child);
 	GameObject* GetParent();
 
 	void AddChild(GameObject* newChild);
+	void RemoveChild(GameObject* child);
 	bool IsGameObjectChild(GameObject* possibleChild);
 
 	string m_Name = " ";
@@ -37,6 +40,7 @@ protected:
 	ComponentMesh* m_ComponentMesh;
 	ComponentTransform* m_ComponentTransform;
 	ComponentMaterial* m_ComponentMaterial;
+	static std::atomic<int> s_id;
 
 public:
 	// flags for every component, indicating whether this object "has it"

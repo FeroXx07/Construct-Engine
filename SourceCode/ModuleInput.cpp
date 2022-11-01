@@ -1,7 +1,8 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleInput.h"
-
+#include "ModuleWindow.h"
+#include "ModuleScene.h"
 #define MAX_KEYS 300
 
 ModuleInput::ModuleInput(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -111,6 +112,20 @@ update_status ModuleInput::PreUpdate(float dt)
 			{
 				if(e.window.event == SDL_WINDOWEVENT_RESIZED)
 					App->renderer3D->OnResize(e.window.data1, e.window.data2);
+				break;
+			}
+
+			case SDL_DROPFILE:  // In case if dropped file
+			{
+				m_DroppedFile = e.drop.file;
+				// Shows directory of dropped file
+				SDL_ShowSimpleMessageBox(
+					SDL_MESSAGEBOX_INFORMATION,
+					"File dropped on window",
+					m_DroppedFile, App->window->window);
+				App->scene->CreateGameObject(m_DroppedFile, m_DroppedFile);
+				SDL_free(m_DroppedFile);
+				break;
 			}
 		}
 	}

@@ -72,7 +72,7 @@ bool ModuleEditor::Start()
 //	//ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
 //	//IM_ASSERT(font != NULL);
 //
-	ImFont* font = io->Fonts->AddFontFromFileTTF("SourceCode/imgui/fonts/Roboto-Regular.ttf", 16.0f);
+	ImFont* font = io->Fonts->AddFontFromFileTTF("Resources/Roboto-Regular.ttf", 16.0f);
 	IM_ASSERT(font != NULL);
 
 	
@@ -193,6 +193,103 @@ void ModuleEditor::SetupImGuiStyle()
 	style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.800000011920929f, 0.800000011920929f, 0.800000011920929f, 0.3499999940395355f);
 }
 
+void ModuleEditor::MenuBarUpdate()
+{
+	// Top Menu Bar
+	if (ImGui::BeginMainMenuBar())
+	{
+		static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
+		ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), dockspace_flags);
+		if (ImGui::BeginMenu("Help"))
+		{
+			if (ImGui::MenuItem("Gui Demo"))
+				show_demo_window = !show_demo_window;
+
+			if (ImGui::MenuItem("Web Page"))
+				App->RequestBrowser("https://github.com/FeroXx07/Game-Engine");
+
+			//if (ImGui::MenuItem("About"))
+			//	ImGui::OpenPopup("About"); // Set pop up id
+
+			//// Always center this window when appearing
+			//ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+			//ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+			if (ImGui::Button("About"))
+				ImGui::OpenPopup("About...");
+
+			// Always center this window when appearing
+			ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+			ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+			if (ImGui::BeginPopupModal("About...", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+			{
+				ImGui::Text("The engine currently doesn't have a name\n");
+				ImGui::Text("The sure thing is that it will be 3D Game Engine\n");
+				ImGui::Text("Make sure to visit the github page: https://github.com/FeroXx07/Game-Engine\n");
+				ImGui::Text(licenseStr.c_str());
+
+				ImGui::Separator();
+
+				//static int unused_i = 0;
+				//ImGui::Combo("Combo", &unused_i, "Delete\0Delete harder\0");
+
+				/*static bool dont_ask_me_next_time = false;
+				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+				ImGui::Checkbox("Don't ask me next time", &dont_ask_me_next_time);
+				ImGui::PopStyleVar();*/
+
+				if (ImGui::Button("OK", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+				ImGui::EndPopup();
+				/*	ImGui::SetItemDefaultFocus();
+					ImGui::SameLine();
+					if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+					ImGui::EndPopup();*/
+			}
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Windows"))
+		{
+			if (ImGui::MenuItem("Configuration"))
+				m_PanelConfig->isActive = !m_PanelConfig->isActive;
+
+			if (ImGui::MenuItem("Console"))
+				m_PanelConsole->isActive = !m_PanelConsole->isActive;
+
+			if (ImGui::MenuItem("Hierarchy"))
+				m_PanelHierarchy->isActive = !m_PanelHierarchy->isActive;
+
+			if (ImGui::MenuItem("Inspector"))
+				m_PanelInspector->isActive = !m_PanelInspector->isActive;
+
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Shapes"))
+		{
+			if (ImGui::MenuItem("Creat Cube"))
+				App->scene->CreateGameObject("Resources/Meshes/Cube.fbx", "Cube");
+
+			if (ImGui::MenuItem("Creat Plane"))
+				App->scene->CreateGameObject("Resources/Meshes/Plane.fbx", "Plane");
+
+			if (ImGui::MenuItem("Creat Sphere"))
+				App->scene->CreateGameObject("Resources/Meshes/Sphere.fbx", "Sphere");
+
+			if (ImGui::MenuItem("Creat Pyramid"))
+				App->scene->CreateGameObject("Resources/Meshes/Pyramid.fbx", "Pyramid");
+
+			if (ImGui::MenuItem("Creat Cone"))
+				App->scene->CreateGameObject("Resources/Meshes/Cone.fbx", "Cone");
+
+			if (ImGui::MenuItem("Creat Cylinder"))
+				App->scene->CreateGameObject("Resources/Meshes/Cylinder.fbx", "Cylinder");
+			ImGui::EndMenu();
+		}
+
+		ImGui::EndMainMenuBar();
+	}
+}
+
 // Load assets
 bool ModuleEditor::CleanUp()
 {
@@ -227,6 +324,7 @@ update_status ModuleEditor::PreUpdate(float dt)
 {
 	this->m_CurrentSelectedNode = m_PanelHierarchy->GetSelectedNode();
 	m_PanelInspector->SetNode(this->m_CurrentSelectedNode);
+
 	return UPDATE_CONTINUE;
 }
 
@@ -242,84 +340,16 @@ update_status ModuleEditor::Update(float dt)
 	if (show_demo_window)
 		ImGui::ShowDemoWindow(&show_demo_window);
 
-	// Top Menu Bar
-	ImGui::BeginMainMenuBar();
-	static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
-	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), dockspace_flags);
-	if (ImGui::BeginMenu("Help"))
-	{
-		if (ImGui::MenuItem("Gui Demo"))
-			show_demo_window = !show_demo_window;
+	MenuBarUpdate();
 
-		if (ImGui::MenuItem("Web Page"))
-			App->RequestBrowser("https://github.com/FeroXx07/Game-Engine");
-
-		//if (ImGui::MenuItem("About"))
-		//	ImGui::OpenPopup("About"); // Set pop up id
-
-		//// Always center this window when appearing
-		//ImVec2 center = ImGui::GetMainViewport()->GetCenter();
-		//ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-
-		//// Pop up id required
-		//if (ImGui::BeginPopupModal("About", NULL, ImGuiWindowFlags_AlwaysAutoResize))
-		//{
-		//	ImGui::Text("All those beautiful files will be deleted.\nThis operation cannot be undone!\n\n");
-		//	ImGui::Separator();
-
-		//	//static int unused_i = 0;
-		//	//ImGui::Combo("Combo", &unused_i, "Delete\0Delete harder\0");
-
-		//	static bool dont_ask_me_next_time = false;
-		//	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
-		//	ImGui::Checkbox("Don't ask me next time", &dont_ask_me_next_time);
-		//	ImGui::PopStyleVar();
-
-		//	if (ImGui::Button("Got it", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
-		//	ImGui::SetItemDefaultFocus();
-		//	//ImGui::SameLine();
-		//	//if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
-		//	//ImGui::EndPopup();
-		//}
-		if (ImGui::Button("About"))
-			ImGui::OpenPopup("About...");
-
-		// Always center this window when appearing
-		ImVec2 center = ImGui::GetMainViewport()->GetCenter();
-		ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-
-		if (ImGui::BeginPopupModal("About...", NULL, ImGuiWindowFlags_AlwaysAutoResize))
-		{
-			ImGui::Text("The engine currently doesn't have a name\n");
-			ImGui::Text("The sure thing is that it will be 3D Game Engine\n");
-			ImGui::Text("Make sure to visit the github page: https://github.com/FeroXx07/Game-Engine\n");
-			ImGui::Text(licenseStr.c_str());
-			
-			ImGui::Separator();
-
-			//static int unused_i = 0;
-			//ImGui::Combo("Combo", &unused_i, "Delete\0Delete harder\0");
-
-			/*static bool dont_ask_me_next_time = false;
-			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
-			ImGui::Checkbox("Don't ask me next time", &dont_ask_me_next_time);
-			ImGui::PopStyleVar();*/
-
-			if (ImGui::Button("OK", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
-			ImGui::EndPopup();
-		/*	ImGui::SetItemDefaultFocus();
-			ImGui::SameLine();
-			if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
-			ImGui::EndPopup();*/
-		}
-		ImGui::EndMenu();
-	}
-	ImGui::EndMainMenuBar();
-
-	m_PanelConfig->Update();
-	m_PanelConsole->Update();
-	m_PanelHierarchy->Update();
-	m_PanelInspector->Update();
+	if (m_PanelConfig->isActive) 
+		m_PanelConfig->Update();
+	if (m_PanelConsole->isActive)
+		m_PanelConsole->Update();
+	if (m_PanelHierarchy->isActive)
+		m_PanelHierarchy->Update();
+	if (m_PanelInspector->isActive)
+		m_PanelInspector->Update();
 	
 	return UPDATE_CONTINUE;
 }

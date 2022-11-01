@@ -22,13 +22,13 @@ public:
 	ModuleWindow* m_Window;
 };
 
-PanelConfig::PanelConfig(ModuleWindow* window, int maxDataHistogram) : Panel(true), m_Title("")
+inline PanelConfig::PanelConfig(ModuleWindow* window, int maxDataHistogram) : Panel(true), m_Title("")
 {
 	this->m_Window = window;
 	this->m_MaxDataHistogram = maxDataHistogram;
 }
 
-PanelConfig::~PanelConfig()
+inline PanelConfig::~PanelConfig()
 {
 	m_FpsLog.clear();
 	m_MsLog.clear();

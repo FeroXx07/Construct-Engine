@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleCamera3D.h"
 #include "ModuleInput.h"
+#include "ModuleEditor.h"
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -87,10 +88,14 @@ update_status ModuleCamera3D::Update(float dt)
 	//LOG("Mouse scroll is %d", zScrollIn);
 	if (zScrollIn != 0)
 	{
-		currentCamera->ProcessMouseScroll((float)zScrollIn * speed / dt);
+		currentCamera->ProcessMouseScroll((float)zScrollIn);
 	}
 	
-
+	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_UP)
+	{
+		if (App->uiManager->m_CurrentSelectedNode != nullptr)
+			currentCamera->LookAt(App->uiManager->m_CurrentSelectedNode->GetTransform()->GetTranslate());
+	}
 	//if(App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	//{
 	//	int dx = -App->input->GetMouseXMotion();

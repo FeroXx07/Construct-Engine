@@ -8,7 +8,6 @@
 class Panel
 {
 public:
-	Panel();
 	~Panel();
 
 	virtual void Start();
@@ -16,12 +15,8 @@ public:
 
 	bool isActive = false;
 protected:
-	Panel(bool isActive_) : isActive(isActive_){}
+	Panel(bool isActive_ = false) : isActive(isActive_){}
 };
-
-Panel::Panel()
-{
-}
 
 Panel::~Panel()
 {

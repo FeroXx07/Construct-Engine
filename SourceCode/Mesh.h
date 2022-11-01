@@ -46,7 +46,7 @@ public:
     Mesh(vector<Vertex> vertices, vector<GLuint> indices, vector<Texture> textures, const char* name);
     ~Mesh();
   
-    void RenderMesh(Shader& shader);
+    int RenderMesh(Shader& shader, bool checkerTex = false);
     string name = " ";
     uint totalFaces = 0;
 private:

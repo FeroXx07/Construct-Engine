@@ -30,6 +30,7 @@ class ModelLoader
 {
 public:
 
+    Texture* checkerTexture = nullptr;
     vector<Texture> textures_loaded;	
     //vector<Mesh>    meshesList;
     string directory;

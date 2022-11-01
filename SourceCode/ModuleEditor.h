@@ -54,6 +54,8 @@ public:
 
 	// Updates the window of the components of the selected node
 	PanelInspector* m_PanelInspector = nullptr;
+
+	void MenuBarUpdate();
 };
 
 #endif

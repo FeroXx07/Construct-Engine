@@ -1,11 +1,13 @@
 #include "GameObject.h"
 
-GameObject::GameObject() : m_Parent(nullptr), m_ComponentMesh(nullptr), m_ComponentTransform(nullptr), m_ComponentMaterial(nullptr), m_HasComponentMesh(0), m_HasComponentTransform(0)
+std::atomic<int> GameObject::s_id;
+
+GameObject::GameObject() : id(++s_id), m_Parent(nullptr), m_ComponentMesh(nullptr), m_ComponentTransform(nullptr), m_ComponentMaterial(nullptr), m_HasComponentMesh(0), m_HasComponentTransform(0)
 {
 	m_Name = "No Name!!";
 }
 
-GameObject::GameObject(string name) : m_Name(name), m_Parent(nullptr), m_ComponentMesh(nullptr), m_ComponentTransform(nullptr), m_ComponentMaterial(nullptr), m_HasComponentMesh(0), m_HasComponentTransform(0)
+GameObject::GameObject(string name) :id(++s_id), m_Name(name), m_Parent(nullptr), m_ComponentMesh(nullptr), m_ComponentTransform(nullptr), m_ComponentMaterial(nullptr), m_HasComponentMesh(0), m_HasComponentTransform(0)
 {
 }
 
@@ -71,13 +73,21 @@ vector<Component*> GameObject::FindAllComponentsOfType(ComponentType type)
 	return res;
 }
 
-void GameObject::SetParentAndChild(GameObject* parent)
+void GameObject::SetParent(GameObject* parent)
 {
-	if (parent != nullptr)
+	if (m_Parent != nullptr)
 	{
-		m_Parent = parent;
-		m_Parent->AddChild(this);
+		// Remove himself from children list of current parent
+		m_Parent->RemoveChild(this);
 	}
+	// Set new parent
+	m_Parent = parent;
+}
+
+void GameObject::SetChild(GameObject* child)
+{
+	// Add himself as new child to the children list of the new parent
+	AddChild(child);
 }
 
 GameObject* GameObject::GetParent()
@@ -87,8 +97,19 @@ GameObject* GameObject::GetParent()
 
 void GameObject::AddChild(GameObject* newChild)
 {
-	if (IsGameObjectChild(this) == false)
-		m_Children.emplace_back(newChild);
+	if (IsGameObjectChild(newChild) == false)
+		m_Children.push_back(newChild);
+}
+
+void GameObject::RemoveChild(GameObject* child)
+{
+	uint i = 0;
+	for (auto go : m_Children)
+	{
+		if (go->m_Name == child->m_Name)
+			m_Children.erase(m_Children.begin() + i);
+		++i;
+	}
 }
 
 bool GameObject::IsGameObjectChild(GameObject* possibleChild)

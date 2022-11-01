@@ -5,7 +5,23 @@
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
+#include <glm/glm.hpp>
 class GameObject;
+
+struct GuiInputData
+{
+	bool m_OpHasBeenEdited = true;
+	glm::vec3 data;
+	void SetData(glm::vec3 newData)
+	{
+		if (m_OpHasBeenEdited)
+		{
+			data = newData;
+			m_OpHasBeenEdited = false;
+		}
+			
+	}
+};
 
 enum class ComponentType
 {

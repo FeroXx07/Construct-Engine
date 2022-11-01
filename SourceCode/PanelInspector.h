@@ -7,7 +7,7 @@
 class PanelInspector : Panel
 {
 public:
-	PanelInspector();
+	PanelInspector() : Panel(true), isActive(true) {};
 	~PanelInspector();
 
 	void Start();
@@ -15,11 +15,8 @@ public:
 
 	void SetNode(GameObject* node);
 	GameObject* m_SelectedNode = nullptr;
+	bool isActive = false;
 };
-inline PanelInspector::PanelInspector()
-{
-
-}
 
 inline PanelInspector::~PanelInspector()
 {

@@ -13,26 +13,48 @@ using namespace glm;
 class ComponentTransform : public Component
 {
 public:
-	ComponentTransform(glm::vec3 translation, glm::vec3 scaling, glm::quat rotation);
+	ComponentTransform(const glm::vec3& translation, const glm::vec3& scaling, const glm::quat& rotation);
 	ComponentTransform();
 	~ComponentTransform();
 
 	void Update();
 	void OnEditor();
 
+private:
 	void ComposeLocalMatrix();
-	void DecomposeWorldMatrix();
+	
+public:
+	void SetTranslate(const glm::vec3& translation);
+	void SetRotation(const glm::vec3& rotation);
+	void SetRotation(const glm::quat& rotation);
+	void SetScale(const glm::vec3& scaling);
+	void SetLocalMatrix(const glm::mat4x4& mat);
+	void SetWorldMatrix(const glm::mat4x4& mat);
+	glm::mat4x4 Combine(const glm::mat4x4& transform);
 
-	glm::mat4x4 GetCombination(glm::mat4x4 transform);
+	const glm::vec3 GetTranslate();
+	const glm::quat GetRotationQuat();
+	const glm::vec3 GetRotationEuler();
+	const glm::vec3 Scaling();
+	const glm::mat4x4 GetLocal();
+	const glm::mat4x4 GetWorld();
+
 	bool m_Dirty = false;
-	glm::mat4x4 m_WorldMat;
+private:
+	void SetDirtyChildren();
+
 	glm::mat4x4 m_LocalMat;
+	glm::mat4x4 m_WorldMat;
 
 	glm::vec3 m_Translation, m_Scaling;
 	glm::quat m_Rotation;
 
-	glm::vec3 m_WorldTranslation, m_WorldScaling;
-	glm::quat m_WorldRotation;
+private:
+	GuiInputData m_InputTrans;
+	GuiInputData m_InputRot;
+	GuiInputData m_InputScale;
 	
+
+	friend class ModelLoader;
 };
 #endif

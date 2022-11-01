@@ -13,11 +13,21 @@ ModelLoader::ModelLoader(ModuleComponentSys* sys, bool gamma) : gammaCorrection(
 {
     componentSystem = sys;
     meshesSize = 0;
+    PHYSFS_mount("Assets", "/", 1);
+    checkerTexture = nullptr;
+
+    // if texture hasn't been loaded already, load it
+    checkerTexture = new Texture();
+    checkerTexture->id = LoadTextureFromFile("CheckersTextureDefault.png", "Resources/Textures", checkerTexture->height, checkerTexture->width, checkerTexture->nComponents);
+    checkerTexture->type = "Checkers";
+    checkerTexture->path = "Resources/Textures";
+    textures_loaded.push_back(*checkerTexture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
 }
 
 ModelLoader::~ModelLoader()
 {
     componentSystem = nullptr;
+    checkerTexture = nullptr;
 }
 
 void ModelLoader::Draw(Shader& shader)
@@ -58,8 +68,7 @@ void ModelLoader::ProcessNode(aiNode* aiNode, const aiScene* aiScene, GameObject
     ComponentTransform transform = ComponentTransform();
     this->GetTransformationFromNode(aiNode, &transform);
     transform.ComposeLocalMatrix();
-    transform.m_WorldMat = parentWorld.m_WorldMat * transform.m_LocalMat;
-    transform.DecomposeWorldMatrix();
+    transform.SetLocalMatrix(parentWorld.m_LocalMat * transform.m_LocalMat);
 
     // process each aiMesh located at the current aiNode
     for (unsigned int i = 0; i < aiNode->mNumMeshes; i++)
@@ -67,11 +76,11 @@ void ModelLoader::ProcessNode(aiNode* aiNode, const aiScene* aiScene, GameObject
         // the aiNode object only contains indices to index the actual objects in the aiScene. 
         // the aiScene contains all the data, aiNode is just to keep stuff organized (like relations between nodes).
         aiMesh* mesh = aiScene->mMeshes[aiNode->mMeshes[i]];
-
+      
         // Create new GameObject
         child = new GameObject(aiNode->mName.C_Str());
-        child->SetParentAndChild(parent);
-
+        child->SetParent(parent);
+        child->GetParent()->SetChild(child);
         // Create a ComponentMesh and fill it
         ComponentMesh* compMesh = new ComponentMesh(CreateMesh(mesh, aiScene));
         child->AssignComponent(compMesh);
@@ -180,6 +189,8 @@ Mesh* ModelLoader::CreateMesh(aiMesh* aiMesh, const aiScene* aiScene)
     std::vector<Texture> heightMaps = LoadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
     textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
+    // Extra. Checker texture
+    textures.push_back(*checkerTexture);
     // new Mesh
     return new Mesh(vertices, indices, textures, aiMesh->mName.C_Str());
 }

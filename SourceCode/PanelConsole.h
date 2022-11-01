@@ -16,7 +16,7 @@ public:
 
 #endif
 
-inline PanelConsole::PanelConsole()
+inline PanelConsole::PanelConsole() : Panel(true)
 {
 }
 

@@ -16,12 +16,13 @@ public:
     void ChangeSelectionNode(GameObject* newSelectedNode);
     GameObject* GetSelectedNode();
     GameObject* m_SelectedNode = nullptr;
+    GameObject* m_HoveredNode = nullptr;
 	ModuleScene* m_Scene = nullptr;
-	bool test_drag_and_drop = true;
+	bool m_IsDraggingNode = false;
 };
 
 
-inline PanelHierarchy::PanelHierarchy(ModuleScene* scene) : m_Scene(scene)
+inline PanelHierarchy::PanelHierarchy(ModuleScene* scene) : Panel(true), m_Scene(scene)
 {
 }
 
@@ -29,6 +30,7 @@ inline PanelHierarchy::~PanelHierarchy()
 {
 	m_Scene = nullptr;
     m_SelectedNode = nullptr;
+    m_HoveredNode = nullptr;
 }
 
 inline void PanelHierarchy::Start()
@@ -56,29 +58,66 @@ inline void PanelHierarchy::DrawGameObjNode(GameObject* node, ImGuiTreeNodeFlags
 
     // Change state if clicked
     // bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, "Selectable Node %d", i);
-    bool node_open = ImGui::TreeNodeEx(node->m_Name.c_str(), node_flags);
+    if (ImGui::TreeNodeEx(node->m_Name.c_str(), node_flags))
+    {
+        if (ImGui::IsItemHovered)
+        {
+            m_HoveredNode = node;
+        }
+          
 
-    if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
-    {
-        LOG("Node: %s is selected", node->m_Name.c_str());
-        ChangeSelectionNode(node);
-    }
-        
+        if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
+        {
+            ChangeSelectionNode(node);
+        }
 
-    if (test_drag_and_drop && ImGui::BeginDragDropSource())
-    {
-        ImGui::SetDragDropPayload("_TREENODE", NULL, 0);
-        ImGui::Text("This is a drag and drop source");
-        ImGui::EndDragDropSource();
-    }
-    if (node_open)
-    {
+        if (ImGui::BeginDragDropSource())
+        {
+            string id = std::to_string(node->id);
+            ImGui::SetDragDropPayload("hierarchy_node", id.c_str(), sizeof(id));
+            ImGui::Text(node->m_Name.c_str());
+            ImGui::EndDragDropSource();
+        }
+        if (ImGui::BeginDragDropTarget())
+        {
+            //ImGuiDragDropFlags_SourceNoDisableHover
+            const ImGuiPayload* data = ImGui::AcceptDragDropPayload("hierarchy_node");
+            if (data != nullptr)
+            {
+                string idS = (const char*)data->Data;
+                int idI = std::stoi(idS);
+                /*LOG("Source: %s",a->m_Name.c_str());
+                LOG("Target: %s",node->m_Name.c_str());*/
+                for (auto chl : this->m_Scene->root->m_Children)
+                {
+                    if (chl->id == idI)
+                    {
+                        // Source
+                        chl->SetParent(node);
+                        node->SetChild(chl);
+                    }
+                }
+               
+              /*  a->SetParent(node);
+                a->GetParent()->SetChild(a);*/
+            }
+           
+            ImGui::EndDragDropTarget();
+        }
+
+   
+        if (node->m_Name == "City_building_030")
+        {
+            bool a = true;
+        }
         for (auto children : node->m_Children)
         {
             DrawGameObjNode(children, flags);
         }
         ImGui::TreePop();
+        
     }
+    
 }
 inline void PanelHierarchy::ChangeSelectionNode(GameObject* newSelectedNode)
 {

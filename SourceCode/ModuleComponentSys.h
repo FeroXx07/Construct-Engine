@@ -17,8 +17,9 @@ public:
 	//void DrawGameObject(Shader& shader, GameObject* rootNode, bool dirty = false);
 
 	void DrawGameObject(Shader& shader, GameObject* rootNode, glm::mat4x4 world);
-	void DrawGameObject(Shader& shader, GameObject* rootNode);
+	//void DrawGameObject(Shader& shader, GameObject* rootNode);
 	void DrawNormals(ComponentMesh* mesh, ComponentTransform* transform);
+	void UpdateAllTransforms(GameObject* rootNode);
 	bool CleanUp();
 
 	//MeshSystem* m_MeshSystem = nullptr;

@@ -33,8 +33,9 @@ bool ModuleScene::Start()
 	root = new GameObject("RootNode");
 	ComponentTransform* rootTrans = new ComponentTransform();
 	root->AssignComponent(rootTrans);
+
 	// tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
-	stbi_set_flip_vertically_on_load(true);
+	stbi_set_flip_vertically_on_load(false);
 	ourShader = new Shader("Resources/Shaders/model_loading.vert", "Resources/Shaders/model_loading.frag"); // you can name your shader files however you like
 	//ourShader = new Shader("Resources/Shaders/simple.vert", "Resources/Shaders/simple.frag"); // you can name your shader files however you like
 	
@@ -43,8 +44,10 @@ bool ModuleScene::Start()
 	m_ModelLoader = new ModelLoader(App->componentsManager);
 	//m_ModelLoader->LoadModelFrom_aiScene("Resources/Meshes/omozra.fbx", this->root);
 	//m_ModelLoader->LoadModelFrom_aiScene("Resources/Meshes/BakerHouse.fbx", this->root);
-	m_ModelLoader->LoadModelFrom_aiScene("Resources/street/street2.fbx", this->root);
-
+	//m_ModelLoader->LoadModelFrom_aiScene("Resources/street/street2.fbx", this->root);
+	bool e = PHYSFS_exists("warrior.fbx");
+	
+	CreateGameObject("Assets/street/street2.fbx", "street2");
 	debug_draw = false;
 
 	return ret;
@@ -67,8 +70,14 @@ bool ModuleScene::CleanUp()
 	return true;
 }
 
-GameObject* ModuleScene::CreateGameObject()
+GameObject* ModuleScene::CreateGameObject(string const& path, string name)
 {
+	//name = name.substr(name.find_last_of("/\\") + 1);
+	//GameObject* go = new GameObject(name);
+	//go->SetParentAndChild(this->root);
+	//ComponentTransform* trans = new ComponentTransform();
+	//go->AssignComponent(trans);
+	m_ModelLoader->LoadModelFrom_aiScene(path, this->root);
 	return nullptr;
 }
 
@@ -94,7 +103,6 @@ update_status ModuleScene::Update(float dt)
 	glm::mat4 view = App->camera->currentCamera->GetViewMatrix();
 	ourShader->setMat4("view", view);
 
-	
 	// note that we're translating the scene in the reverse direction of where we want to move
 	//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
@@ -124,7 +132,7 @@ update_status ModuleScene::PostUpdate(float dt)
 	//glBindTexture(GL_TEXTURE_2D, texture2);
 	ourShader->use();
 	//App->componentsManager->DrawGameObject(*ourShader, this->root);
-	App->componentsManager->DrawGameObject(*ourShader, this->root);
+	App->componentsManager->DrawGameObject(*ourShader, this->root, this->root->GetTransform()->GetLocal());
 	//m_ModelLoader->Draw(*ourShader);
 	//ourShader->use();
 	/*glBindVertexArray(VAO);
