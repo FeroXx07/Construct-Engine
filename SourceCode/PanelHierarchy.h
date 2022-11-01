@@ -54,9 +54,10 @@ inline void PanelHierarchy::DrawGameObjNode(GameObject* node, ImGuiTreeNodeFlags
 {
     // Flags for selected nodes
     ImGuiTreeNodeFlags node_flags = flags;
+    node_flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
     if (node->gui_IsSelected)
         node_flags |= ImGuiTreeNodeFlags_Selected;
-
+    
     // Change state if clicked
     if (ImGui::TreeNodeEx(node->m_Name.c_str(), node_flags))
     {
@@ -84,29 +85,40 @@ inline void PanelHierarchy::DrawGameObjNode(GameObject* node, ImGuiTreeNodeFlags
             {
                 string idS = (const char*)data->Data;
                 int idI = std::stoi(idS);
-                for (auto chl : this->m_Scene->root->m_Children)
+                GameObject* chl = this->m_Scene->root->FindById(idI);
+                if (chl != nullptr)
                 {
-                    if (chl->id == idI)
-                    {
-                        // Source
-                        chl->SetParent(node);
-                        node->SetChild(chl);
-                        glm::mat4 inverse = glm::inverse(node->GetTransform()->GetWorld());
-                        glm::mat4 mat = chl->GetTransform()->GetLocal();
-                        inverse *= mat;
-                        chl->GetTransform()->SetLocalMatrix(inverse);
-                    }
+                    // Source
+                    chl->SetParent(node);
+                    node->SetChild(chl);
+                    glm::mat4 inverse = glm::inverse(node->GetTransform()->GetWorld());
+                    glm::mat4 mat = chl->GetTransform()->GetLocal();
+                    inverse *= mat;
+                    chl->GetTransform()->SetLocalMatrix(inverse);
                 }
+                //for (auto chl : this->m_Scene->root->m_Children)
+                //{
+                //    if (chl->id == idI)
+                //    {
+                //        // Source
+                //        chl->SetParent(node);
+                //        node->SetChild(chl);
+                //        glm::mat4 inverse = glm::inverse(node->GetTransform()->GetWorld());
+                //        glm::mat4 mat = chl->GetTransform()->GetLocal();
+                //        inverse *= mat;
+                //        chl->GetTransform()->SetLocalMatrix(inverse);
+                //    }
+                //}
             }
            
             ImGui::EndDragDropTarget();
         }
-        ImGui::TreePop();
+
         for (auto children : node->m_Children)
         {
             DrawGameObjNode(children, flags);
         }
-        
+        ImGui::TreePop();
         
     }
     

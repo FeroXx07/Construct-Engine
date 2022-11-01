@@ -21,6 +21,7 @@ public:
 
 	//	Finds all components of given type in the whole	scene (parent and children)
 	vector<Component*> FindAllComponentsOfType(ComponentType type);
+	GameObject* FindById(int id);
 
 	void SetParent(GameObject* parent);
 	void SetChild(GameObject* child);

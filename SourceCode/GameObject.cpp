@@ -73,6 +73,19 @@ vector<Component*> GameObject::FindAllComponentsOfType(ComponentType type)
 	return res;
 }
 
+GameObject* GameObject::FindById(int id)
+{
+	for (auto chl : this->m_Children)
+	{
+		if (chl->id == id)
+		{
+			return chl;
+		}
+		chl->FindById(id);
+	}
+	return nullptr;
+}
+
 void GameObject::SetParent(GameObject* parent)
 {
 	if (m_Parent != nullptr)

@@ -14,7 +14,7 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 
 	Position = vec3(0.0f, 0.0f, 0.0f);
 	Reference = vec3(0.0f, 0.0f, 0.0f);*/
-	currentCamera = new Camera(glm::vec3(-2.0f, 30.0f, 60.0f));
+	currentCamera = new Camera(glm::vec3(0.0f, 0.0f, 10.0f));
 	cameras.push_back(currentCamera);
 }
 

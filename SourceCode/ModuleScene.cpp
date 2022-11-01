@@ -46,9 +46,10 @@ bool ModuleScene::Start()
 	//m_ModelLoader->LoadModelFrom_aiScene("Resources/Meshes/BakerHouse.fbx", this->root);
 	//m_ModelLoader->LoadModelFrom_aiScene("Resources/street/street2.fbx", this->root);;
 	
-	GameObject* house = CreateGameObject("Assets/BakerHouse.fbx", "BakerHouse");
-	ComponentTransform* trans = house->GetTransform();
-	trans->SetScale(trans->Scaling()*0.1f);
+	//CreateGameObject("Assets/BakerHouse.fbx", "BakerHouse");
+	CreateGameObject("Assets/BakerHouse.fbx", "BakerHouse");
+	//ComponentTransform* trans = house->GetTransform();
+	//trans->SetScale(trans->Scaling()*0.1f);
 	debug_draw = false;
 
 	return ret;
@@ -75,9 +76,9 @@ GameObject* ModuleScene::CreateGameObject(string const& path, string name)
 	//go->SetParentAndChild(this->root);
 	//ComponentTransform* trans = new ComponentTransform();
 	//go->AssignComponent(trans);
-	GameObject* go = CreateEmptyGameObject(name);
-	m_ModelLoader->LoadModelFrom_aiScene(path, go);
-	return go;
+	//GameObject* go = CreateEmptyGameObject(name);
+	m_ModelLoader->LoadModelFrom_aiScene(path, this->root);
+	return nullptr;
 }
 
 GameObject* ModuleScene::CreateEmptyGameObject(string name)
