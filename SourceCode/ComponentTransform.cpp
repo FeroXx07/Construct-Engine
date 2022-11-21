@@ -175,7 +175,7 @@ const glm::vec3 ComponentTransform::GetRotationEuler()
 	return eulerL;
 }
 
-const glm::vec3 ComponentTransform::Scaling()
+const glm::vec3 ComponentTransform::GetScaling()
 {
 	return m_Scaling;
 }

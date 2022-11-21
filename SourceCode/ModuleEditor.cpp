@@ -78,6 +78,7 @@ bool ModuleEditor::Start()
 	
 	PHYSFS_mount("Licenses", "/", 1);
 	PHYSFS_File* fp;
+	
 	fp = PHYSFS_openRead("LICENSE.md");
 	if (fp)
 	{

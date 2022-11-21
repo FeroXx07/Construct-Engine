@@ -14,6 +14,7 @@ ModelLoader::ModelLoader(ModuleComponentSys* sys, bool gamma) : gammaCorrection(
     componentSystem = sys;
     meshesSize = 0;
     PHYSFS_mount("Assets", "/", 1);
+    PHYSFS_mount("Resources", "/", 1);
     checkerTexture = nullptr;
 
     // if texture hasn't been loaded already, load it
@@ -137,6 +138,10 @@ void ModelLoader::ProcessNode(aiNode* aiNode, const aiScene* aiScene, GameObject
         compMaterial->m_MaterialName = aiScene->mMaterials[mesh->mMaterialIndex]->GetName().C_Str();
       /*  meshesList.push_back(CreateMesh(mesh, aiScene));*/
         ++meshesSize;
+
+        // Save to Custom format
+        Save(compMesh->GetMesh(), compMesh->GetMesh()->name.c_str());
+        //Load(compMesh->GetMesh(), compMesh->GetMesh()->name.c_str());
     }
 
     if (child == nullptr)
@@ -286,33 +291,105 @@ void ModelLoader::GetTransformationFromNode(aiNode* node, ComponentTransform* tr
     trans->m_Translation = glm::vec3(translation.x, translation.y, translation.z);
     trans->m_Scaling = glm::vec3(scaling.x, scaling.y, scaling.z);
     trans->m_Rotation = glm::quat(rotation.w, rotation.x, rotation.y, rotation.z);
-
-    //if (IsDummyNode(*node))
-    //{
-    //    // As dummies will only have one child, selecting the next one to process is easy.
-    //    aiNode* dummy = node->mChildren[0];
-
-    //    aiVector3D dTranslation, dScaling;
-    //    aiQuaternion dRotation;
-
-    //    // Getting the Transform stored in the dummy node.
-    //    dummy->mTransformation.Decompose(dScaling, dRotation, dTranslation);
-
-    //    glm::vec3 dummyPosition = glm::vec3(dTranslation.x, dTranslation.y, dTranslation.z);
-    //    glm::vec3 dummyScaling = glm::vec3(dScaling.x, dScaling.y, dScaling.z);
-    //    glm::quat dummyRotation = glm::quat(dRotation.x, dRotation.y, dRotation.z, dRotation.w);
-
-    //    // Adding the dummy's Transform to the current one.
-    //    trans->m_Translation += dummyPosition;
-    //    trans->m_Rotation = trans->m_Rotation * dummyRotation;
-    //    trans->m_Scaling = { trans->m_Scaling.x * dummyScaling.x, trans->m_Scaling.y * dummyScaling.y, trans->m_Scaling.z * dummyScaling.z };
-    //}
 }
 
 bool ModelLoader::IsDummyNode(const aiNode& assimpNode)
 {
     // All dummy nodes contain the "_$AssimpFbx$_" string and only one child node.
     return (strstr(assimpNode.mName.C_Str(), "_$AssimpFbx$_") != nullptr && assimpNode.mNumChildren == 1);
+}
+
+void ModelLoader::Save(const Mesh* mesh, const char* filename)
+{
+    // Directory
+    string path = filename;
+    path += ".mesh";
+    string altpath = "Resources/Meshes/";
+    altpath += path;
+    std::ofstream file2;
+    file2.open(altpath, std::ios::in | std::ios::trunc | std::ios::binary);
+    if (file2.is_open())
+    {
+        uint num_Indices = mesh->indices.size();
+        uint num_Vertices = mesh->vertices.size();
+        uint num_Textures = mesh->textures.size();
+        uint num_TotalFaces = mesh->totalFaces;
+
+        // Header pre-data
+        long int sizeVertex = sizeof(Vertex);
+        uint vertices_Size_In_Bytes = num_Vertices * sizeof(Vertex); // Vertex position
+        uint indices_Size_In_Bytes = num_Indices * sizeof(GLuint); // Vertex position
+
+        // Header data
+        file2.write((char*)&vertices_Size_In_Bytes, sizeof(Vertex)); // Vertex position, we need size to reserve (malloc or resize for std::) later in load
+        file2.write((char*)&indices_Size_In_Bytes, sizeof(GLuint)); // Vertex position, we need size to reserve (malloc or resize for std::) later in load
+
+        // Body data
+        file2.write((char*)mesh->vertices.data(), vertices_Size_In_Bytes); // Vertex position, the REAL DATA!
+        file2.write((char*)mesh->indices.data(), indices_Size_In_Bytes); // Vertex position, the REAL DATA!
+        file2.close();
+    }
+}
+
+Mesh* ModelLoader::LoadFromCustomFormat(const char* filename, Mesh* compareMesh)
+{
+    // Directory
+    string path = "Resources/Meshes/";
+    path += filename;
+    path += ".mesh";
+
+    std::ifstream file;
+    file.open(path, std::ios::binary);
+    if (file)
+    {
+        vector<Vertex> vertices;
+        vector<GLuint> indices;
+        vector<Texture> textures;
+
+        uint vertices_Size_In_Bytes = 0;
+        uint indices_Size_In_Bytes = 0;
+
+        // Read all header data and resize the vector
+        file.read((char*)&vertices_Size_In_Bytes, sizeof(Vertex)); // Vertex position data in bytes, we need size to reserve (malloc or resize for std::)
+        file.read((char*)&indices_Size_In_Bytes, sizeof(GLuint)); // Vertex position data in bytes, we need size to reserve (malloc or resize for std::)
+       
+
+        int numVertices = vertices_Size_In_Bytes / sizeof(Vertex);
+        int numIndices = indices_Size_In_Bytes / sizeof(GLuint);
+        vertices.resize(numVertices);
+        indices.resize(numIndices);
+        bool everythingCorrect = true;
+        // Fill the vector with the boty data
+        for (int i = 0; i < numVertices; i++)
+        {
+            file.read((char*)&vertices[i].m_Position, sizeof(glm::vec3));
+            file.read((char*)&vertices[i].m_Normal, sizeof(glm::vec3));
+            file.read((char*)&vertices[i].m_TexCoords, sizeof(glm::vec2));
+            file.read((char*)&vertices[i].m_Tangent, sizeof(glm::vec3));
+            file.read((char*)&vertices[i].m_Bitangent, sizeof(glm::vec3));
+
+            //file.read((char*)&vertices[i].m_BoneIDs, sizeof(int));
+            //if (vertices[i].m_BoneIDs != mesh->vertices[i].m_BoneIDs)
+            //    everythingCorrect = false;
+
+            //file.read((char*)&vertices[i].m_Weights, sizeof(float));
+            //if (vertices[i].m_Weights != mesh->vertices[i].m_Weights)
+            //    everythingCorrect = false;
+            //
+        }
+        for (int i = 0; i < numIndices; i++)
+            file.read((char*)&indices[i], sizeof(GLuint));
+
+        if (everythingCorrect == false)
+            printf("Not equal!");
+
+        Mesh* mesh = new Mesh(vertices, indices, textures, filename);
+         /*mesh->vertices = vertices;
+        mesh->indices = indices;*/
+        file.close();
+        return mesh;
+    }
+    return nullptr;
 }
 
 GLuint LoadTextureFromFile(const char* path, const string& directory, uint& height_, uint& width_, uint& nComponents_, bool gamma)

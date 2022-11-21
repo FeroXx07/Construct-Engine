@@ -1,6 +1,6 @@
 #include "ComponentMaterial.h"
 
-ComponentMaterial::ComponentMaterial()
+ComponentMaterial::ComponentMaterial() : Component(ComponentType::MATERIAL)
 {
     m_Textures = nullptr;
 }

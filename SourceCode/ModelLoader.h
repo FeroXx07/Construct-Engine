@@ -57,6 +57,11 @@ private:
 
     void GetTransformationFromNode(aiNode* aiNode, ComponentTransform* trans);
     bool IsDummyNode(const aiNode& assimpNode);
+
+public:
+    // Save And Load mesh from custom format
+    void Save(const Mesh* mesh, const char* filename);
+    Mesh* LoadFromCustomFormat(const char* filename, Mesh* compareMesh = nullptr);
 };
 
 inline glm::mat4 aiMatrix4x4ToGlm(const aiMatrix4x4* from)

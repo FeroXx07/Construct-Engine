@@ -35,7 +35,7 @@ public:
 	const glm::vec3 GetTranslate();
 	const glm::quat GetRotationQuat();
 	const glm::vec3 GetRotationEuler();
-	const glm::vec3 Scaling();
+	const glm::vec3 GetScaling();
 	const glm::mat4x4 GetLocal();
 	const glm::mat4x4 GetWorld();
 

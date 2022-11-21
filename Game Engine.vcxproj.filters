@@ -308,6 +308,7 @@
     <ClInclude Include="SourceCode\ComponentMaterial.h">
       <Filter>GameObjects And Components\Components</Filter>
     </ClInclude>
+    <ClInclude Include="SourceCode\Json.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SourceCode\MathGeoLib\Geometry\TriangleMesh_IntersectRay_CPP.inl">

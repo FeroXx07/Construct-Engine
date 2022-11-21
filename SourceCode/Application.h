@@ -9,19 +9,11 @@
 #include "ModuleCamera3D.h"
 #include "ModuleEditor.h"
 #include "ModuleComponentSys.h"
-
 #include <string>
 #include <list>
-#include <nlohmann/json.hpp>
 #include <fstream>
 #include <iostream>
 #include "physfs/physfs.h"
-// for convenience
-using json = nlohmann::json;
-// Return variable name as str
-#define getName(var)  #var
-// Return variable name as str and save it in another string
-#define getNameS(var, str)  sprintf(str, "%s", #var) 
 
 class Application
 {

@@ -240,6 +240,7 @@
     <ClInclude Include="SourceCode\ComponentTransform.h" />
     <ClInclude Include="SourceCode\GameObject.h" />
     <ClInclude Include="SourceCode\Globals.h" />
+    <ClInclude Include="SourceCode\Json.h" />
     <ClInclude Include="SourceCode\Light.h" />
     <ClInclude Include="SourceCode\Mesh.h" />
     <ClInclude Include="SourceCode\ModelLoader.h" />

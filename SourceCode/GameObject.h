@@ -7,7 +7,7 @@
 
 #include <string>
 #include <vector>
-
+#include "Json.h"
 using namespace std;
 class GameObject
 {
@@ -26,6 +26,7 @@ public:
 	void SetParent(GameObject* parent);
 	void SetChild(GameObject* child);
 	GameObject* GetParent();
+	GameObject* GetParentConst() const;
 
 	void AddChild(GameObject* newChild);
 	void RemoveChild(GameObject* child);
@@ -53,12 +54,19 @@ public:
 	void AssignComponent(ComponentMesh* comp);
 	void AssignComponent(ComponentTransform* comp);
 	void AssignComponent(ComponentMaterial* comp);
+
 	ComponentMesh* GetMesh();
 	ComponentTransform* GetTransform();
 	ComponentMaterial* GetMaterial();
 
+	ComponentMesh* GetMeshConst() const;
+	ComponentTransform* GetTransformConst() const;
+	ComponentMaterial* GetMaterialConst() const;
+
 public:
 	bool gui_IsSelected = false;
+
+
 };
 
 #endif

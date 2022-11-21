@@ -291,6 +291,7 @@ void ModuleWindow::SaveJson()
 	
 	std::ofstream file("Settings/config.json");
 	file << jSettings;
+	file.close();
 }
 
 bool ModuleWindow::LoadJson()
@@ -311,6 +312,7 @@ bool ModuleWindow::LoadJson()
 		width = data[getName(width)];
 		height = data[getName(height)];
 		brightness = data[getName(brightness)];
+		f.close();
 	}
 
 	return ret;

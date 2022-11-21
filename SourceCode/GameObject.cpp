@@ -14,11 +14,16 @@ GameObject::GameObject(string name) :id(++s_id), m_Name(name), m_Parent(nullptr)
 
 GameObject::~GameObject()
 {
+	if (this->m_Parent != nullptr)
+	{
+		m_Parent->RemoveChild(this);
+	}
 	m_Parent = nullptr;
 
 	// Delete mesh component
 	if (m_ComponentMesh != nullptr)
 	{
+		delete m_ComponentMesh->GetMesh();
 		delete m_ComponentMesh;
 		m_ComponentMesh = nullptr;
 	}
@@ -75,6 +80,10 @@ vector<Component*> GameObject::FindAllComponentsOfType(ComponentType type)
 
 GameObject* GameObject::FindById(int id)
 {
+	if (this->id == id)
+	{
+		return this;
+	}
 	for (auto chl : this->m_Children)
 	{
 		if (chl->id == id)
@@ -101,6 +110,11 @@ void GameObject::SetChild(GameObject* child)
 {
 	// Add himself as new child to the children list of the new parent
 	AddChild(child);
+}
+
+GameObject* GameObject::GetParentConst()const
+{
+	return m_Parent;
 }
 
 GameObject* GameObject::GetParent()
@@ -179,4 +193,31 @@ ComponentMaterial* GameObject::GetMaterial()
 	else
 		return nullptr;
 }
+
+ComponentMesh* GameObject::GetMeshConst() const
+{
+	if (m_HasComponentMesh)
+		return m_ComponentMesh;
+	else
+		return nullptr;
+}
+
+ComponentTransform* GameObject::GetTransformConst() const
+{
+	if (m_HasComponentTransform)
+		return m_ComponentTransform;
+	else
+		return nullptr;
+}
+
+ComponentMaterial* GameObject::GetMaterialConst() const
+{
+	if (m_HasComponentMaterial)
+		return m_ComponentMaterial;
+	else
+		return nullptr;
+}
+
+
+
 

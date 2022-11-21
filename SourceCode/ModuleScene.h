@@ -30,4 +30,10 @@ public:
 	ModelLoader* m_ModelLoader = nullptr;
 
 	glm::mat4 projection;
+
+	void SaveSceneJson();
+	void LoadSceneJson();
+	void DeleteScene();
+	void To_Json(json& j, const GameObject* go);
+	GameObject* From_Json(const json& j, const GameObject* goParent);
 };

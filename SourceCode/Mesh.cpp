@@ -7,6 +7,7 @@ Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture
     this->indices = indices;
     this->textures = textures;
     this->name = name;
+
     totalFaces = 0;
     LOG("New <%s> created", name);
     LOG("<%s> with %d vertices", name, vertices.size());
@@ -168,12 +169,12 @@ void Mesh::GenerateBuffers()
     // vertex bitangent
     glEnableVertexAttribArray(4);
     glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, m_Bitangent));
-    // ids
-    glEnableVertexAttribArray(5);
-    glVertexAttribIPointer(5, 4, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, m_BoneIDs));
+    //// ids
+    //glEnableVertexAttribArray(5);
+    //glVertexAttribIPointer(5, 4, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, m_BoneIDs));
 
-    // weights
-    glEnableVertexAttribArray(6);
-    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, m_Weights));
-    glBindVertexArray(0);
+    //// weights
+    //glEnableVertexAttribArray(6);
+    //glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, m_Weights));
+    //glBindVertexArray(0);
 }

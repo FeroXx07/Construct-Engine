@@ -51,7 +51,7 @@ bool ModuleScene::Start()
 	//ComponentTransform* trans = house->GetTransform();
 	//trans->SetScale(trans->Scaling()*0.1f);
 	debug_draw = false;
-
+	SaveSceneJson();
 	return ret;
 }
 
@@ -95,6 +95,141 @@ GameObject* ModuleScene::CreateEmptyGameObject(string name)
 	return go;
 }
 
+void ModuleScene::SaveSceneJson()
+{
+	// Create null value
+	json jSonGameObjects;
+
+	To_Json(jSonGameObjects, root);
+
+	// default serialization 
+	auto s1 = jSonGameObjects.dump();
+	//std::cout << jSettings << std::endl;
+
+	std::ofstream file("Resources/Scenes/scene.json");
+	if (file.is_open())
+	{
+		file << jSonGameObjects;
+		file.close();
+	}
+}
+
+void ModuleScene::LoadSceneJson()
+{
+	std::ifstream file("Resources/Scenes/scene.json");
+	if (file.is_open())
+	{
+		json data = json::parse(file);
+		for (auto el : data["Game Objects"])
+		{
+			From_Json(el, root);
+		}
+		file.close();
+	}
+	// Load all children from root node
+}
+
+void ModuleScene::DeleteScene()
+{
+	for (auto go : root->m_Children)
+	{
+		delete go;
+	}
+}
+
+void ModuleScene::To_Json(json& json_, const GameObject* go_)
+{
+	// add via member function
+	string id = std::to_string(go_->id);
+	// Id
+	json_["Game Objects"][id]["UID"] = go_->id;
+	// Parent id
+	if (go_->GetParentConst() != nullptr)
+		json_["Game Objects"][id]["ParentUID"] = go_->GetParentConst()->id;
+	// Name
+	json_["Game Objects"][id] += {"Name", go_->m_Name.c_str()};
+	//Transform
+	ComponentTransform* t = go_->GetTransformConst();
+	json_["Game Objects"][id]["Translation"] = {t->GetTranslate().x, t->GetTranslate().y, t->GetTranslate().z};
+	json_["Game Objects"][id]["Scale"] = {t->GetScaling().x, t->GetScaling().y, t->GetScaling().z};
+	json_["Game Objects"][id]["Rotation"] = {t->GetRotationQuat().w, t->GetRotationQuat().x, t->GetRotationQuat().y, t->GetRotationQuat().z};
+	
+	//Mesh
+	if (go_->m_HasComponentMesh)
+	{
+		json_["Game Objects"][id]["Mesh"] = go_->GetMeshConst()->GetMesh()->name;
+	}
+	if (go_->m_HasComponentMaterial)
+	{
+		ComponentMaterial* m = go_->GetMaterialConst();
+		int total = m->m_Textures->size();
+		json_["Game Objects"][id]["Material"] = m->m_MaterialName;
+		json_["Game Objects"][id]["TotalTextures"] = total;
+		for (int i = 0; i < 1; i++)
+		{
+			string tex = "texture";
+			tex += std::to_string(i);
+			json_["Game Objects"][id][tex] = m->m_Textures->at(i).path;
+		}
+	}
+
+	for (auto children : go_->m_Children)
+	{
+		To_Json(json_, children);
+	}
+}
+
+GameObject* ModuleScene::From_Json(const json& j, const GameObject* goParent)
+{
+	string name = j["Name"];
+	string rootnode = "RootNode";
+
+	if (name != rootnode)
+	{
+		// New gameobject
+		GameObject* newGo = new GameObject(name);
+		newGo->id = j["UID"];
+		uint parentId = j["ParentUID"];
+		newGo->SetParent(root->FindById(parentId));
+		newGo->GetParent()->SetChild(newGo);
+		// New transform
+		glm::vec3 Translation, Scaling;
+		glm::quat Rotation;
+		std::vector<float>l = j["Translation"];
+		Translation = vec3(l.at(0), l.at(1), l.at(2));
+		std::vector<float>l2 = j["Scale"];
+		Scaling = vec3(l2.at(0), l2.at(1), l2.at(2));
+		std::vector<float>l3 = j["Rotation"];
+		Rotation = quat(l3.at(0), l3.at(1), l3.at(2), l3.at(3));
+		ComponentTransform* newTransform = new ComponentTransform(Translation, Scaling, Rotation);
+		newGo->AssignComponent(newTransform);
+
+		// New mesh
+		if (j["Mesh"].is_null() == false)
+		{
+			Mesh* mesh = m_ModelLoader->LoadFromCustomFormat(name.c_str());
+			ComponentMesh* newMeshComp = new ComponentMesh(mesh);
+			newGo->AssignComponent(newMeshComp);
+		}
+
+		if (j["Material"].is_null() == false)
+		{
+			ComponentMaterial* newMatComp = new ComponentMaterial();
+			//m_ModelLoader->LoadTextureIntoGameObject()
+			std::vector<Texture> tex;
+			tex.push_back(*m_ModelLoader->checkerTexture);
+			newMatComp->PassTextures(tex);
+			newMatComp->m_MaterialName = j["Material"];
+			newGo->AssignComponent(newMatComp);
+		}
+
+		return newGo;
+	}
+	
+	return root;
+}
+
+
 // Update
 update_status ModuleScene::Update(float dt)
 {
@@ -123,7 +258,13 @@ update_status ModuleScene::Update(float dt)
 
 	//glm::mat4x4 trans = projection * view * model;
 	//ourShader->setMat4("trans", trans);
-	
+
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_UP)
+		LoadSceneJson();
+	if (App->input->GetKey(SDL_SCANCODE_K) == KEY_UP)
+		SaveSceneJson();
+	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_UP)
+		DeleteScene();
 	return UPDATE_CONTINUE;
 }
 
