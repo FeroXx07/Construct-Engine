@@ -4,6 +4,7 @@
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
 #include "ComponentMaterial.h"
+#include "ComponentCamera.h"
 
 #include <string>
 #include <vector>
@@ -42,6 +43,7 @@ protected:
 	ComponentMesh* m_ComponentMesh;
 	ComponentTransform* m_ComponentTransform;
 	ComponentMaterial* m_ComponentMaterial;
+	ComponentCamera* m_ComponentCamera;
 	static std::atomic<int> s_id;
 
 public:
@@ -49,19 +51,23 @@ public:
 	bool m_HasComponentMesh = false;
 	bool m_HasComponentTransform = false;
 	bool m_HasComponentMaterial= false;
+	bool m_HasComponentCamera= false;
 
 	// Components assignators
 	void AssignComponent(ComponentMesh* comp);
 	void AssignComponent(ComponentTransform* comp);
 	void AssignComponent(ComponentMaterial* comp);
+	void AssignComponent(ComponentCamera* comp);
 
 	ComponentMesh* GetMesh();
 	ComponentTransform* GetTransform();
 	ComponentMaterial* GetMaterial();
+	ComponentCamera* GetCamera();
 
 	ComponentMesh* GetMeshConst() const;
 	ComponentTransform* GetTransformConst() const;
 	ComponentMaterial* GetMaterialConst() const;
+	ComponentCamera* GetCameraConst() const;
 
 public:
 	bool gui_IsSelected = false;

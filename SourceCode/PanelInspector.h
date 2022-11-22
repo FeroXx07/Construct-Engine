@@ -45,6 +45,9 @@ inline void PanelInspector::Update()
 	
 		if (m_SelectedNode->m_HasComponentMaterial)
 			m_SelectedNode->GetMaterial()->OnEditor();
+
+		if (m_SelectedNode->m_HasComponentCamera)
+			m_SelectedNode->GetCamera()->OnEditor();
 	}
 	else
 	{

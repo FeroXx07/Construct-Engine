@@ -1,7 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-#include "Camera.h"
+#include "ComponentCamera.h"
 
 class ModuleCamera3D : public Module
 {
@@ -13,8 +13,8 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
-	std::vector<Camera*> cameras;
-	Camera* currentCamera = nullptr;
+	std::vector<ComponentCamera*> cameras;
+	ComponentCamera* editorCamera = nullptr;
 	float lastX = 0;
 	float lastY = 0;
 	float lastScroll = 0;

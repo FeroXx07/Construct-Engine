@@ -2,12 +2,12 @@
 
 std::atomic<int> GameObject::s_id;
 
-GameObject::GameObject() : id(++s_id), m_Parent(nullptr), m_ComponentMesh(nullptr), m_ComponentTransform(nullptr), m_ComponentMaterial(nullptr), m_HasComponentMesh(0), m_HasComponentTransform(0)
+GameObject::GameObject() : id(++s_id), m_Parent(nullptr), m_ComponentMesh(nullptr), m_ComponentTransform(nullptr), m_ComponentMaterial(nullptr), m_HasComponentMesh(0), m_HasComponentTransform(0), m_HasComponentMaterial(0), m_ComponentCamera(0)
 {
 	m_Name = "No Name!!";
 }
 
-GameObject::GameObject(string name) :id(++s_id), m_Name(name), m_Parent(nullptr), m_ComponentMesh(nullptr), m_ComponentTransform(nullptr), m_ComponentMaterial(nullptr), m_HasComponentMesh(0), m_HasComponentTransform(0)
+GameObject::GameObject(string name) :id(++s_id), m_Name(name), m_Parent(nullptr), m_ComponentMesh(nullptr), m_ComponentTransform(nullptr), m_ComponentMaterial(nullptr), m_HasComponentMesh(0), m_HasComponentTransform(0), m_HasComponentMaterial(0), m_ComponentCamera(0)
 {
 }
 
@@ -41,6 +41,13 @@ GameObject::~GameObject()
 		delete m_ComponentMaterial;
 		m_ComponentMaterial = nullptr;
 	}
+
+	// Delete material component
+	if (m_ComponentCamera != nullptr)
+	{
+		delete m_ComponentCamera;
+		m_ComponentCamera = nullptr;
+	}
 }
 
 Component* GameObject::GetComponent(ComponentType type)
@@ -62,6 +69,11 @@ Component* GameObject::GetComponent(ComponentType type)
 		if (m_HasComponentMaterial) { return m_ComponentMaterial; };
 	}
 		break;
+	case ComponentType::CAMERA:
+	{
+		if (m_HasComponentMaterial) { return m_ComponentMaterial; };
+	}
+	break;
 	default:
 		break;
 	}
@@ -170,6 +182,13 @@ void GameObject::AssignComponent(ComponentMaterial* comp)
 	comp->SetGameObject(*this);
 }
 
+void GameObject::AssignComponent(ComponentCamera* comp)
+{
+	m_ComponentCamera = comp;
+	m_HasComponentCamera = true;
+	comp->SetGameObject(*this);
+}
+
 ComponentMesh* GameObject::GetMesh()
 {
 	if (m_HasComponentMesh)
@@ -190,6 +209,14 @@ ComponentMaterial* GameObject::GetMaterial()
 {
 	if (m_HasComponentMaterial)
 		return m_ComponentMaterial;
+	else
+		return nullptr;
+}
+
+ComponentCamera* GameObject::GetCamera()
+{
+	if (m_HasComponentCamera)
+		return m_ComponentCamera;
 	else
 		return nullptr;
 }
@@ -218,6 +245,10 @@ ComponentMaterial* GameObject::GetMaterialConst() const
 		return nullptr;
 }
 
-
-
-
+ComponentCamera* GameObject::GetCameraConst() const
+{
+	if (m_HasComponentCamera)
+		return m_ComponentCamera;
+	else
+		return nullptr;
+}

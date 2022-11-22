@@ -12,6 +12,7 @@
 #include "stb_image.h"
 
 #include "ComponentMesh.h"
+#include "ComponentCamera.h"
 ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 }
@@ -33,7 +34,7 @@ bool ModuleScene::Start()
 	root = new GameObject("RootNode");
 	ComponentTransform* rootTrans = new ComponentTransform();
 	root->AssignComponent(rootTrans);
-
+	CreateCamera("Main Camera");
 	// tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
 	stbi_set_flip_vertically_on_load(false);
 	ourShader = new Shader("Resources/Shaders/model_loading.vert", "Resources/Shaders/model_loading.frag"); // you can name your shader files however you like
@@ -93,6 +94,32 @@ GameObject* ModuleScene::CreateEmptyGameObject(string name)
 	transform->SetWorldMatrix(this->root->GetTransform()->GetWorld()*glm::mat4(1.0f));
 	go->AssignComponent(transform);
 	return go;
+}
+
+GameObject* ModuleScene::CreateCamera(string name, GameObject* destinationGO)
+{
+	GameObject* cameraGO = CreateEmptyGameObject(name);
+	if (destinationGO != nullptr)
+	{
+		string tmp = "Camera_";
+		tmp += destinationGO->m_Name;
+		ComponentCamera* cameraComp = new ComponentCamera(tmp.c_str());
+		App->camera->cameras.push_back(cameraComp);
+		destinationGO->AssignComponent(cameraComp);
+		return destinationGO;
+	}
+	else
+	{
+		int totalCameras = App->camera->cameras.size();
+		string tmp = "Camera_";
+		tmp += std::to_string(totalCameras);
+		ComponentCamera* cameraComp = new ComponentCamera(tmp.c_str());
+		App->camera->cameras.push_back(cameraComp);
+		cameraGO->AssignComponent(cameraComp);
+		return cameraGO;
+	}
+	
+	return cameraGO;
 }
 
 void ModuleScene::SaveSceneJson()
@@ -232,32 +259,17 @@ GameObject* ModuleScene::From_Json(const json& j, const GameObject* goParent)
 
 // Update
 update_status ModuleScene::Update(float dt)
-{
-
-	Scale += 0.2f;
-	
+{	
 	int height, width;
 	App->window->GetScreenSize(width, height);
 
-	/*glm::mat4 model = glm::mat4(1.0f);
-	model = glm::rotate(model, glm::radians(Scale), glm::vec3(0.0f, 1.0f, 0.0f));*/
-	
-	//model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
-	//ourShader->setMat4("model", model);
-
 	float nearPlane = 0.1f;
 	float farPlane = 100.0f * 1.5f;
-	projection = glm::perspective(glm::radians(App->camera->currentCamera->Zoom), (float)width / (float)height, nearPlane, farPlane);
+	projection = glm::perspective(glm::radians(App->camera->editorCamera->camera->Zoom), (float)width / (float)height, nearPlane, farPlane);
 	ourShader->setMat4("projection", projection);
 
-	glm::mat4 view = App->camera->currentCamera->GetViewMatrix();
+	glm::mat4 view = App->camera->editorCamera->camera->GetViewMatrix();
 	ourShader->setMat4("view", view);
-
-	// note that we're translating the scene in the reverse direction of where we want to move
-	//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-
-	//glm::mat4x4 trans = projection * view * model;
-	//ourShader->setMat4("trans", trans);
 
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_UP)
 		LoadSceneJson();

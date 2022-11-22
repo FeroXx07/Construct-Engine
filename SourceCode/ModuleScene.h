@@ -21,6 +21,7 @@ public:
 
 	GameObject* CreateGameObject(string const& path, string name);
 	GameObject* CreateEmptyGameObject(string name);
+	GameObject* CreateCamera(string name, GameObject* destinationGO = nullptr);
 	
 	GameObject* root = nullptr;
 

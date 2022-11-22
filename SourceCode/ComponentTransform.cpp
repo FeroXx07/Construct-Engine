@@ -1,7 +1,7 @@
 #include "ComponentTransform.h"
 #include "GameObject.h"
 
-ComponentTransform::ComponentTransform(const glm::vec3& translation, const glm::vec3& scaling, const glm::quat& rotation) : m_Translation(translation), m_Scaling(scaling), m_Rotation(rotation)
+ComponentTransform::ComponentTransform(const glm::vec3& translation, const glm::vec3& scaling, const glm::quat& rotation) :Component(ComponentType::TRANSFORM), m_Translation(translation), m_Scaling(scaling), m_Rotation(rotation)
 {
 	m_LocalMat = glm::mat4x4(1.0f);
 	m_WorldMat = glm::mat4x4(1.0f);

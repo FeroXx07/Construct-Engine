@@ -71,7 +71,7 @@ void ModuleComponentSys::DrawNormals(ComponentMesh* mesh, ComponentTransform* tr
 {
 	if (mesh->m_DisplayNormals)
 	{
-		glm::mat4 view = App->camera->currentCamera->GetViewMatrix();
+		glm::mat4 view = App->camera->editorCamera->camera->GetViewMatrix();
 		glMatrixMode(GL_PROJECTION);
 		glLoadMatrixf((const GLfloat*)&App->scene->projection[0]);
 		glMatrixMode(GL_MODELVIEW);

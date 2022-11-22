@@ -270,6 +270,9 @@ void ModuleEditor::MenuBarUpdate()
 			if (ImGui::MenuItem("Creat Empty"))
 				App->scene->CreateEmptyGameObject("Empty GameObject");
 
+			if (ImGui::MenuItem("Creat Camer"))
+				App->scene->CreateCamera("");
+
 			if (ImGui::MenuItem("Creat Cube"))
 				App->scene->CreateGameObject("Resources/Meshes/Cube.fbx", "Cube");
 

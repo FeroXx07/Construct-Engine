@@ -14,8 +14,8 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 
 	Position = vec3(0.0f, 0.0f, 0.0f);
 	Reference = vec3(0.0f, 0.0f, 0.0f);*/
-	currentCamera = new Camera(glm::vec3(0.0f, 0.0f, 10.0f));
-	cameras.push_back(currentCamera);
+	editorCamera = new ComponentCamera("editorCamera",glm::vec3(0.0f, 0.0f, 10.0f));
+	cameras.push_back(editorCamera);
 }
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -40,7 +40,7 @@ bool ModuleCamera3D::CleanUp()
 {
 	LOG("Cleaning camera");
 
-	for (std::vector<Camera*>::iterator i = cameras.begin(); i != cameras.end(); ++i)
+	for (std::vector<ComponentCamera*>::iterator i = cameras.begin(); i != cameras.end(); ++i)
 	{
 		delete* i;
 		*i = nullptr;
@@ -58,7 +58,10 @@ update_status ModuleCamera3D::Update(float dt)
 	// Now we can make this movememnt frame rate independant!
 
 	//vec3 newPos(0,0,0);
-
+	for (auto el : cameras)
+	{
+		el->Update();
+	}
 	float speed = 3.0f * dt;
 	if(App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
 		speed = 8.0f * dt;
@@ -66,10 +69,10 @@ update_status ModuleCamera3D::Update(float dt)
 	//if(App->input->GetKey(SDL_SCANCODE_I) == KEY_REPEAT) newPos.z += 10*speed;
 	//if(App->input->GetKey(SDL_SCANCODE_K) == KEY_REPEAT) newPos.z -= 10*speed;
 
-	if(App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) currentCamera->ProcessKeyboard(Camera_Movement::FORWARD, speed);
-	if(App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) currentCamera->ProcessKeyboard(Camera_Movement::BACKWARD, speed);
-	if(App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)  currentCamera->ProcessKeyboard(Camera_Movement::LEFT, speed);
-	if(App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) currentCamera->ProcessKeyboard(Camera_Movement::RIGHT, speed);
+	if(App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) editorCamera->camera->ProcessKeyboard(Camera_Movement::FORWARD, speed);
+	if(App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) editorCamera->camera->ProcessKeyboard(Camera_Movement::BACKWARD, speed);
+	if(App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)  editorCamera->camera->ProcessKeyboard(Camera_Movement::LEFT, speed);
+	if(App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) editorCamera->camera->ProcessKeyboard(Camera_Movement::RIGHT, speed);
 
 	//Position += newPos;
 	//Reference += newPos;
@@ -81,121 +84,21 @@ update_status ModuleCamera3D::Update(float dt)
 		int xposIn = App->input->GetMouseXMotion();
 		int yposIn = -App->input->GetMouseYMotion();
 		
-		currentCamera->ProcessMouseMovement(xposIn, yposIn);
+		editorCamera->camera->ProcessMouseMovement(xposIn, yposIn);
 	}
 
 	int zScrollIn = App->input->GetMouseZ();
 	//LOG("Mouse scroll is %d", zScrollIn);
 	if (zScrollIn != 0)
 	{
-		currentCamera->ProcessMouseScroll((float)zScrollIn);
+		editorCamera->camera->ProcessMouseScroll((float)zScrollIn);
 	}
 	
 	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_UP)
 	{
 		if (App->uiManager->m_CurrentSelectedNode != nullptr)
-			currentCamera->LookAt(App->uiManager->m_CurrentSelectedNode->GetTransform()->GetTranslate());
+			editorCamera->camera->LookAt(App->uiManager->m_CurrentSelectedNode->GetTransform()->GetTranslate());
 	}
-	//if(App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
-	//{
-	//	int dx = -App->input->GetMouseXMotion();
-	//	int dy = -App->input->GetMouseYMotion();
-	//	/*LOG("dx is %d", dx);
-	//	LOG("dy is %d", dy);*/
-
-	//	float Sensitivity = 0.25f;
-
-	//	Position -= Reference;
-
-	//	if(dx != 0)
-	//	{
-	//		float DeltaX = (float)dx * Sensitivity;
-
-	//		X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-	//		Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-	//		Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-	//	}
-
-	//	if(dy != 0)
-	//	{
-	//		float DeltaY = (float)dy * Sensitivity;
-
-	//		Y = rotate(Y, DeltaY, X);
-	//		Z = rotate(Z, DeltaY, X);
-
-	//		if(Y.y < 0.0f)
-	//		{
-	//			Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-	//			Y = cross(Z, X);
-	//		}
-	//	}
-
-	//	Position = Reference + Z * length(Position);
-	//}
-
-
-	//// Recalculate matrix -------------
-	//CalculateViewMatrix();
 
 	return UPDATE_CONTINUE;
 }
-
-//// -----------------------------------------------------------------
-//void ModuleCamera3D::Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference)
-//{
-//	this->Position = Position;
-//	this->Reference = Reference;
-//
-//	Z = normalize(Position - Reference);
-//	X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
-//	Y = cross(Z, X);
-//
-//	if(!RotateAroundReference)
-//	{
-//		this->Reference = this->Position;
-//		this->Position += Z * 0.05f;
-//	}
-//
-//	CalculateViewMatrix();
-//}
-//
-//// -----------------------------------------------------------------
-//void ModuleCamera3D::LookAt( const vec3 &Spot)
-//{
-//	Reference = Spot;
-//
-//	Z = normalize(Position - Reference);
-//	X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
-//	Y = cross(Z, X);
-//
-//	CalculateViewMatrix();
-//}
-//
-//
-//// -----------------------------------------------------------------
-//void ModuleCamera3D::Move(const vec3 &Movement)
-//{
-//	Position += Movement;
-//	Reference += Movement;
-//
-//	CalculateViewMatrix();
-//}
-//
-//// -----------------------------------------------------------------
-//float* ModuleCamera3D::GetViewMatrix()
-//{
-//	return &ViewMatrix;
-//}
-//
-//void ModuleCamera3D::ModifyViewMatrix(float matrix[9])
-//{
-//	mat4x4 modMatrix = {matrix[0], matrix[1], matrix[2], 0.0f, matrix[3], matrix[4], matrix[5], 0.0f, matrix[6], matrix[7], matrix[8], 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
-//	ViewMatrix = (modMatrix * ViewMatrix);
-//}
-//
-//// -----------------------------------------------------------------
-//void ModuleCamera3D::CalculateViewMatrix()
-//{
-//	ViewMatrix = mat4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -dot(X, Position), -dot(Y, Position), -dot(Z, Position), 1.0f);
-//	ViewMatrixInverse = inverse(ViewMatrix);
-//}

@@ -10,10 +10,12 @@ Component::Component(ComponentType type_)
 
 Component::Component()
 {
+	
 }
 
 Component::~Component()
 {
+	m_GameObject = nullptr;
 }
 
 const GameObject& Component::GetGameObject() const
