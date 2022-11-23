@@ -26,31 +26,34 @@ bool ModuleScene::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 
-	ourShader = nullptr;
+	modelsShader = nullptr;
+	screenShader = nullptr;
 	m_ModelLoader = nullptr;
+
+	modelsShader = new Shader("Resources/Shaders/model_loading.vert", "Resources/Shaders/model_loading.frag"); // you can name your shader files however you like
+	screenShader = new Shader("Resources/Shaders/framebuffer_screen.vert", "Resources/Shaders/framebuffer_screen.frag"); // you can name your shader files however you like
+	screenShader->use();
+	screenShader->setInt("screenTexture", 0);
 
 	srand(_getpid());
 
 	root = new GameObject("RootNode");
 	ComponentTransform* rootTrans = new ComponentTransform();
 	root->AssignComponent(rootTrans);
-	CreateCamera("Main Camera");
+	GameObject* mainCamera = CreateCamera("Main Camera");
+	glm::vec3 posMainCamera = mainCamera->GetTransform()->GetTranslate();
+	posMainCamera.x += -5;
+	mainCamera->GetTransform()->SetTranslate(posMainCamera);
+	App->camera->editorCamera->GenerateBuffers(App->scene->screenShader);
+	//mainCamera->GetCamera()->camera->Yaw += 180.0f;// rotate the camera's yaw 180 degrees around
 	// tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
 	stbi_set_flip_vertically_on_load(false);
-	ourShader = new Shader("Resources/Shaders/model_loading.vert", "Resources/Shaders/model_loading.frag"); // you can name your shader files however you like
-	//ourShader = new Shader("Resources/Shaders/simple.vert", "Resources/Shaders/simple.frag"); // you can name your shader files however you like
 	
-	//ourModel = new Model("Resources/backpack/backpack.obj");
-	//ourModel = new Model("Resources/Meshes/BirdFountain.fbx");
+	
+
 	m_ModelLoader = new ModelLoader(App->componentsManager);
-	//m_ModelLoader->LoadModelFrom_aiScene("Resources/Meshes/omozra.fbx", this->root);
-	//m_ModelLoader->LoadModelFrom_aiScene("Resources/Meshes/BakerHouse.fbx", this->root);
-	//m_ModelLoader->LoadModelFrom_aiScene("Resources/street/street2.fbx", this->root);;
-	
-	//CreateGameObject("Assets/BakerHouse.fbx", "BakerHouse");
+
 	CreateGameObject("Assets/BakerHouse.fbx", "BakerHouse");
-	//ComponentTransform* trans = house->GetTransform();
-	//trans->SetScale(trans->Scaling()*0.1f);
 	debug_draw = false;
 	SaveSceneJson();
 	return ret;
@@ -61,8 +64,11 @@ bool ModuleScene::CleanUp()
 {
 	LOG("Unloading Intro scene");
 
-	if (ourShader != nullptr)
-		delete ourShader;
+	if (modelsShader != nullptr)
+		delete modelsShader;
+
+	if (screenShader != nullptr)
+		delete screenShader;
 
 	if (m_ModelLoader != nullptr)
 		delete m_ModelLoader;
@@ -104,6 +110,7 @@ GameObject* ModuleScene::CreateCamera(string name, GameObject* destinationGO)
 		string tmp = "Camera_";
 		tmp += destinationGO->m_Name;
 		ComponentCamera* cameraComp = new ComponentCamera(tmp.c_str());
+		cameraComp->GenerateBuffers(screenShader);
 		App->camera->cameras.push_back(cameraComp);
 		destinationGO->AssignComponent(cameraComp);
 		return destinationGO;
@@ -114,6 +121,7 @@ GameObject* ModuleScene::CreateCamera(string name, GameObject* destinationGO)
 		string tmp = "Camera_";
 		tmp += std::to_string(totalCameras);
 		ComponentCamera* cameraComp = new ComponentCamera(tmp.c_str());
+		cameraComp->GenerateBuffers(screenShader);
 		App->camera->cameras.push_back(cameraComp);
 		cameraGO->AssignComponent(cameraComp);
 		return cameraGO;
@@ -265,11 +273,8 @@ update_status ModuleScene::Update(float dt)
 
 	float nearPlane = 0.1f;
 	float farPlane = 100.0f * 1.5f;
-	projection = glm::perspective(glm::radians(App->camera->editorCamera->camera->Zoom), (float)width / (float)height, nearPlane, farPlane);
-	ourShader->setMat4("projection", projection);
-
-	glm::mat4 view = App->camera->editorCamera->camera->GetViewMatrix();
-	ourShader->setMat4("view", view);
+	projection = glm::perspective(glm::radians(App->camera->editorCamera->m_Camera->Zoom), (float)width / (float)height, nearPlane, farPlane);
+	modelsShader->setMat4("projection", projection);
 
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_UP)
 		LoadSceneJson();
@@ -291,26 +296,47 @@ update_status ModuleScene::PostUpdate(float dt)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
-	glClear(GL_COLOR_BUFFER_BIT);
+	//for (auto camera : App->camera->cameras)
+	//{
+	//	if (camera->fbo != 0)
+	//		continue;
+	//	glBindFramebuffer(GL_FRAMEBUFFER, camera->fbo); // If fbo=0 then default frame buffer, as the case for editorCamera.
+	//	// make sure we clear the framebuffer's content
+	//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//	glm::mat4 view = camera->camera->GetViewMatrix();
+	//	modelsShader->setMat4("view", view);
+	//	App->componentsManager->DrawGameObject(*modelsShader, this->root, this->root->GetTransform()->GetLocal());
+	//}
+	
 
-	// bind textures on corresponding texture units
-	//glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, texture1);
-	//glActiveTexture(GL_TEXTURE1);
-	//glBindTexture(GL_TEXTURE_2D, texture2);
-	ourShader->use();
-	//App->componentsManager->DrawGameObject(*ourShader, this->root);
-	App->componentsManager->DrawGameObject(*ourShader, this->root, this->root->GetTransform()->GetLocal());
-	//m_ModelLoader->Draw(*ourShader);
-	//ourShader->use();
-	/*glBindVertexArray(VAO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	for (auto camera : App->camera->cameras)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, camera->m_Framebuffer); // If fbo=0 then default frame buffer, as the case for editorCamera.
+		glEnable(GL_DEPTH_TEST); // enable depth testing (is disabled for rendering screen-space quad)
 
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		// make sure we clear the framebuffer's content
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-	*/
+		modelsShader->use();
+		glm::mat4 view = camera->m_Camera->GetViewMatrix();
+		modelsShader->setMat4("view", view);
+		App->componentsManager->DrawGameObject(camera, *modelsShader, this->root, this->root->GetTransform()->GetLocal());
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0); // If fbo=0 then default frame buffer, as the case for editorCamera.
+	// make sure we clear the framebuffer's content
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glm::mat4 view = App->camera->editorCamera->m_Camera->GetViewMatrix();
+	modelsShader->setMat4("view", view);
+	App->componentsManager->DrawGameObject(App->camera->editorCamera, *modelsShader, this->root, this->root->GetTransform()->GetLocal());
+
+	for (auto camera : App->camera->cameras)
+	{
+		camera->RenderWindow();
+	}
+
+	modelsShader->use();
 	return UPDATE_CONTINUE;
 }
 

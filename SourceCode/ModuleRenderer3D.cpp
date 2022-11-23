@@ -156,7 +156,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glLoadMatrixf(App->camera->GetViewMatrix());*/
 
 	// light 0 on cam pos
-	lights[0].SetPos(App->camera->editorCamera->camera->Position.x, App->camera->editorCamera->camera->Position.y, App->camera->editorCamera->camera->Position.z);
+	lights[0].SetPos(App->camera->editorCamera->m_Camera->Position.x, App->camera->editorCamera->m_Camera->Position.y, App->camera->editorCamera->m_Camera->Position.z);
 
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
@@ -170,6 +170,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	SDL_GL_SwapWindow(App->window->window);
+
 	return UPDATE_CONTINUE;
 }
 

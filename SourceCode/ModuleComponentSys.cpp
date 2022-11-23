@@ -24,8 +24,9 @@ update_status ModuleComponentSys::Update(float dt)
 }
 
 
-void ModuleComponentSys::DrawGameObject(Shader& shader, GameObject* node, glm::mat4x4 parentWorld)
+void ModuleComponentSys::DrawGameObject(ComponentCamera* camera, Shader& shader, GameObject* node, glm::mat4x4 parentWorld)
 {
+	shader.use();
 	bool isRoot = false;
 	if (node->GetParent() == nullptr)
 		isRoot = true;
@@ -36,9 +37,7 @@ void ModuleComponentSys::DrawGameObject(Shader& shader, GameObject* node, glm::m
 		local->Update();
 		world = local->Combine(parentWorld);
 		local->SetWorldMatrix(world);
-		if (node->m_Name == "Cube")
-			LOG("Cube");
-		
+
 		if (node->m_HasComponentMesh)
 		{
 			ComponentMesh* mesh = node->GetMesh();
@@ -49,13 +48,12 @@ void ModuleComponentSys::DrawGameObject(Shader& shader, GameObject* node, glm::m
 				mesh->GetMesh()->RenderMesh(shader, material);
 			}
 
-			DrawNormals(mesh, local);
-			shader.use();
+			DrawNormals(camera, mesh, local);
 		}
 	}
 	for (auto c : node->m_Children)
 	{
-		DrawGameObject(shader, c, world);
+		DrawGameObject(camera, shader, c, world);
 	}
 	
 }
@@ -67,11 +65,11 @@ void ModuleComponentSys::AddTextureToGameObject(string const& path)
 }
 
 
-void ModuleComponentSys::DrawNormals(ComponentMesh* mesh, ComponentTransform* transform)
+void ModuleComponentSys::DrawNormals(ComponentCamera* camera, ComponentMesh* mesh, ComponentTransform* transform)
 {
 	if (mesh->m_DisplayNormals)
 	{
-		glm::mat4 view = App->camera->editorCamera->camera->GetViewMatrix();
+		glm::mat4 view = camera->m_Camera->GetViewMatrix();
 		glMatrixMode(GL_PROJECTION);
 		glLoadMatrixf((const GLfloat*)&App->scene->projection[0]);
 		glMatrixMode(GL_MODELVIEW);

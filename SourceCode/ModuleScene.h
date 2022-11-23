@@ -26,7 +26,9 @@ public:
 	GameObject* root = nullptr;
 
 	bool debug_draw = true;
-	Shader* ourShader = nullptr;
+	Shader* modelsShader = nullptr;
+	Shader* screenShader = nullptr;
+
 	float Scale = 0.0f;
 	ModelLoader* m_ModelLoader = nullptr;
 

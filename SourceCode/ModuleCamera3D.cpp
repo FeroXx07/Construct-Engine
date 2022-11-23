@@ -14,8 +14,6 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 
 	Position = vec3(0.0f, 0.0f, 0.0f);
 	Reference = vec3(0.0f, 0.0f, 0.0f);*/
-	editorCamera = new ComponentCamera("editorCamera",glm::vec3(0.0f, 0.0f, 10.0f));
-	cameras.push_back(editorCamera);
 }
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -26,6 +24,10 @@ bool ModuleCamera3D::Start()
 {
 	LOG("Setting up the camera");
 	bool ret = true;
+
+	editorCamera = new ComponentCamera("editorCamera", glm::vec3(0.0f, 0.0f, 10.0f));
+	cameras.push_back(editorCamera);
+	editorCamera->m_Framebuffer = 0; // Default buffer!
 
 	int height, width;
 	App->window->GetScreenSize(width, height);
@@ -69,10 +71,10 @@ update_status ModuleCamera3D::Update(float dt)
 	//if(App->input->GetKey(SDL_SCANCODE_I) == KEY_REPEAT) newPos.z += 10*speed;
 	//if(App->input->GetKey(SDL_SCANCODE_K) == KEY_REPEAT) newPos.z -= 10*speed;
 
-	if(App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) editorCamera->camera->ProcessKeyboard(Camera_Movement::FORWARD, speed);
-	if(App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) editorCamera->camera->ProcessKeyboard(Camera_Movement::BACKWARD, speed);
-	if(App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)  editorCamera->camera->ProcessKeyboard(Camera_Movement::LEFT, speed);
-	if(App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) editorCamera->camera->ProcessKeyboard(Camera_Movement::RIGHT, speed);
+	if(App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) editorCamera->m_Camera->ProcessKeyboard(Camera_Movement::FORWARD, speed);
+	if(App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) editorCamera->m_Camera->ProcessKeyboard(Camera_Movement::BACKWARD, speed);
+	if(App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)  editorCamera->m_Camera->ProcessKeyboard(Camera_Movement::LEFT, speed);
+	if(App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) editorCamera->m_Camera->ProcessKeyboard(Camera_Movement::RIGHT, speed);
 
 	//Position += newPos;
 	//Reference += newPos;
@@ -84,20 +86,20 @@ update_status ModuleCamera3D::Update(float dt)
 		int xposIn = App->input->GetMouseXMotion();
 		int yposIn = -App->input->GetMouseYMotion();
 		
-		editorCamera->camera->ProcessMouseMovement(xposIn, yposIn);
+		editorCamera->m_Camera->ProcessMouseMovement(xposIn, yposIn);
 	}
 
 	int zScrollIn = App->input->GetMouseZ();
 	//LOG("Mouse scroll is %d", zScrollIn);
 	if (zScrollIn != 0)
 	{
-		editorCamera->camera->ProcessMouseScroll((float)zScrollIn);
+		editorCamera->m_Camera->ProcessMouseScroll((float)zScrollIn);
 	}
 	
 	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_UP)
 	{
 		if (App->uiManager->m_CurrentSelectedNode != nullptr)
-			editorCamera->camera->LookAt(App->uiManager->m_CurrentSelectedNode->GetTransform()->GetTranslate());
+			editorCamera->m_Camera->LookAt(App->uiManager->m_CurrentSelectedNode->GetTransform()->GetTranslate());
 	}
 
 	return UPDATE_CONTINUE;

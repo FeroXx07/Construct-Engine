@@ -474,7 +474,7 @@ GL_APICALL void         GL_APIENTRY glActiveTexture (GLenum texture);
 GL_APICALL void         GL_APIENTRY glAttachShader (GLuint program, GLuint shader);
 GL_APICALL void         GL_APIENTRY glBindAttribLocation (GLuint program, GLuint index, const GLchar* name);
 GL_APICALL void         GL_APIENTRY glBindBuffer (GLenum target, GLuint buffer);
-GL_APICALL void         GL_APIENTRY glBindFramebuffer (GLenum target, GLuint framebuffer);
+GL_APICALL void         GL_APIENTRY glBindFramebuffer (GLenum target, GLuint m_Framebuffer);
 GL_APICALL void         GL_APIENTRY glBindRenderbuffer (GLenum target, GLuint renderbuffer);
 GL_APICALL void         GL_APIENTRY glBindTexture (GLenum target, GLuint texture);
 GL_APICALL void         GL_APIENTRY glBlendColor (GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
@@ -553,7 +553,7 @@ GL_APICALL void         GL_APIENTRY glGetVertexAttribPointerv (GLuint index, GLe
 GL_APICALL void         GL_APIENTRY glHint (GLenum target, GLenum mode);
 GL_APICALL GLboolean    GL_APIENTRY glIsBuffer (GLuint buffer);
 GL_APICALL GLboolean    GL_APIENTRY glIsEnabled (GLenum cap);
-GL_APICALL GLboolean    GL_APIENTRY glIsFramebuffer (GLuint framebuffer);
+GL_APICALL GLboolean    GL_APIENTRY glIsFramebuffer (GLuint m_Framebuffer);
 GL_APICALL GLboolean    GL_APIENTRY glIsProgram (GLuint program);
 GL_APICALL GLboolean    GL_APIENTRY glIsRenderbuffer (GLuint renderbuffer);
 GL_APICALL GLboolean    GL_APIENTRY glIsShader (GLuint shader);
