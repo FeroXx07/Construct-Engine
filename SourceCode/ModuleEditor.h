@@ -41,6 +41,7 @@ public:
 	std::string licenseStr;
 	
 	GameObject* m_CurrentSelectedNode = nullptr;
+	void SetNullSelected();
 
 	// Updates the window of the configuration of the window options
 	// Updates the window of the configuration of the hardware options

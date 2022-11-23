@@ -164,6 +164,7 @@ void ModuleScene::LoadSceneJson()
 
 void ModuleScene::DeleteScene()
 {
+	App->uiManager->SetNullSelected();
 	int size = root->m_Children.size();
 	for (int i = size-1; i >= 0; i--)
 	{

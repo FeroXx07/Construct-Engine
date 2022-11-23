@@ -15,6 +15,7 @@ public:
 
     void DrawGameObjNode(GameObject* node, ImGuiTreeNodeFlags flags);
     void ChangeSelectionNode(GameObject* newSelectedNode);
+    void SetNullSelection();
     GameObject* GetSelectedNode();
     GameObject* m_SelectedNode = nullptr;
     GameObject* m_HoveredNode = nullptr;
@@ -132,6 +133,10 @@ inline void PanelHierarchy::ChangeSelectionNode(GameObject* newSelectedNode)
         newSelectedNode->gui_IsSelected = true;
 
     m_SelectedNode = newSelectedNode;
+}
+inline void PanelHierarchy::SetNullSelection()
+{
+    m_SelectedNode = nullptr;
 }
 inline GameObject* PanelHierarchy::GetSelectedNode()
 {

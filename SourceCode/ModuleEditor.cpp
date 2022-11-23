@@ -194,6 +194,13 @@ void ModuleEditor::SetupImGuiStyle()
 	style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.800000011920929f, 0.800000011920929f, 0.800000011920929f, 0.3499999940395355f);
 }
 
+void ModuleEditor::SetNullSelected()
+{
+	m_PanelHierarchy->SetNullSelection();
+	m_CurrentSelectedNode = nullptr;
+	m_PanelInspector->m_SelectedNode = nullptr;
+}
+
 void ModuleEditor::MenuBarUpdate()
 {
 	// Top Menu Bar
