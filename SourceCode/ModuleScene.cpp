@@ -48,8 +48,6 @@ bool ModuleScene::Start()
 	//mainCamera->GetCamera()->camera->Yaw += 180.0f;// rotate the camera's yaw 180 degrees around
 	// tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
 	stbi_set_flip_vertically_on_load(false);
-	
-	
 
 	m_ModelLoader = new ModelLoader(App->componentsManager);
 
@@ -166,9 +164,21 @@ void ModuleScene::LoadSceneJson()
 
 void ModuleScene::DeleteScene()
 {
-	for (auto go : root->m_Children)
+	int size = root->m_Children.size();
+	for (int i = size-1; i >= 0; i--)
 	{
-		delete go;
+		// Remove camera from camera list
+		if (root->m_Children[i]->m_HasComponentCamera)
+		{
+			int totalCams = App->camera->cameras.size();
+			for (int j = 0; j < totalCams; j++)
+			{
+				if (root->m_Children[i]->GetCamera() == App->camera->cameras[j])
+					App->camera->cameras.erase(App->camera->cameras.begin()+j);
+			}
+		}
+
+		delete root->m_Children[i];
 	}
 }
 
@@ -192,21 +202,40 @@ void ModuleScene::To_Json(json& json_, const GameObject* go_)
 	//Mesh
 	if (go_->m_HasComponentMesh)
 	{
-		json_["Game Objects"][id]["Mesh"] = go_->GetMeshConst()->GetMesh()->name;
+		json_["Game Objects"][id]["Mesh"]["Exists"] = true;
+		json_["Game Objects"][id]["Mesh"]["Name"] = go_->GetMeshConst()->GetMesh()->name;
 	}
+	else
+		json_["Game Objects"][id]["Mesh"]["Exists"] = false;
+
+	// Material
 	if (go_->m_HasComponentMaterial)
 	{
+		json_["Game Objects"][id]["Material"]["Exists"] = true;
 		ComponentMaterial* m = go_->GetMaterialConst();
-		int total = m->m_Textures->size();
-		json_["Game Objects"][id]["Material"] = m->m_MaterialName;
-		json_["Game Objects"][id]["TotalTextures"] = total;
-		for (int i = 0; i < 1; i++)
+		int total = m->m_Textures.size();
+		json_["Game Objects"][id]["Material"]["Name"] = m->m_MaterialName;
+		json_["Game Objects"][id]["Material"]["Totaltextures"] = total;
+		for (int i = 0; i < total; i++)
 		{
 			string tex = "texture";
 			tex += std::to_string(i);
-			json_["Game Objects"][id][tex] = m->m_Textures->at(i).path;
+			json_["Game Objects"][id]["Material"][tex] = m->m_Textures.at(i).path;
 		}
 	}
+	else
+		json_["Game Objects"][id]["Material"]["Exists"] = false;
+
+	// Camera
+	if (go_->m_HasComponentCamera)
+	{
+		json_["Game Objects"][id]["Camera"]["Exists"] = true;
+		json_["Game Objects"][id]["Camera"]["Position"] = { t->GetTranslate().x, t->GetTranslate().y, t->GetTranslate().z };
+		json_["Game Objects"][id]["Camera"]["Name"] = go_->GetCameraConst()->m_Name;
+	}
+	else
+		json_["Game Objects"][id]["Camera"]["Exists"] = false;
+
 
 	for (auto children : go_->m_Children)
 	{
@@ -240,23 +269,42 @@ GameObject* ModuleScene::From_Json(const json& j, const GameObject* goParent)
 		newGo->AssignComponent(newTransform);
 
 		// New mesh
-		if (j["Mesh"].is_null() == false)
+		if (j["Mesh"]["Exists"])
 		{
 			Mesh* mesh = m_ModelLoader->LoadFromCustomFormat(name.c_str());
 			ComponentMesh* newMeshComp = new ComponentMesh(mesh);
 			newGo->AssignComponent(newMeshComp);
 		}
 
-		if (j["Material"].is_null() == false)
+		if (j["Material"]["Exists"])
 		{
 			ComponentMaterial* newMatComp = new ComponentMaterial();
+			newGo->AssignComponent(newMatComp);
 			//m_ModelLoader->LoadTextureIntoGameObject()
 			std::vector<Texture> tex;
-			tex.push_back(*m_ModelLoader->checkerTexture);
-			newMatComp->PassTextures(tex);
-			newMatComp->m_MaterialName = j["Material"];
-			newGo->AssignComponent(newMatComp);
+			/*newMatComp->PassTextures();*/
+			int totalTex = j["Material"]["Totaltextures"];
+			for (int i = 0; i < totalTex; i++)
+			{
+				string tex = "texture";
+				tex += std::to_string(i);
+				tex = j["Material"][tex];
+				m_ModelLoader->LoadTextureIntoGameObject(tex.c_str(), newGo);
+			}
+			newMatComp->m_MaterialName = j["Material"]["Name"];
+			
 		}
+
+		if (j["Camera"]["Exists"])
+		{
+			string camName = j["Camera"]["Name"];
+			std::vector<float>pos = j["Camera"]["Position"];
+			vec3 cameraPos = vec3(pos.at(0), pos.at(1), pos.at(2));
+			ComponentCamera* newCamComp = new ComponentCamera(camName.c_str(), cameraPos);
+			newGo->AssignComponent(newCamComp);
+		}
+		/*json_["Game Objects"][id]["Camera"]["Position"] = { t->GetTranslate().x, t->GetTranslate().y, t->GetTranslate().z };
+		json_["Game Objects"][id]["Camera"]["Name"] = go_->GetCameraConst()->m_Name;*/
 
 		return newGo;
 	}

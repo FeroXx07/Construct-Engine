@@ -20,8 +20,8 @@ ModelLoader::ModelLoader(ModuleComponentSys* sys, bool gamma) : gammaCorrection(
     // if texture hasn't been loaded already, load it
     checkerTexture = new Texture();
     checkerTexture->id = LoadTextureFromFile("CheckersTextureDefault.png", "Resources/Textures", checkerTexture->height, checkerTexture->width, checkerTexture->nComponents);
-    checkerTexture->type = "Checkers";
-    checkerTexture->path = "Resources/Textures";
+    checkerTexture->type = "texture_diffuse";
+    checkerTexture->path = "Checkers";
     textures_loaded.push_back(*checkerTexture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
 }
 
@@ -82,7 +82,7 @@ void ModelLoader::LoadTextureIntoGameObject(string const& path, GameObject* go)
             // Check if we have alreday loaded this texture before
             if (std::strcmp(textures_loaded[j].path.data(), tmp.c_str()) == 0)
             {
-                mat->m_Textures->push_back(textures_loaded[j]);
+                mat->m_Textures.push_back(textures_loaded[j]);
                 skip = true;
                 break;
             }
@@ -93,7 +93,7 @@ void ModelLoader::LoadTextureIntoGameObject(string const& path, GameObject* go)
             texture.id = LoadTextureFromFile(tmp.c_str(), this->directory, texture.height, texture.width, texture.nComponents);
             texture.type = typeDefault;
             texture.path = tmp.c_str();
-            mat->m_Textures->push_back(texture);
+            mat->m_Textures.push_back(texture);
             textures_loaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
         }
     }

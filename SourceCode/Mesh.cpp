@@ -93,7 +93,7 @@ int  Mesh::RenderMesh(Shader& shader, bool checkerTex)
 
 int  Mesh::RenderMesh(Shader& shader, ComponentMaterial* mat)
 {
-    TextureVector* tex = mat->m_Textures;
+    std::vector<Texture>* tex = &mat->m_Textures;
    
     // bind appropriate textures
     unsigned int diffuseNr = 1;

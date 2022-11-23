@@ -20,6 +20,12 @@ GameObject::~GameObject()
 	}
 	m_Parent = nullptr;
 
+	int size = m_Children.size();
+	for (int i = size - 1; i >= 0; i--)
+	{
+		delete m_Children[i];
+	}
+
 	// Delete mesh component
 	if (m_ComponentMesh != nullptr)
 	{

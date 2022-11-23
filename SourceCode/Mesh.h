@@ -35,7 +35,7 @@ struct Texture {
     uint nComponents;
     bool isEnabled = true;
 };
-typedef std::vector<Texture> TextureVector;
+
 class Mesh {
 public:
     // Vectors of data

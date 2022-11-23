@@ -2,16 +2,19 @@
 
 ComponentMaterial::ComponentMaterial() : Component(ComponentType::MATERIAL)
 {
-    m_Textures = nullptr;
 }
 
 ComponentMaterial::~ComponentMaterial()
 {
+    m_Textures.clear();
 }
 
 void ComponentMaterial::PassTextures(vector<Texture> &t)
 {
-	m_Textures = &t;
+    for (auto el : t)
+    {
+        m_Textures.push_back(el);
+    }
 }
 
 void ComponentMaterial::OnEditor()
@@ -27,7 +30,7 @@ void ComponentMaterial::OnEditor()
 		ImGui::Separator();
 
         uint i = 0;
-        for (auto tex : *m_Textures)
+        for (auto tex : m_Textures)
         {
             if (ImGui::TreeNodeEx(tex.path.c_str(), treeFlags))
             {
@@ -63,7 +66,7 @@ void ComponentMaterial::OnEditor()
                 ImGui::Separator();
 
                 // Enabled?
-                ImGui::Checkbox("Enabled texture", &m_Textures->at(i).isEnabled);
+                ImGui::Checkbox("Enabled texture", &m_Textures.at(i).isEnabled);
 
                 ImGuiIO& io = ImGui::GetIO();
                 ImTextureID my_tex_id = (void*)(intptr_t)tex.id;
