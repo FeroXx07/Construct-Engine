@@ -265,11 +265,11 @@ void ModuleWindow::SaveJson()
 
 	// STL container of an object {"key":"value"}
 	std::unordered_map<std::string, bool> mapSettings;
-	mapSettings.insert({ getName(isFullScreen), isFullScreen});
-	mapSettings.insert({ getName(isResizable), isResizable });
-	mapSettings.insert({ getName(isBorderless), isBorderless });
-	mapSettings.insert({ getName(isFullScreen_Desktop), isFullScreen_Desktop });
-	mapSettings.insert({ getName(isVsync), isVsync });
+	mapSettings.insert({ getNameStr(isFullScreen), isFullScreen});
+	mapSettings.insert({ getNameStr(isResizable), isResizable });
+	mapSettings.insert({ getNameStr(isBorderless), isBorderless });
+	mapSettings.insert({ getNameStr(isFullScreen_Desktop), isFullScreen_Desktop });
+	mapSettings.insert({ getNameStr(isVsync), isVsync });
 
 	// automatic transformation of STL containers in nlohmann Json
 	json j_Object(mapSettings);
@@ -277,13 +277,13 @@ void ModuleWindow::SaveJson()
 
 	// add via member function
 	jSettings["Window"].push_back({ "title", title.c_str() });
-	jSettings["Window"].emplace( getName(brightness), brightness);
+	jSettings["Window"].emplace( getNameStr(brightness), brightness);
 
 	// add via += operator
-	jSettings["Window"] += {getName(width), width};
+	jSettings["Window"] += {getNameStr(width), width};
 
 	// add via key
-	jSettings["Window"][getName(height)] = height;
+	jSettings["Window"][getNameStr(height)] = height;
 
 	// default serialization 
 	auto s1 = jSettings.dump();
@@ -304,14 +304,14 @@ bool ModuleWindow::LoadJson()
 		ret = true;
 		json data = json::parse(f);
 		data = data["Window"];
-		isFullScreen = data[getName(isFullScreen)];
-		isResizable = data[getName(isResizable)];
-		isBorderless = data[getName(isBorderless)];
-		isFullScreen_Desktop = data[getName(isFullScreen_Desktop)];
-		isVsync = data[getName(isVsync)];
-		width = data[getName(width)];
-		height = data[getName(height)];
-		brightness = data[getName(brightness)];
+		isFullScreen = data[getNameStr(isFullScreen)];
+		isResizable = data[getNameStr(isResizable)];
+		isBorderless = data[getNameStr(isBorderless)];
+		isFullScreen_Desktop = data[getNameStr(isFullScreen_Desktop)];
+		isVsync = data[getNameStr(isVsync)];
+		width = data[getNameStr(width)];
+		height = data[getNameStr(height)];
+		brightness = data[getNameStr(brightness)];
 		f.close();
 	}
 

@@ -4,7 +4,7 @@
 // for convenience
 using json = nlohmann::json;
 // Return variable name as str
-#define getName(var)  #var
+#define getNameStr(var)  #var
 // Return variable name as str and save it in another string
-#define getNameS(var, str)  sprintf(str, "%s", #var) 
+#define getNameStrToStr(var, str)  sprintf(str, "%s", #var) 
 #endif

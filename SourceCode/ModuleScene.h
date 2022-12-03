@@ -7,7 +7,7 @@
 #include "GameObject.h"
 
 #include <list>
-
+#include "Primitive.h"
 class ModuleScene : public Module
 {
 public:
@@ -39,4 +39,6 @@ public:
 	void DeleteScene();
 	void To_Json(json& j, const GameObject* go);
 	GameObject* From_Json(const json& j, const GameObject* goParent);
+
+	P_Plane p = P_Plane(0, 1, 0, 0);
 };

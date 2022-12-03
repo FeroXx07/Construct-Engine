@@ -48,9 +48,6 @@
     <ClCompile Include="SourceCode\Light.cpp">
       <Filter>MathAndTools</Filter>
     </ClCompile>
-    <ClCompile Include="SourceCode\Color.cpp">
-      <Filter>MathAndTools</Filter>
-    </ClCompile>
     <ClCompile Include="SourceCode\MathGeoLib\Math\float4x4.cpp">
       <Filter>MathGeoLib\Math</Filter>
     </ClCompile>
@@ -177,6 +174,21 @@
     <ClCompile Include="SourceCode\ComponentCamera.cpp">
       <Filter>GameObjects And Components\Components</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\ModulePhysics3D.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\PhysBody3D.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\Color.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\Primitive.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceCode\glmath.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ImGui">
@@ -221,6 +233,9 @@
     <Filter Include="GameObjects And Components\Systems">
       <UniqueIdentifier>{7c9196f4-1403-49de-8ce2-7d591bdb327e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{94100e18-ebda-46d2-baab-0a6607ae8049}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\Module.h">
@@ -249,9 +264,6 @@
       <Filter>MathAndTools</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\Light.h">
-      <Filter>MathAndTools</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\Color.h">
       <Filter>MathAndTools</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\Pipeline.h">
@@ -314,6 +326,21 @@
     <ClInclude Include="SourceCode\Json.h" />
     <ClInclude Include="SourceCode\ComponentCamera.h">
       <Filter>GameObjects And Components\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\ModulePhysics3D.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\PhysBody3D.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\Color.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\Primitive.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\glmath.h">
+      <Filter>Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

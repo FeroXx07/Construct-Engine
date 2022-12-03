@@ -44,6 +44,7 @@ bool ModuleCamera3D::CleanUp()
 
 	for (std::vector<ComponentCamera*>::iterator i = cameras.begin(); i != cameras.end(); ++i)
 	{
+		
 		delete* i;
 		*i = nullptr;
 	}
