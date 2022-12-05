@@ -5,7 +5,7 @@
 #include <gl/glew.h>
 #include <gl/GLU.h>
 #include <gl/GL.h>
-
+#include "glut.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "glew32.lib")    /* link OpenGL Utility lib     */
@@ -40,32 +40,32 @@ bool ModuleRenderer3D::Init()
 		if(App->window->GetVsync() && SDL_GL_SetSwapInterval(1) < 0)
 			LOG("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 		
-		////Initialize Projection Matrix
-		//glMatrixMode(GL_PROJECTION);
-		//glLoadIdentity();
+		//Initialize Projection Matrix
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
 
-		////Check for error
+		//Check for error
 		GLenum error = glGetError();
-		//if(error != GL_NO_ERROR)
-		//{
-		//	LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
-		//	ret = false;
-		//}
+		if(error != GL_NO_ERROR)
+		{
+			LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
+			ret = false;
+		}
 
-		////Initialize Modelview Matrix
-		//glMatrixMode(GL_MODELVIEW);
-		//glLoadIdentity();
+		//Initialize Modelview Matrix
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
 
-		////Check for error
-		//error = glGetError();
-		//if(error != GL_NO_ERROR)
-		//{
-		//	LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
-		//	ret = false;
-		//}
+		//Check for error
+		error = glGetError();
+		if(error != GL_NO_ERROR)
+		{
+			LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
+			ret = false;
+		}
 		
-		/*glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-		glClearDepth(1.0f);*/
+		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+		glClearDepth(1.0f);
 		
 		//Initialize clear color
 		glClearColor(0.1f,0.6f, 0.4f, 1.0f);
@@ -130,6 +130,7 @@ bool ModuleRenderer3D::Init()
 			LOG("Error initializing OpenGL! %s\n", glewGetErrorString(error));
 			ret = false;
 		}
+	
 		std::string strVersion = (const char*)glGetString(GL_VERSION);
 		strVersion = strVersion.substr(0, strVersion.find(" "));
 		float number = std::atof(strVersion.c_str());
@@ -189,12 +190,18 @@ void ModuleRenderer3D::OnResize(int width, int height)
 {
 	glViewport(0, 0, width, height);
 
-	//glMatrixMode(GL_PROJECTION);
-	//glLoadIdentity();
-	//ProjectionMatrix = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
-	//glLoadMatrixf(&ProjectionMatrix);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	float nearPlane = 0.1f;
+	float farPlane = 100.0f * 1.5f;
+	if (App->camera->editorCamera != nullptr)
+	{
+		glm::mat4  projection = glm::perspective(glm::radians(App->camera->editorCamera->m_Camera->Zoom), (float)width / (float)height, nearPlane, farPlane);
+		glLoadMatrixf(glm::value_ptr(projection));
 
-	//glMatrixMode(GL_MODELVIEW);
-	//glLoadIdentity();
+	}
+	
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 }
 

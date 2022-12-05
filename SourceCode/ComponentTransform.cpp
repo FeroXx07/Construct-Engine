@@ -36,6 +36,13 @@ ComponentTransform::~ComponentTransform()
 void ComponentTransform::Update()
 {
 	ComposeLocalMatrix();
+	if (m_hasGameObject)
+	{
+		if (m_GameObject->m_PhysBody != nullptr)
+		{
+			m_GameObject->m_PhysBody->SetTransform(m_WorldMat);
+		}
+	}
 }
 
 void ComponentTransform::OnEditor()

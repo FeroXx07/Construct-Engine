@@ -15,6 +15,17 @@ Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture
     LOG("<%s> with %d textures", name, textures.size());
     // now that we have all the required data, set the vertex buffers and its attribute pointers.
     GenerateBuffers();
+
+    int size = vertices.size();
+    float3* array = new float3[size];
+    for (int i = 0; i < size; i++)
+    {
+        array[i] = vertices[i].m_Position;
+    }
+
+    // Generate AABB
+    aabb.SetNegativeInfinity();
+    aabb.Enclose((float3*)array, size);
 }
 Mesh::~Mesh()
 {
@@ -133,6 +144,11 @@ int  Mesh::RenderMesh(Shader& shader, ComponentMaterial* mat)
     // restore the texture to a "neutral" state
     glActiveTexture(GL_TEXTURE0);
     return 1;
+}
+
+const AABB& Mesh::GetAABB()
+{
+    return aabb;
 }
 
 void Mesh::GenerateBuffers()

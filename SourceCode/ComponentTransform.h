@@ -56,5 +56,6 @@ private:
 	
 
 	friend class ModelLoader;
+	friend class GameObject;
 };
 #endif

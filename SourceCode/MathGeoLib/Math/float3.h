@@ -18,7 +18,7 @@
 #pragma once
 
 #include "../MathBuildConfig.h"
-
+#include <glm/glm.hpp>
 #ifdef MATH_ENABLE_STL_SUPPORT
 #include <string>
 #endif
@@ -119,7 +119,7 @@ public:
 		@see ptr(), operator [](). */
 	float &At(int index);
 	CONST_WIN32 float At(int index) const;
-
+	float3& operator =(const glm::vec3& v);
 	/// Adds two vectors. [indexTitle: operators +,-,*,/]
 	/** This function is identical to the member function Add().
 		@return float3(x + v.x, y + v.y, z + v.z); */

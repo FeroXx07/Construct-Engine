@@ -7,7 +7,7 @@
 #define _USE_MATH_DEFINES
 
 #include <math.h>
-
+#include "MathGeoLib/MathGeoLib.h"
 // ----------------------------------------------------------------------------------------------------------------------------
 namespace PrimitiveMath {
 	class vec2
@@ -190,6 +190,11 @@ namespace PrimitiveMath {
 		float* operator & ()
 		{
 			return (float*)this;
+		}
+		
+		vec3& operator = (const math::float3& u)
+		{
+			x += u.x; y += u.y; z += u.z; return *this;
 		}
 		vec3& operator += (float num)
 		{

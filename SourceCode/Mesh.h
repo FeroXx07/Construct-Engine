@@ -51,10 +51,14 @@ public:
     int RenderMesh(Shader& shader, ComponentMaterial* mat);
     string name = " ";
     uint totalFaces = 0;
+    const AABB& GetAABB();
+    // AABB
+    AABB aabb;
 private:
     // Buffers
     GLuint VBO, EBO;
     // Init the buffers once data is loaded
     void GenerateBuffers();
+ 
 };
 #endif

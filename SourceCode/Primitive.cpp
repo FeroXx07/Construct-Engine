@@ -5,7 +5,8 @@
 #include <gl/glew.h>
 #include <gl/GLU.h>
 #include <gl/GL.h>
-#include "freeglut/include/GL/freeglut.h"
+#include "freeglut/include/GL/glut.h"
+
 //#include "glut/glut.h"
 #include "Application.h"
 // ------------------------------------------------------------
@@ -64,10 +65,10 @@ void Primitive::Render() const
 
 	glColor3f(color.r, color.g, color.b);
 
-	if(wire)
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	else
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//if(wire)
+	//	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//else
+	//	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	InnerRender();
 
@@ -177,7 +178,13 @@ P_Sphere::P_Sphere(float radius) : Primitive(), radius(radius)
 
 void P_Sphere::InnerRender() const
 {
-	glutSolidSphere(radius, 25, 25);
+	//glutSolidSphere(radius, 25, 25);
+	// Create a new quadric and render it normally
+	GLUquadricObj* pObj = gluNewQuadric();
+	gluQuadricDrawStyle(pObj, GLU_FILL);
+	gluSphere(pObj, 0.5f, 25, 25);
+	// Free the quadric object
+	gluDeleteQuadric(pObj);
 }
 
 

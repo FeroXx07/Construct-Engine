@@ -300,6 +300,34 @@ void ModuleEditor::MenuBarUpdate()
 			ImGui::EndMenu();
 		}
 
+		ImGui::Begin("--Execution State--");
+		ImGui::Text("Current state: ");
+		ImGui::SameLine();
+		switch (App->scene->editorState)
+		{
+		case ON_EDITOR:
+			ImGui::Text("STOPPED");
+			break;
+		case ON_PAUSE:
+			ImGui::Text("PAUSED");
+			break;
+		case ON_PLAYING:
+			ImGui::Text("PLAYING");
+			break;
+		default:
+			break;
+		}
+		ImGui::SameLine();
+		if(ImGui::Button("PLAY"))
+			App->scene->ChangeEditorState(StateEditor::ON_PLAYING);
+		ImGui::SameLine();
+		if (ImGui::Button("PAUSE"))
+			App->scene->ChangeEditorState(StateEditor::ON_PAUSE);
+		ImGui::SameLine();
+		if (ImGui::Button("STOP"))
+			App->scene->ChangeEditorState(StateEditor::ON_EDITOR);
+		ImGui::End();
+			
 		ImGui::EndMainMenuBar();
 	}
 }

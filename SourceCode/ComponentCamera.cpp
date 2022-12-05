@@ -134,6 +134,7 @@ void ComponentCamera::RenderWindow()
 	}
 }
 
+
 void ComponentCamera::BindFrameBuffer()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, m_Framebuffer);

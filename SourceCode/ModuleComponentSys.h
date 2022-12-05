@@ -16,9 +16,13 @@ public:
 	update_status Update(float dt);
 	//void DrawGameObject(Shader& shader, GameObject* rootNode, bool dirty = false);
 
+	// Drawing
 	void DrawGameObject(ComponentCamera* camera, Shader& shader, GameObject* rootNode, glm::mat4x4 world);
 	void AddTextureToGameObject(string const& path);
 	void DrawNormals(ComponentCamera* camera, ComponentMesh* mesh, ComponentTransform* transform);
+	void DrawBoundingBoxes(ComponentCamera* camera, ComponentTransform* transform, GameObject* go);
+	void DrawFrustum(ComponentCamera* camera, ComponentTransform* transform);
+
 	void UpdateAllTransforms(GameObject* rootNode);
 	bool CleanUp();
 

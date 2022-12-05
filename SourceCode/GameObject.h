@@ -5,6 +5,7 @@
 #include "ComponentTransform.h"
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
+#include "PhysBody3D.h"
 
 #include <string>
 #include <vector>
@@ -24,10 +25,15 @@ public:
 	vector<Component*> FindAllComponentsOfType(ComponentType type);
 	GameObject* FindById(int id);
 
+	void SetPhysBody(PhysBody3D* newBody);
 	void SetParent(GameObject* parent);
 	void SetChild(GameObject* child);
+
+	PhysBody3D* GetPhysBody();
 	GameObject* GetParent();
 	GameObject* GetParentConst() const;
+
+	void UpdateBody();
 
 	void AddChild(GameObject* newChild);
 	void RemoveChild(GameObject* child);
@@ -35,6 +41,10 @@ public:
 
 	string m_Name = " ";
 	vector<GameObject*> m_Children;
+	OBB m_Obb;
+	AABB m_Aabb;
+	void GenerateBoundingBoxes();
+	PhysBody3D* m_PhysBody = nullptr;
 protected:
 	/*vector<Component*> m_Components;*/
 	GameObject* m_Parent = nullptr;

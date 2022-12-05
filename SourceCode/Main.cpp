@@ -6,7 +6,7 @@
 #include <string>
 
 #include "singleton.h"
-
+#include "glut.h"
 #include <optick.h>
 enum main_states
 {
@@ -22,7 +22,7 @@ int main(int argc, char ** argv)
 	OPTICK_FRAME("MainThread");
 	PHYSFS_init(*argv);
 	LOG("Starting game engine...\n");
-	
+
 	int main_return = EXIT_FAILURE;
 	main_states state = MAIN_CREATION;
 	Application* App = NULL;

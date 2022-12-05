@@ -754,6 +754,36 @@ CONST_WIN32 float3x3 float4x4::RotatePart() const
 	return Float3x3Part();
 }
 
+float4x4 float4x4::FromGLM(glm::mat4x4 rhs)
+{
+	float4x4 v;
+	//First row in mathgeo lib 
+	v[0][0] = rhs[0][0];
+	v[0][1] = rhs[1][0];
+	v[0][2] = rhs[2][0];
+	v[0][3] = rhs[3][0];
+
+	//Second row in mathgeo lib 
+	v[1][0] = rhs[0][1];
+	v[1][1] = rhs[1][1];
+	v[1][2] = rhs[2][1];
+	v[1][3] = rhs[3][1];
+
+	//Third row in mathgeo lib 
+	v[2][0] = rhs[0][2];
+	v[2][1] = rhs[1][2];
+	v[2][2] = rhs[2][2];
+	v[2][3] = rhs[3][2];
+
+	//Forth row in mathgeo lib 
+	v[3][0] = rhs[0][3];
+	v[3][1] = rhs[1][3];
+	v[3][2] = rhs[2][3];
+	v[3][3] = rhs[3][3];
+
+	return v;
+}
+
 float3 float4x4::WorldX() const
 {
 	return Col3(0);
@@ -1240,6 +1270,38 @@ float4x4 &float4x4::operator =(const TranslateOp &rhs)
 	
 	return *this;
 }
+
+//float4x4& float4x4::operator=(const glm::mat4x4& rhs)
+//{
+//	// GLM is column based (column)(row)
+//	// MATRGEOLIB is row based (row)(column)
+//
+//	// First row in mathgeo lib 
+//	v[0][0] = rhs[0][0];
+//	v[0][1] = rhs[1][0];
+//	v[0][2] = rhs[2][0];
+//	v[0][3] = rhs[3][0];
+//
+//	//Second row in mathgeo lib 
+//	v[1][0] = rhs[0][1];
+//	v[1][1] = rhs[1][1];
+//	v[1][2] = rhs[2][1];
+//	v[1][3] = rhs[3][1];
+//
+//	//Third row in mathgeo lib 
+//	v[2][0] = rhs[0][2];
+//	v[2][1] = rhs[1][2];
+//	v[2][2] = rhs[2][2];
+//	v[2][3] = rhs[3][2];
+//
+//	//Forth row in mathgeo lib 
+//	v[3][0] = rhs[0][3];
+//	v[3][1] = rhs[1][3];
+//	v[3][2] = rhs[2][3];
+//	v[3][3] = rhs[3][3];
+//
+//	return *this;
+//}
 
 float float4x4::Determinant3() const
 {

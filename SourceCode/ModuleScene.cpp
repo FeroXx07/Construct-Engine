@@ -2,7 +2,7 @@
 #include "Application.h"
 #include "ModuleScene.h"
 #include "ModuleComponentSys.h"
-
+#include "ModulePhysics3D.h"
 #include <gl/glew.h>
 
 #include <glm/glm.hpp>
@@ -49,12 +49,22 @@ bool ModuleScene::Start()
 	// tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
 	stbi_set_flip_vertically_on_load(false);
 
-	m_ModelLoader = new ModelLoader(App->componentsManager);
+	m_ModelLoader = new ModelLoader(App->componentsManager, App->physics3D);
 
-	CreateGameObject("Assets/BakerHouse.fbx", "BakerHouse");
+	//CreateGameObject("Assets/BakerHouse.fbx", "BakerHouse");
+	CreateGameObject("Assets/street/street2.fbx", "StreetScene");
+	GameObject* ground = CreateEmptyGameObject("Ground");
+	ground->GetTransform()->SetScale(glm::vec3(100, 100, 100));
+	ground->SetPhysBody(App->physics3D->AddBodyCube(ground->GetTransform()->GetLocal(), 1.0f));
 	debug_draw = false;
 	SaveSceneJson();
 	return ret;
+}
+
+update_status ModuleScene::PreUpdate(float dt)
+{
+	App->componentsManager->UpdateAllTransforms(this->root);
+	return UPDATE_CONTINUE;
 }
 
 // Load assets
@@ -72,6 +82,130 @@ bool ModuleScene::CleanUp()
 		delete m_ModelLoader;
 	
 	return true;
+}
+
+void ModuleScene::Draw()
+{
+	if (debug_draw == true)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+	else
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+
+	//for (auto camera : App->camera->cameras)
+	//{
+	//	if (camera->fbo != 0)
+	//		continue;
+	//	glBindFramebuffer(GL_FRAMEBUFFER, camera->fbo); // If fbo=0 then default frame buffer, as the case for editorCamera.
+	//	// make sure we clear the framebuffer's content
+	//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//	glm::mat4 view = camera->camera->GetViewMatrix();
+	//	modelsShader->setMat4("view", view);
+	//	App->componentsManager->DrawGameObject(*modelsShader, this->root, this->root->GetTransform()->GetLocal());
+	//}
+
+
+	for (auto camera : App->camera->cameras)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, camera->m_Framebuffer); // If fbo=0 then default frame buffer, as the case for editorCamera.
+		glEnable(GL_DEPTH_TEST); // enable depth testing (is disabled for rendering screen-space quad)
+
+		// make sure we clear the framebuffer's content
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		// The verticalFov (is zoom), the horizontalFov needs to be adjusted as FovY changes
+		int height, width;
+		App->window->GetScreenSize(width, height);
+		float aspectRatio = (float)width / (float)height;
+		float verticalFov = camera->m_Camera->Zoom;
+		float horizontalFov = 2 * Atan(Tan(glm::radians(verticalFov) / 2) * aspectRatio);
+
+		float nearPlane = 0.1f;
+		float farPlane = 100.0f * 10.0f;
+		camera->m_Camera->frustum.nearPlaneDistance = nearPlane;
+		camera->m_Camera->frustum.farPlaneDistance = farPlane;
+
+		camera->m_Camera->frustum.verticalFov = verticalFov;
+		camera->m_Camera->frustum.verticalFov = horizontalFov;
+
+		camera->m_Camera->projection = glm::perspective(glm::radians(camera->m_Camera->Zoom), aspectRatio, nearPlane, farPlane);
+		modelsShader->setMat4("projection", camera->m_Camera->projection);
+
+		modelsShader->use();
+		glm::mat4 view = camera->m_Camera->GetViewMatrix();
+		modelsShader->setMat4("view", view);
+		App->componentsManager->DrawGameObject(camera, *modelsShader, this->root, this->root->GetTransform()->GetLocal());
+
+		glMatrixMode(GL_PROJECTION);
+		glLoadMatrixf(glm::value_ptr(camera->m_Camera->projection));
+		glMatrixMode(GL_MODELVIEW);
+		glm::mat4 MV = view;
+		glLoadMatrixf(glm::value_ptr(MV));
+		
+		App->physics3D->world->debugDrawWorld();
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0); // If fbo=0 then default frame buffer, as the case for editorCamera.
+	// make sure we clear the framebuffer's content
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	/*glm::mat4 view = App->camera->editorCamera->m_Camera->GetViewMatrix();
+	modelsShader->setMat4("view", view);
+	App->componentsManager->DrawGameObject(App->camera->editorCamera, *modelsShader, this->root, this->root->GetTransform()->GetLocal());
+	App->physics3D->world->debugDrawWorld();*/
+	for (auto camera : App->camera->cameras)
+	{
+		camera->RenderWindow();
+	}
+
+	modelsShader->use();
+}
+
+void ModuleScene::ChangeEditorState(StateEditor newState)
+{
+	switch (newState)
+	{
+	case ON_EDITOR:
+	{
+		if (editorState == StateEditor::ON_PLAYING || editorState == StateEditor::ON_PAUSE)
+		{
+			App->physics3D->delta = 0.0000001f;
+			DeleteScene();
+			LoadSceneJson();
+			editorState = ON_EDITOR;
+		}
+		break;
+	}
+		
+	case ON_PAUSE:
+	{
+		if (editorState == StateEditor::ON_PLAYING)
+		{
+			editorState = ON_PAUSE;
+		}
+		break;
+	}
+	
+	case ON_PLAYING:
+	{
+		if (editorState == StateEditor::ON_EDITOR)
+		{
+			SaveSceneJson();
+			editorState = ON_PLAYING;
+		}
+		else if (editorState == StateEditor::ON_PAUSE)
+		{
+			editorState = ON_PLAYING;
+		}
+		break;
+	}
+		
+	default:
+		break;
+	}
 }
 
 GameObject* ModuleScene::CreateGameObject(string const& path, string name)
@@ -102,7 +236,6 @@ GameObject* ModuleScene::CreateEmptyGameObject(string name)
 
 GameObject* ModuleScene::CreateCamera(string name, GameObject* destinationGO)
 {
-	GameObject* cameraGO = CreateEmptyGameObject(name);
 	if (destinationGO != nullptr)
 	{
 		string tmp = "Camera_";
@@ -115,6 +248,7 @@ GameObject* ModuleScene::CreateCamera(string name, GameObject* destinationGO)
 	}
 	else
 	{
+		GameObject* cameraGO = CreateEmptyGameObject(name);
 		int totalCameras = App->camera->cameras.size();
 		string tmp = "Camera_";
 		tmp += std::to_string(totalCameras);
@@ -124,8 +258,6 @@ GameObject* ModuleScene::CreateCamera(string name, GameObject* destinationGO)
 		cameraGO->AssignComponent(cameraComp);
 		return cameraGO;
 	}
-	
-	return cameraGO;
 }
 
 void ModuleScene::SaveSceneJson()
@@ -160,10 +292,13 @@ void ModuleScene::LoadSceneJson()
 		file.close();
 	}
 	// Load all children from root node
+	App->physics3D->Start();
 }
 
 void ModuleScene::DeleteScene()
 {
+	App->physics3D->CleanUp();
+	App->physics3D->Start();
 	App->uiManager->SetNullSelected();
 	int size = root->m_Children.size();
 	for (int i = size-1; i >= 0; i--)
@@ -181,6 +316,7 @@ void ModuleScene::DeleteScene()
 
 		delete root->m_Children[i];
 	}
+
 }
 
 void ModuleScene::To_Json(json& json_, const GameObject* go_)
@@ -275,6 +411,7 @@ GameObject* ModuleScene::From_Json(const json& j, const GameObject* goParent)
 			Mesh* mesh = m_ModelLoader->LoadFromCustomFormat(name.c_str());
 			ComponentMesh* newMeshComp = new ComponentMesh(mesh);
 			newGo->AssignComponent(newMeshComp);
+			newGo->GenerateBoundingBoxes();
 		}
 
 		if (j["Material"]["Exists"])
@@ -301,8 +438,8 @@ GameObject* ModuleScene::From_Json(const json& j, const GameObject* goParent)
 			string camName = j["Camera"]["Name"];
 			std::vector<float>pos = j["Camera"]["Position"];
 			vec3 cameraPos = vec3(pos.at(0), pos.at(1), pos.at(2));
-			ComponentCamera* newCamComp = new ComponentCamera(camName.c_str(), cameraPos);
-			newGo->AssignComponent(newCamComp);
+			CreateCamera(camName, newGo);
+			newGo->GetCamera()->m_Camera->Position = cameraPos;
 		}
 		/*json_["Game Objects"][id]["Camera"]["Position"] = { t->GetTranslate().x, t->GetTranslate().y, t->GetTranslate().z };
 		json_["Game Objects"][id]["Camera"]["Name"] = go_->GetCameraConst()->m_Name;*/
@@ -316,15 +453,7 @@ GameObject* ModuleScene::From_Json(const json& j, const GameObject* goParent)
 
 // Update
 update_status ModuleScene::Update(float dt)
-{	
-	int height, width;
-	App->window->GetScreenSize(width, height);
-
-	float nearPlane = 0.1f;
-	float farPlane = 100.0f * 1.5f;
-	projection = glm::perspective(glm::radians(App->camera->editorCamera->m_Camera->Zoom), (float)width / (float)height, nearPlane, farPlane);
-	modelsShader->setMat4("projection", projection);
-
+{
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_UP)
 		LoadSceneJson();
 	if (App->input->GetKey(SDL_SCANCODE_K) == KEY_UP)
@@ -336,56 +465,7 @@ update_status ModuleScene::Update(float dt)
 
 update_status ModuleScene::PostUpdate(float dt)
 {
-	if (debug_draw == true)
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	}
-	else
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	}
-
-	//for (auto camera : App->camera->cameras)
-	//{
-	//	if (camera->fbo != 0)
-	//		continue;
-	//	glBindFramebuffer(GL_FRAMEBUFFER, camera->fbo); // If fbo=0 then default frame buffer, as the case for editorCamera.
-	//	// make sure we clear the framebuffer's content
-	//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//	glm::mat4 view = camera->camera->GetViewMatrix();
-	//	modelsShader->setMat4("view", view);
-	//	App->componentsManager->DrawGameObject(*modelsShader, this->root, this->root->GetTransform()->GetLocal());
-	//}
-	
-
-	for (auto camera : App->camera->cameras)
-	{
-		glBindFramebuffer(GL_FRAMEBUFFER, camera->m_Framebuffer); // If fbo=0 then default frame buffer, as the case for editorCamera.
-		glEnable(GL_DEPTH_TEST); // enable depth testing (is disabled for rendering screen-space quad)
-
-		// make sure we clear the framebuffer's content
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		modelsShader->use();
-		glm::mat4 view = camera->m_Camera->GetViewMatrix();
-		modelsShader->setMat4("view", view);
-		App->componentsManager->DrawGameObject(camera, *modelsShader, this->root, this->root->GetTransform()->GetLocal());
-	}
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0); // If fbo=0 then default frame buffer, as the case for editorCamera.
-	// make sure we clear the framebuffer's content
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glm::mat4 view = App->camera->editorCamera->m_Camera->GetViewMatrix();
-	modelsShader->setMat4("view", view);
-	App->componentsManager->DrawGameObject(App->camera->editorCamera, *modelsShader, this->root, this->root->GetTransform()->GetLocal());
-
-	for (auto camera : App->camera->cameras)
-	{
-		camera->RenderWindow();
-	}
-
-	modelsShader->use();
+	Draw();
 	return UPDATE_CONTINUE;
 }
 

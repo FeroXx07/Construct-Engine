@@ -114,12 +114,12 @@
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>$(SolutionDir)\SourceCode\SDL\include;$(SolutionDir)\SourceCode\imgui\include;$(SolutionDir)\SourceCode\JsonParser;$(SolutionDir)\SourceCode\Glew\include;$(SolutionDir)\SourceCode\glm;$(SolutionDir)\SourceCode\physfs;$(SolutionDir)\SourceCode\;$(SolutionDir)\SourceCode\Optick\include;$(SolutionDir)\SourceCode\Bullet\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\SourceCode\SDL\include;$(SolutionDir)\SourceCode\imgui\include;$(SolutionDir)\SourceCode\JsonParser;$(SolutionDir)\SourceCode\Glew\include;$(SolutionDir)\SourceCode\glm;$(SolutionDir)\SourceCode\physfs;$(SolutionDir)\SourceCode\;$(SolutionDir)\SourceCode\Optick\include;$(SolutionDir)\SourceCode\Bullet\Include;$(SolutionDir)\SourceCode\freeglut\include\GL</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <AdditionalLibraryDirectories>$(SolutionDir)\SourceCode\SDL\lib\x64;$(SolutionDir)\SourceCode\Glew\lib\Release\x64;$(SolutionDir)\SourceCode\assimp\lib;$(SolutionDir)\SourceCode\physfs\lib;$(SolutionDir)\SourceCode\freeglut\lib\x64;$(SolutionDir)\SourceCode\Optick\lib\x64\debug</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(CoreLibraryDependencies);SDL2.lib;SDL2main.lib;assimp-vc143-mt.lib;assimp-vc143-mtd.lib;physfs.lib;physfs-static.lib;OptickCore.lib;freeglut.lib</AdditionalDependencies>
@@ -156,14 +156,14 @@
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)\SourceCode\SDL\include;$(SolutionDir)\SourceCode\imgui\include;$(SolutionDir)\SourceCode\JsonParser;$(SolutionDir)\SourceCode\Glew\include;$(SolutionDir)\SourceCode\glm;$(SolutionDir)\SourceCode\physfs;$(SolutionDir)\SourceCode\;$(SolutionDir)\SourceCode\Optick\include;$(SolutionDir)\SourceCode\Bullet\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\SourceCode\SDL\include;$(SolutionDir)\SourceCode\imgui\include;$(SolutionDir)\SourceCode\JsonParser;$(SolutionDir)\SourceCode\Glew\include;$(SolutionDir)\SourceCode\glm;$(SolutionDir)\SourceCode\physfs;$(SolutionDir)\SourceCode\;$(SolutionDir)\SourceCode\Optick\include;$(SolutionDir)\SourceCode\Bullet\Include;$(SolutionDir)\SourceCode\freeglut\include\GL</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <AdditionalLibraryDirectories>$(SolutionDir)\SourceCode\SDL\lib\x64;$(SolutionDir)\SourceCode\Glew\lib\Release\x64;$(SolutionDir)\SourceCode\assimp\lib;$(SolutionDir)\SourceCode\physfs\lib;$(SolutionDir)\SourceCode\freeglut\lib\x64;$(SolutionDir)\SourceCode\Optick\lib\x64\release</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(CoreLibraryDependencies);SDL2.lib;SDL2main.lib;assimp-vc143-mt.lib;assimp-vc143-mtd.lib;physfs.lib;physfs-static.lib;OptickCore.lib;freeglut.lib</AdditionalDependencies>

@@ -19,7 +19,8 @@
 
 #include "../MathBuildConfig.h"
 #include "SSEMath.h"
-
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #ifdef MATH_ENABLE_STL_SUPPORT
 #include "myassert.h"
 #endif
@@ -400,6 +401,8 @@ public:
 	//	   pre-transformed coordinate system, if the matrix contained reflection.
 //	template<typename Convention = XposRight_YposUp_ZposForward> float3 Forward() const;
 
+	float4x4 FromGLM(glm::mat4x4 m);
+
 	/// Returns the local +X axis in world space.
 	/** This is the same as transforming the vector (1,0,0) by this matrix. [indexTitle: X/Y/Z] */
 	float3 WorldX() const;
@@ -591,6 +594,8 @@ public:
 	float4x4 &operator =(const float4x4 &rhs);
 
 	float4x4 &operator =(const TranslateOp &rhs);
+
+	//float4x4& operator =(const glm::mat4x4& rhs);
 
 	/// Sets this float4x4 to represent the same rotation as the given Quat.
 	/// @note The remaining entries of this matrix are set to identity.

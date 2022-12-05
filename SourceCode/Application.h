@@ -9,6 +9,8 @@
 #include "ModuleCamera3D.h"
 #include "ModuleEditor.h"
 #include "ModuleComponentSys.h"
+#include "ModulePhysics3D.h"
+
 #include <string>
 #include <list>
 #include <fstream>
@@ -25,6 +27,7 @@ public:
 	ModuleCamera3D* camera;
 	ModuleEditor* uiManager;
 	ModuleComponentSys* componentsManager;
+	ModulePhysics3D* physics3D;
 
 private:
 

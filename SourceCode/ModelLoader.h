@@ -22,6 +22,7 @@
 
 class GameObject;
 class ModuleComponentSys;
+class ModulePhysics3D;
 class ComponentTransform;
 
 using namespace std;
@@ -38,7 +39,8 @@ public:
     uint meshesSize = 0;
 
     ModuleComponentSys* componentSystem = nullptr;
-    ModelLoader(ModuleComponentSys* sys, bool gamma = false);
+    ModulePhysics3D* physics3D = nullptr;
+    ModelLoader(ModuleComponentSys* sys, ModulePhysics3D* physics3D, bool gamma = false);
     ~ModelLoader();
  
     // draws the model, and all its meshesList

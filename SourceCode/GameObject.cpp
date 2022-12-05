@@ -1,5 +1,5 @@
 #include "GameObject.h"
-
+#include "Bullet/include/btBulletDynamicsCommon.h"
 std::atomic<int> GameObject::s_id;
 
 GameObject::GameObject() : id(++s_id), m_Parent(nullptr), m_ComponentMesh(nullptr), m_ComponentTransform(nullptr), m_ComponentMaterial(nullptr), m_HasComponentMesh(0), m_HasComponentTransform(0), m_HasComponentMaterial(0), m_ComponentCamera(0)
@@ -53,6 +53,14 @@ GameObject::~GameObject()
 	{
 		delete m_ComponentCamera;
 		m_ComponentCamera = nullptr;
+	}
+
+
+	// Delete physbody
+	if (m_PhysBody != nullptr)
+	{
+		delete m_PhysBody;
+		m_PhysBody = nullptr;
 	}
 }
 
@@ -113,6 +121,13 @@ GameObject* GameObject::FindById(int id)
 	return nullptr;
 }
 
+void GameObject::SetPhysBody(PhysBody3D* newBody)
+{
+	m_PhysBody = newBody;
+	m_PhysBody->SetGameObject(this);
+	m_PhysBody->m_Body->setGravity({0,0,0});
+}
+
 void GameObject::SetParent(GameObject* parent)
 {
 	if (m_Parent != nullptr)
@@ -133,6 +148,19 @@ void GameObject::SetChild(GameObject* child)
 GameObject* GameObject::GetParentConst()const
 {
 	return m_Parent;
+}
+
+void GameObject::UpdateBody()
+{
+	if (m_PhysBody != nullptr)
+	{
+		m_PhysBody->GetTransform(m_ComponentTransform->m_LocalMat);
+	}
+}
+
+PhysBody3D* GameObject::GetPhysBody()
+{
+	return m_PhysBody;
 }
 
 GameObject* GameObject::GetParent()
@@ -166,11 +194,28 @@ bool GameObject::IsGameObjectChild(GameObject* possibleChild)
 	return isChildren;
 }
 
+void GameObject::GenerateBoundingBoxes()
+{
+	if (m_HasComponentMesh && m_HasComponentTransform)
+	{
+		// Generate global OBB
+		m_Obb = GetMeshConst()->GetMesh()->GetAABB();
+		mat4x4 transformMatrix = GetTransformConst()->GetWorld();
+		math::float4x4 a;
+		a = a.FromGLM(transformMatrix);
+		m_Obb.Transform(a);
+		// Generate global AABB
+		m_Aabb.SetNegativeInfinity();
+		m_Aabb.Enclose(m_Obb);
+	}
+}
+
 void GameObject::AssignComponent(ComponentMesh* comp)
 {
 	m_ComponentMesh = comp;
 	m_HasComponentMesh = true;
 	comp->SetGameObject(*this);
+	GenerateBoundingBoxes();
 }
 
 void GameObject::AssignComponent(ComponentTransform* comp)

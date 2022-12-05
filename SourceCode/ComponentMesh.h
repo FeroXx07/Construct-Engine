@@ -19,5 +19,6 @@ public:
 	bool m_DisplayNormals = false;
 private:
 	Mesh* m_Mesh = nullptr;
+
 };
 #endif

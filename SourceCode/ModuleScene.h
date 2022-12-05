@@ -8,6 +8,14 @@
 
 #include <list>
 #include "Primitive.h"
+
+enum StateEditor
+{
+	ON_EDITOR,
+	ON_PAUSE,
+	ON_PLAYING
+};
+
 class ModuleScene : public Module
 {
 public:
@@ -15,10 +23,13 @@ public:
 	~ModuleScene();
 
 	bool Start();
+	update_status PreUpdate(float dt);
 	update_status Update(float dt);
 	update_status PostUpdate(float dt);
 	bool CleanUp();
-
+	void Draw();
+	StateEditor editorState = ON_EDITOR;
+	void ChangeEditorState(StateEditor newState);
 	GameObject* CreateGameObject(string const& path, string name);
 	GameObject* CreateEmptyGameObject(string name);
 	GameObject* CreateCamera(string name, GameObject* destinationGO = nullptr);
@@ -40,5 +51,4 @@ public:
 	void To_Json(json& j, const GameObject* go);
 	GameObject* From_Json(const json& j, const GameObject* goParent);
 
-	P_Plane p = P_Plane(0, 1, 0, 0);
 };

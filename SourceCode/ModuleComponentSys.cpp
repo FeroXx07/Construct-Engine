@@ -49,6 +49,12 @@ void ModuleComponentSys::DrawGameObject(ComponentCamera* camera, Shader& shader,
 			}
 
 			DrawNormals(camera, mesh, local);
+			DrawBoundingBoxes(camera, local, node);
+		}
+
+		if (node->m_HasComponentCamera)
+		{
+			DrawFrustum(camera, local);
 		}
 	}
 	for (auto c : node->m_Children)
@@ -90,10 +96,148 @@ void ModuleComponentSys::DrawNormals(ComponentCamera* camera, ComponentMesh* mes
 		glEnd();
 		glLineWidth(1.0f);
 	}
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+}
+
+void ModuleComponentSys::DrawBoundingBoxes(ComponentCamera* camera, ComponentTransform* transform, GameObject* go)
+{
+	glm::mat4 view = camera->m_Camera->GetViewMatrix();
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf((const GLfloat*)&camera->m_Camera->projection[0]);
+	glMatrixMode(GL_MODELVIEW);
+	glm::mat4 MV = view * transform->GetWorld();
+	glLoadMatrixf((const GLfloat*)&MV[0]);
+	glUseProgram(0);
+
+	glLineWidth(2.0f);
+	glBegin(GL_LINES);
+	math::float3 c[8];
+	AABB* b = &go->m_Aabb;
+	math::float3 p0 = b->CornerPoint(0);
+	math::float3 p1 = b->CornerPoint(1);
+	math::float3 p2 = b->CornerPoint(2);
+	math::float3 p3 = b->CornerPoint(3);
+	math::float3 p4 = b->CornerPoint(4);
+	math::float3 p5 = b->CornerPoint(5);
+	math::float3 p6 = b->CornerPoint(6);
+	math::float3 p7 = b->CornerPoint(7);
+	
+	glColor3f(0, 255, 0);
+
+	// Bottom face
+	glVertex3f(p0.x,p0.y,p0.z); glVertex3f(p4.x,p4.y,p4.z);
+	glVertex3f(p4.x, p4.y, p4.z); glVertex3f(p6.x,p6.y,p6.z);
+	glVertex3f(p6.x, p6.y, p6.z); glVertex3f(p2.x,p2.y,p2.z);
+	glVertex3f(p2.x, p2.y, p2.z); glVertex3f(p0.x, p0.y, p0.z);
+
+
+	// Left face
+	glVertex3f(p0.x, p0.y, p0.z); glVertex3f(p2.x, p2.y, p2.z);
+	glVertex3f(p2.x, p2.y, p2.z); glVertex3f(p3.x, p3.y, p3.z);
+	glVertex3f(p3.x, p3.y, p3.z); glVertex3f(p1.x, p1.y, p1.z);
+	glVertex3f(p1.x, p1.y, p1.z); glVertex3f(p0.x, p0.y, p0.z);
+
+	// Top face
+	glVertex3f(p1.x, p1.y, p1.z); glVertex3f(p5.x, p5.y, p5.z);
+	glVertex3f(p5.x, p5.y, p5.z); glVertex3f(p7.x, p7.y, p7.z);
+	glVertex3f(p7.x, p7.y, p7.z); glVertex3f(p3.x, p3.y, p3.z);
+	glVertex3f(p3.x, p3.y, p3.z); glVertex3f(p1.x, p1.y, p1.z);
+
+	// Right face
+	glVertex3f(p5.x, p5.y, p5.z); glVertex3f(p4.x, p4.y, p4.z);
+	glVertex3f(p4.x, p4.y, p4.z); glVertex3f(p6.x, p6.y, p6.z);
+	glVertex3f(p6.x, p6.y, p6.z); glVertex3f(p7.x, p7.y, p7.z);
+	glVertex3f(p7.x, p7.y, p7.z); glVertex3f(p5.x, p5.y, p5.z);
+
+	glEnd();
+	glLineWidth(1.0f);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+}
+
+void ModuleComponentSys::DrawFrustum(ComponentCamera* camera, ComponentTransform* transform)
+{
+	glm::mat4 view = camera->m_Camera->GetViewMatrix();
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf(glm::value_ptr(camera->m_Camera->projection));
+	glMatrixMode(GL_MODELVIEW);
+	glm::mat4 MV = view * transform->GetLocal();
+	glLoadMatrixf(glm::value_ptr(MV));
+	glUseProgram(0);
+
+	P_Sphere ps;
+	ps.radius = 2.0f;
+	ps.wire = true;
+	ps.axis = true;
+	ps.Render();
+	
+	Frustum* fr = &camera->m_Camera->frustum;
+	
+	glLineWidth(2.0f);
+	glBegin(GL_LINES);
+	math::float3 c[8];
+
+	math::float3 p0 = fr->CornerPoint(0);
+	math::float3 p1 = fr->CornerPoint(1);
+	math::float3 p2 = fr->CornerPoint(2);
+	math::float3 p3 = fr->CornerPoint(3);
+	math::float3 p4 = fr->CornerPoint(4);
+	math::float3 p5 = fr->CornerPoint(5);
+	math::float3 p6 = fr->CornerPoint(6);
+	math::float3 p7 = fr->CornerPoint(7);
+
+	glColor3f(0, 255, 0);
+
+	// Bottom face
+	glVertex3f(p0.x, p0.y, p0.z); glVertex3f(p4.x, p4.y, p4.z);
+	glVertex3f(p4.x, p4.y, p4.z); glVertex3f(p6.x, p6.y, p6.z);
+	glVertex3f(p6.x, p6.y, p6.z); glVertex3f(p2.x, p2.y, p2.z);
+	glVertex3f(p2.x, p2.y, p2.z); glVertex3f(p0.x, p0.y, p0.z);
+
+
+	// Left face
+	glVertex3f(p0.x, p0.y, p0.z); glVertex3f(p2.x, p2.y, p2.z);
+	glVertex3f(p2.x, p2.y, p2.z); glVertex3f(p3.x, p3.y, p3.z);
+	glVertex3f(p3.x, p3.y, p3.z); glVertex3f(p1.x, p1.y, p1.z);
+	glVertex3f(p1.x, p1.y, p1.z); glVertex3f(p0.x, p0.y, p0.z);
+
+	// Top face
+	glVertex3f(p1.x, p1.y, p1.z); glVertex3f(p5.x, p5.y, p5.z);
+	glVertex3f(p5.x, p5.y, p5.z); glVertex3f(p7.x, p7.y, p7.z);
+	glVertex3f(p7.x, p7.y, p7.z); glVertex3f(p3.x, p3.y, p3.z);
+	glVertex3f(p3.x, p3.y, p3.z); glVertex3f(p1.x, p1.y, p1.z);
+
+	// Right face
+	glVertex3f(p5.x, p5.y, p5.z); glVertex3f(p4.x, p4.y, p4.z);
+	glVertex3f(p4.x, p4.y, p4.z); glVertex3f(p6.x, p6.y, p6.z);
+	glVertex3f(p6.x, p6.y, p6.z); glVertex3f(p7.x, p7.y, p7.z);
+	glVertex3f(p7.x, p7.y, p7.z); glVertex3f(p5.x, p5.y, p5.z);
+
+	glEnd();
+	glLineWidth(1.0f);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 }
 
 void ModuleComponentSys::UpdateAllTransforms(GameObject* rootNode)
 {
+	//glMatrixMode(GL_PROJECTION);
+	//glLoadIdentity();
+	//glMatrixMode(GL_MODELVIEW);
+	//glLoadIdentity();
+	//rootNode->UpdateBody();
+
+	//for (auto c : rootNode->m_Children)
+	//{
+	//	UpdateAllTransforms(c);
+	//}
 }
 
 

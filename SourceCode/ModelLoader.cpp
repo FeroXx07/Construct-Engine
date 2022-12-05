@@ -9,8 +9,10 @@
 #include "ComponentMaterial.h"
 
 #include "ModuleComponentSys.h"
-ModelLoader::ModelLoader(ModuleComponentSys* sys, bool gamma) : gammaCorrection(gamma)
+#include "ModulePhysics3D.h"
+ModelLoader::ModelLoader(ModuleComponentSys* sys, ModulePhysics3D* physics, bool gamma) : gammaCorrection(gamma)
 {
+    physics3D = physics;
     componentSystem = sys;
     meshesSize = 0;
     PHYSFS_mount("Assets", "/", 1);
@@ -28,6 +30,7 @@ ModelLoader::ModelLoader(ModuleComponentSys* sys, bool gamma) : gammaCorrection(
 ModelLoader::~ModelLoader()
 {
     componentSystem = nullptr;
+    physics3D = nullptr;
     checkerTexture = nullptr;
 }
 
@@ -130,7 +133,7 @@ void ModelLoader::ProcessNode(aiNode* aiNode, const aiScene* aiScene, GameObject
 
         // Create a ComponentTransform and assign it
         child->AssignComponent(new ComponentTransform(transform));
-        
+        child->GenerateBoundingBoxes();
         // Create a ComponentMaterial and fill it
         ComponentMaterial* compMaterial = new ComponentMaterial();
         child->AssignComponent(compMaterial);
@@ -138,6 +141,9 @@ void ModelLoader::ProcessNode(aiNode* aiNode, const aiScene* aiScene, GameObject
         compMaterial->m_MaterialName = aiScene->mMaterials[mesh->mMaterialIndex]->GetName().C_Str();
       /*  meshesList.push_back(CreateMesh(mesh, aiScene));*/
         ++meshesSize;
+
+        child->SetPhysBody(physics3D->AddBodyCube(transform.m_LocalMat, 1.0f));
+       
 
         // Save to Custom format
         Save(compMesh->GetMesh(), compMesh->GetMesh()->name.c_str());
@@ -327,6 +333,9 @@ void ModelLoader::Save(const Mesh* mesh, const char* filename)
         // Body data
         file2.write((char*)mesh->vertices.data(), vertices_Size_In_Bytes); // Vertex position, the REAL DATA!
         file2.write((char*)mesh->indices.data(), indices_Size_In_Bytes); // Vertex position, the REAL DATA!
+
+        // Extra data (AABB...)
+        file2.write((char*)&mesh->aabb, sizeof(AABB)); // Vertex position, the REAL DATA!
         file2.close();
     }
 }
@@ -384,6 +393,8 @@ Mesh* ModelLoader::LoadFromCustomFormat(const char* filename, Mesh* compareMesh)
             printf("Not equal!");
 
         Mesh* mesh = new Mesh(vertices, indices, textures, filename);
+        // Read AABB
+        file.read((char*)&mesh->aabb, sizeof(AABB));
          /*mesh->vertices = vertices;
         mesh->indices = indices;*/
         file.close();

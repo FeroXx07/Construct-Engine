@@ -9,6 +9,7 @@ Application::Application()
 	camera = new ModuleCamera3D(this);
     uiManager = new ModuleEditor(this, false);
     componentsManager = new ModuleComponentSys(this);
+    physics3D = new ModulePhysics3D(this);
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
@@ -20,6 +21,7 @@ Application::Application()
 
 	// Scenes
 	AddModule(componentsManager);
+	AddModule(physics3D);
 	AddModule(scene);
 	AddModule(uiManager);
 

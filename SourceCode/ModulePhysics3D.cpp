@@ -14,7 +14,8 @@
 	#pragma comment (lib, "SourceCode/Bullet/lib/BulletDynamics_vs2010_x64_release.lib")
 	#pragma comment (lib, "SourceCode/Bullet/lib/LinearMath_vs2010_x64_release.lib")
 #endif
-
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/string_cast.hpp>
 ModulePhysics3D::ModulePhysics3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	debug = true;
@@ -54,7 +55,6 @@ bool ModulePhysics3D::Start()
 	world->setDebugDrawer(debug_draw);
 	world->setGravity(GRAVITY*2);
 	vehicle_raycaster = new btDefaultVehicleRaycaster(world);
-
 	// Big plane as ground
 	{
 		btCollisionShape* colShape = new btStaticPlaneShape(btVector3(0, 1, 0), 0);
@@ -74,43 +74,56 @@ bool ModulePhysics3D::Start()
 // ---------------------------------------------------------
 update_status ModulePhysics3D::PreUpdate(float dt)
 {
-	world->stepSimulation(dt, 15);
-
-	int numManifolds = world->getDispatcher()->getNumManifolds();
-	for(int i = 0; i<numManifolds; i++)
+	if (App->scene->editorState == StateEditor::ON_PLAYING)
 	{
-		btPersistentManifold* contactManifold = world->getDispatcher()->getManifoldByIndexInternal(i);
-		btCollisionObject* obA = (btCollisionObject*)(contactManifold->getBody0());
-		btCollisionObject* obB = (btCollisionObject*)(contactManifold->getBody1());
+		world->stepSimulation(delta, 15);
 
-		int numContacts = contactManifold->getNumContacts();
-		if(numContacts > 0)
+		int numManifolds = world->getDispatcher()->getNumManifolds();
+		for (int i = 0; i < numManifolds; i++)
 		{
-			PhysBody3D* pbodyA = (PhysBody3D*)obA->getUserPointer();
-			PhysBody3D* pbodyB = (PhysBody3D*)obB->getUserPointer();
+			btPersistentManifold* contactManifold = world->getDispatcher()->getManifoldByIndexInternal(i);
+			btCollisionObject* obA = (btCollisionObject*)(contactManifold->getBody0());
+			btCollisionObject* obB = (btCollisionObject*)(contactManifold->getBody1());
 
-			if(pbodyA && pbodyB)
+			int numContacts = contactManifold->getNumContacts();
+			if (numContacts > 0)
 			{
-				//std::list<Module*>* item = pbodyA->collision_listeners.getFirst();
-				std::list<Module*>::iterator item = pbodyA->collision_listeners.begin();
-				while(*item && *item != nullptr)
-				{
-					(*item)->OnCollision(pbodyA, pbodyB);
-					//item->data->OnCollision(pbodyA, pbodyB);
-					item++;
-				}
+				PhysBody3D* pbodyA = (PhysBody3D*)obA->getUserPointer();
+				PhysBody3D* pbodyB = (PhysBody3D*)obB->getUserPointer();
 
-				item = pbodyB->collision_listeners.begin();
-				while(*item && *item != nullptr)
+				if (pbodyA && pbodyB)
 				{
-					(*item)->OnCollision(pbodyB, pbodyA);
-					//item->data->OnCollision(pbodyA, pbodyB);
-					item++;
+					//std::list<Module*>* item = pbodyA->collision_listeners.getFirst();
+					for (std::list<Module*>::iterator item = pbodyA->collision_listeners.begin(); item != pbodyA->collision_listeners.end(); item++)
+					{
+						(*item)->OnCollision(pbodyA, pbodyB);
+					}
+
+					for (std::list<Module*>::iterator item2 = pbodyB->collision_listeners.begin(); item2 != pbodyB->collision_listeners.end(); item2++)
+					{
+						(*item2)->OnCollision(pbodyB, pbodyA);
+					}
+					//while(*item && *item != nullptr)
+					//{
+					//	(*item)->OnCollision(pbodyA, pbodyB);
+					//	//item->data->OnCollision(pbodyA, pbodyB);
+					//	item++;
+					//}
+
+					//item = pbodyB->collision_listeners.begin();
+					//while(*item && *item != nullptr)
+					//{
+					//	(*item)->OnCollision(pbodyB, pbodyA);
+					//	//item->data->OnCollision(pbodyA, pbodyB);
+					//	item++;
+					//}
 				}
 			}
 		}
+
 	}
 
+	
 	return UPDATE_CONTINUE;
 }
 
@@ -120,19 +133,35 @@ update_status ModulePhysics3D::Update(float dt)
 	if(App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 		debug = !debug;
 
+	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
+	{
+		for (std::list<PhysBody3D*>::iterator item = bodies.begin(); item != bodies.end(); item++)
+		{
+			(*item)->Push(0.0f,2.0f,0.0f);
+		}
+	}
+	for (std::list<PhysBody3D*>::iterator item = bodies.begin(); item != bodies.end(); item++)
+	{
+		(*item)->ownerGameObject->UpdateBody();
+		glm::mat4x4 m;
+		(*item)->GetTransform(m);
+		string n = (*item)->ownerGameObject->m_Name;
+		std::cout << n << "  " << glm::to_string(m) << std::endl << std::endl;
+	}
+
 	if(debug == true)
 	{
-		world->debugDrawWorld();
+		//world->debugDrawWorld();
 
 		// Render vehicles
-		std::list<PhysVehicle3D*>::iterator item = vehicles.begin();
-		//p2List_item<PhysVehicle3D*>* item = vehicles.getFirst();
-		while(*item && *item != nullptr)
-		{
-			/*(*item)->Render();*/
-			/**item->Render();
-			++i;*/
-		}
+		//std::list<PhysVehicle3D*>::iterator item = vehicles.begin();
+		////p2List_item<PhysVehicle3D*>* item = vehicles.getFirst();
+		//while(*item && *item != nullptr)
+		//{
+		//	/*(*item)->Render();*/
+		//	/**item->Render();
+		//	++i;*/
+		//}
 
 		/*if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 		{
@@ -164,7 +193,7 @@ bool ModulePhysics3D::CleanUp()
 		world->removeCollisionObject(obj);
 	}
 	
-	for(std::list<btTypedConstraint*>::iterator item = constraints.begin(); item != constraints.end(); ++item)
+	for(std::list<btTypedConstraint*>::iterator item = constraints.begin(); item != constraints.end(); item++)
 	{
 		world->removeConstraint((*item));
 		delete *item;
@@ -173,7 +202,7 @@ bool ModulePhysics3D::CleanUp()
 	
 	constraints.clear();
 
-	for(std::list<btDefaultMotionState*>::iterator item = motions.begin(); item != motions.end(); ++item)
+	for(std::list<btDefaultMotionState*>::iterator item = motions.begin(); item != motions.end(); item++)
 	{
 		delete *item;
 		*item = nullptr;
@@ -181,7 +210,7 @@ bool ModulePhysics3D::CleanUp()
 
 	motions.clear();
 
-	for (std::list<btCollisionShape*>::iterator item = shapes.begin(); item != shapes.end(); ++item)
+	for (std::list<btCollisionShape*>::iterator item = shapes.begin(); item != shapes.end(); item++)
 	{
 		delete* item;
 		*item = nullptr;
@@ -189,8 +218,9 @@ bool ModulePhysics3D::CleanUp()
 
 	shapes.clear();
 
-	for (std::list<PhysBody3D*>::iterator item = bodies.begin(); item != bodies.end(); ++item)
+	for (std::list<PhysBody3D*>::iterator item = bodies.begin(); item != bodies.end(); item++)
 	{
+		(*item)->ownerGameObject->m_PhysBody = nullptr;
 		delete* item;
 		*item = nullptr;
 	}
@@ -233,7 +263,7 @@ PhysBody3D* ModulePhysics3D::AddBodySphere(glm::mat4x4 transform, float radius, 
 	body->setUserPointer(pbody);
 	world->addRigidBody(body);
 	bodies.push_back(pbody);
-	pbody->body = body;
+	pbody->m_Body = body;
 	//sphere.body = pbody;
 	//pbody->parentPrimitive = (Primitive*)&sphere;
 	return pbody;
@@ -250,7 +280,7 @@ PhysBody3D* ModulePhysics3D::AddBodyCube(glm::mat4x4 transform, float mass)
 	glm::vec3 Translation;
 	glm::decompose(transform, Scaling, Rotation, Translation, skew, perspective);
 
-	btCollisionShape* colShape = new btBoxShape(btVector3(Translation.x*0.5f, Translation.y*0.5f, Translation.z*0.5f));
+	btCollisionShape* colShape = new btBoxShape(btVector3(Translation.x * 0.5f, Translation.y *0.5f, Translation.z * 0.5f));
 	shapes.push_back(colShape);
 
 	btTransform startTransform;
@@ -270,7 +300,7 @@ PhysBody3D* ModulePhysics3D::AddBodyCube(glm::mat4x4 transform, float mass)
 	body->setUserPointer(pbody);
 	world->addRigidBody(body);
 	bodies.push_back(pbody);
-	pbody->body = body;
+	pbody->m_Body = body;
 	pbody->shape = Shape::CUBE;
 	/*cube.body = pbody;*/
 	/*pbody->parentPrimitive = (Primitive*)&cube;*/
@@ -300,7 +330,7 @@ PhysBody3D* ModulePhysics3D::AddBodyCylinder(glm::mat4x4 transform, float height
 	body->setUserPointer(pbody);
 	world->addRigidBody(body);
 	bodies.push_back(pbody);
-	pbody->body = body;
+	pbody->m_Body = body;
 	pbody->shape = Shape::CYLINDER;
 	/*cylinder.body = pbody;
 	pbody->parentPrimitive = (Primitive*)&cylinder;*/
@@ -372,8 +402,8 @@ PhysBody3D* ModulePhysics3D::AddBodyCylinder(glm::mat4x4 transform, float height
 void ModulePhysics3D::AddConstraintP2P(PhysBody3D& bodyA, PhysBody3D& bodyB, const vec3& anchorA, const vec3& anchorB)
 {
 	btTypedConstraint* p2p = new btPoint2PointConstraint(
-		*(bodyA.body), 
-		*(bodyB.body), 
+		*(bodyA.m_Body), 
+		*(bodyB.m_Body), 
 		btVector3(anchorA.x, anchorA.y, anchorA.z), 
 		btVector3(anchorB.x, anchorB.y, anchorB.z));
 	world->addConstraint(p2p);
@@ -384,8 +414,8 @@ void ModulePhysics3D::AddConstraintP2P(PhysBody3D& bodyA, PhysBody3D& bodyB, con
 void ModulePhysics3D::AddConstraintHinge(PhysBody3D& bodyA, PhysBody3D& bodyB, const vec3& anchorA, const vec3& anchorB, const vec3& axisA, const vec3& axisB, bool disable_collision)
 {
 	btHingeConstraint* hinge = new btHingeConstraint(
-		*(bodyA.body), 
-		*(bodyB.body), 
+		*(bodyA.m_Body), 
+		*(bodyB.m_Body), 
 		btVector3(anchorA.x, anchorA.y, anchorA.z),
 		btVector3(anchorB.x, anchorB.y, anchorB.z),
 		btVector3(axisA.x, axisA.y, axisA.z), 
@@ -414,10 +444,18 @@ void ModulePhysics3D::AddConstraintSixDof(btRigidBody& bodyA, btRigidBody& bodyB
 
 void DebugDrawer::drawLine(const btVector3& from, const btVector3& to, const btVector3& color)
 {
-	line.origin.Set(from.getX(), from.getY(), from.getZ());
-	line.destination.Set(to.getX(), to.getY(), to.getZ());
-	line.color.Set(color.getX(), color.getY(), color.getZ());
-	line.Render();
+	//line.origin.Set(from.getX(), from.getY(), from.getZ());
+	//line.destination.Set(to.getX(), to.getY(), to.getZ());
+	//line.color.Set(255, 0, 0);
+	//line.Render();
+	glUseProgram(0);
+	glColor3f(0, 0, 255);
+	glLineWidth(2.0f);
+	glBegin(GL_LINES);
+	glVertex3f(from.getX(), from.getY(), from.getZ());
+	glVertex3f(to.getX(), to.getY(), to.getZ());
+	glEnd();
+	glLineWidth(1.0f);
 }
 
 void DebugDrawer::drawContactPoint(const btVector3& PointOnB, const btVector3& normalOnB, btScalar distance, int lifeTime, const btVector3& color)

@@ -89,6 +89,16 @@ CONST_WIN32 float float3::At(int index) const
 	return ptr()[index];
 }
 
+float3& float3::operator=(const glm::vec3& rhs)
+{
+	x = rhs.x;
+	y = rhs.y;
+	z = rhs.z;
+
+	return *this;
+	// TODO: Insertar una instrucción "return" aquí
+}
+
 float &float3::At(int index)
 {
 	assume(index >= 0);

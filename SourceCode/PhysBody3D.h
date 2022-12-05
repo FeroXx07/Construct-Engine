@@ -7,13 +7,14 @@
 #include <glm/gtc/type_ptr.hpp>
 class btRigidBody;
 class Module;
-
+class GameObject;
 //class Sphere;
 //class Cube;
 //class Cylinder;
 //class Plane;
 //
 //class Primitive;
+
 enum Shape {
 	SPHERE,
 	CUBE,
@@ -33,19 +34,33 @@ public:
 	void GetTransform(glm::mat4& mat) const;
 	void SetTransform(glm::mat4& mat) const;
 	void SetPos(float x, float y, float z);
+
+	void SetGameObject(GameObject* ownerGameObject);
 	void PhysBody3D::SetAsSensor(bool is_sensor);
+	
 	btRigidBody* GetBody()
 	{
-		return body;
+		return m_Body;
 	}
 	Shape shape = Shape::CUBE;
 	/*Primitive* parentPrimitive;*/
-private:
-	btRigidBody* body = nullptr;
-	
+
+
+	btRigidBody* m_Body = nullptr;
+	GameObject* ownerGameObject = nullptr;
 public:
 	std::list<Module*> collision_listeners;
 	bool is_sensor = false;
+
+	//glm::mat4x4 BtToGLM(btScalar* m, glm::mat4x4& dst)
+	//{
+	//	// convert to (column major)
+	//	dst[0][0] = m[0];
+	//	dst[0][0] = m[0];
+	//	dst[0][0] = m[0];
+	//	dst[0][0] = m[0];
+
+	//}
 };
 
 #endif // __PhysBody3D_H__

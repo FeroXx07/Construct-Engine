@@ -1,6 +1,6 @@
 #include "ComponentMesh.h"
 #include "Mesh.h"
-
+#include "GameObject.h"
 ComponentMesh::ComponentMesh(Mesh* mesh) : Component(ComponentType::MESH), m_Mesh(nullptr)
 {
 	m_Mesh = mesh;
@@ -51,3 +51,5 @@ Mesh* ComponentMesh::GetMesh()
 	else
 		return nullptr;
 }
+
+

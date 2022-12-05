@@ -16,6 +16,7 @@ public:
 	void Update();
 	void OnEditor();
 	void RenderWindow();
+	
 	Camera* m_Camera = nullptr;
 	Shader* m_ScreenShader = nullptr;
 	string m_Name = "No_Name";
