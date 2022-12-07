@@ -17,6 +17,9 @@ All the licenses can be found in the license folder of the repository.
 - Pressing “f” focuses the camera to the geometry.
 - Holding SHIFT duplicates movement speed.
 - Drag and slide the in the component inspector window to change Transform data like Position, Scaling and Rotation.
+- Press "L" key to delete the scene.
+- Press "K" key to save the scene.
+- Press "SPACE BAR" key to load the saved the scene.
 
 ## License
 MIT License
