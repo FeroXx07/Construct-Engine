@@ -21,7 +21,7 @@ public:
 	void AddTextureToGameObject(string const& path);
 	void DrawNormals(ComponentCamera* camera, ComponentMesh* mesh, ComponentTransform* transform);
 	void DrawBoundingBoxes(ComponentCamera* camera, ComponentTransform* transform, GameObject* go);
-	void DrawFrustum(ComponentCamera* camera, ComponentTransform* transform);
+	void DrawFrustum(ComponentCamera* camera, ComponentCamera* frustumCamera, ComponentTransform* transform);
 
 	void UpdateAllTransforms(GameObject* rootNode);
 	bool CleanUp();

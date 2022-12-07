@@ -37,6 +37,7 @@
 #include "../Geometry/Capsule.h"
 #include "MathFunc.h"
 
+
 MATH_BEGIN_NAMESPACE
 
 using namespace std;
@@ -54,6 +55,18 @@ float3::float3(float scalar)
 float3::float3(const float2 &xy, float z_)
 :x(xy.x), y(xy.y), z(z_)
 {
+}
+
+float3::float3(glm::vec3& v)
+	:x(v.x), y(v.y), z(v.z)
+{
+
+}
+
+float3::float3(const glm::vec3& v)
+	:x(v.x), y(v.y), z(v.z)
+{
+
 }
 
 float3::float3(const float *data)

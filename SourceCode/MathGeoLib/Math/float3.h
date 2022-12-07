@@ -24,7 +24,7 @@
 #endif
 
 #include "../MathGeoLibFwd.h"
-
+#include <glm/glm.hpp>
 #ifdef MATH_QT_INTEROP
 #include <QVector3D>
 #endif
@@ -78,10 +78,12 @@ public:
 	/// Constructs a new float3 with the value (x, y, z).
 	/** @see x, y, z. */
 	float3(float x, float y, float z);
+	float3(glm::vec3& );
 
 	/// Constructs a new float3 with the value (scalar, scalar, scalar).
 	/** @see x, y, z. */
 	explicit float3(float scalar);
+	explicit float3(const glm::vec3& v);
 
 	/// Constructs a new float3 with the value (xy.x, xy.y, z).
 	float3(const float2 &xy, float z);

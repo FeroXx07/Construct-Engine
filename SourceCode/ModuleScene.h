@@ -52,3 +52,4 @@ public:
 	GameObject* From_Json(const json& j, const GameObject* goParent);
 
 };
+

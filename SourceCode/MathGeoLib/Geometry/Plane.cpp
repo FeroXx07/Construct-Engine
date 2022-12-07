@@ -61,6 +61,11 @@ Plane::Plane(const float3 &point, const float3 &normal_)
 	Set(point, normal_);
 }
 
+Plane::Plane(const glm::vec3& point, const glm::vec3& normal_)
+{
+	Set((float3)point, (float3)normal_);
+}
+
 Plane::Plane(const Ray &ray, const float3 &normal)
 {
 	float3 perpNormal = normal - normal.ProjectToNorm(ray.dir);

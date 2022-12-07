@@ -784,6 +784,66 @@ float4x4 float4x4::FromGLM(glm::mat4x4 rhs)
 	return v;
 }
 
+glm::mat4x4 float4x4::FromGEO(float4x4 rhs)
+{
+	glm::mat4x4 v;
+	//First row in mathgeo lib 
+	v[0][0] = rhs[0][0];
+	v[1][0] = rhs[0][1];
+	v[2][0] = rhs[0][2];
+	v[3][0] = rhs[0][3];
+
+	//Second row in mathgeo lib 
+	v[0][1] = rhs[1][0];
+	v[1][1] = rhs[1][1];
+	v[2][1] = rhs[1][2];
+	v[3][1] = rhs[1][3];
+
+	//Third row in mathgeo lib 
+	v[0][2] = rhs[2][0];
+	v[1][2] = rhs[2][1];
+	v[2][2] = rhs[2][2];
+	v[3][2] = rhs[2][3];
+
+	//Forth row in mathgeo lib 
+	v[0][3] = rhs[3][0];
+	v[1][3] = rhs[3][1];
+	v[2][3] = rhs[3][2];
+	v[3][3] = rhs[3][3];
+
+	return v;
+}
+
+glm::mat4x4 float4x4::FromGEO()
+{
+	glm::mat4x4 v;
+	//First row in mathgeo lib 
+	v[0][0] = this->v[0][0];
+	v[1][0] = this->v[0][1];
+	v[2][0] = this->v[0][2];
+	v[3][0] = this->v[0][3];
+
+	//Second row in mathgeo lib 
+	v[0][1] = this->v[1][0];
+	v[1][1] = this->v[1][1];
+	v[2][1] = this->v[1][2];
+	v[3][1] = this->v[1][3];
+
+	//Third row in mathgeo lib 
+	v[0][2] = this->v[2][0];
+	v[1][2] = this->v[2][1];
+	v[2][2] = this->v[2][2];
+	v[3][2] = this->v[2][3];
+
+	//Forth row in mathgeo lib 
+	v[0][3] = this->v[3][0];
+	v[1][3] = this->v[3][1];
+	v[2][3] = this->v[3][2];
+	v[3][3] = this->v[3][3];
+
+	return v;
+}
+
 float3 float4x4::WorldX() const
 {
 	return Col3(0);

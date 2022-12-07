@@ -19,7 +19,7 @@
 
 #include "../MathGeoLibFwd.h"
 #include "../Math/float3.h"
-
+#include <glm/glm.hpp>
 #ifdef MATH_OGRE_INTEROP
 #include <OgrePlane.h>
 #endif
@@ -65,6 +65,7 @@ public:
 	/** @param normal The direction the plane is facing. This vector must have been normalized in advance.
 		@see Set(). */
 	Plane(const float3 &point, const float3 &normal);
+	Plane(const glm::vec3 &point, const glm::vec3 &normal);
 	/// Constructs a plane by specifying a line that lies on the plane, and the plane normal.
 	/** @param line The line object that is to be contained in the newly constructed plane.
 		@param normal The direction the plane if facing. This vector must have been normalized in advance. The normal

@@ -31,6 +31,7 @@ void ModuleComponentSys::DrawGameObject(ComponentCamera* camera, Shader& shader,
 	if (node->GetParent() == nullptr)
 		isRoot = true;
 	glm::mat4x4 world = parentWorld;
+	MyFrustum* frustum = &camera->m_Camera->frustum;
 	if (!isRoot)
 	{
 		ComponentTransform* local = node->GetTransform();
@@ -45,7 +46,15 @@ void ModuleComponentSys::DrawGameObject(ComponentCamera* camera, Shader& shader,
 			if (node->m_HasComponentMaterial)
 			{
 				ComponentMaterial* material = node->GetMaterial();
-				mesh->GetMesh()->RenderMesh(shader, material);
+				AABB* box = &node->m_Aabb;
+				glm::vec3 minP = glm::vec3(box->minPoint.x, box->minPoint.y, box->minPoint.z);
+				glm::vec3 maxP = glm::vec3(box->maxPoint.x, box->maxPoint.y, box->maxPoint.z);
+				bool isVisible = frustum->IsBoxVisible(minP, maxP);
+
+				if (isVisible)
+					mesh->GetMesh()->RenderMesh(shader, material);
+				else
+					std::cout << node->m_Name << " is not visible !" << std::endl << std::endl;
 			}
 
 			DrawNormals(camera, mesh, local);
@@ -54,7 +63,7 @@ void ModuleComponentSys::DrawGameObject(ComponentCamera* camera, Shader& shader,
 
 		if (node->m_HasComponentCamera)
 		{
-			DrawFrustum(camera, local);
+			DrawFrustum(camera, node->GetCameraConst(),local);
 		}
 	}
 	for (auto c : node->m_Children)
@@ -133,7 +142,6 @@ void ModuleComponentSys::DrawBoundingBoxes(ComponentCamera* camera, ComponentTra
 	glVertex3f(p6.x, p6.y, p6.z); glVertex3f(p2.x,p2.y,p2.z);
 	glVertex3f(p2.x, p2.y, p2.z); glVertex3f(p0.x, p0.y, p0.z);
 
-
 	// Left face
 	glVertex3f(p0.x, p0.y, p0.z); glVertex3f(p2.x, p2.y, p2.z);
 	glVertex3f(p2.x, p2.y, p2.z); glVertex3f(p3.x, p3.y, p3.z);
@@ -160,63 +168,48 @@ void ModuleComponentSys::DrawBoundingBoxes(ComponentCamera* camera, ComponentTra
 	glLoadIdentity();
 }
 
-void ModuleComponentSys::DrawFrustum(ComponentCamera* camera, ComponentTransform* transform)
+void ModuleComponentSys::DrawFrustum(ComponentCamera* camera, ComponentCamera* frustumCamera, ComponentTransform* transform)
 {
+	
 	glm::mat4 view = camera->m_Camera->GetViewMatrix();
 	glMatrixMode(GL_PROJECTION);
 	glLoadMatrixf(glm::value_ptr(camera->m_Camera->projection));
 	glMatrixMode(GL_MODELVIEW);
-	glm::mat4 MV = view * transform->GetLocal();
+	glm::mat4 local(1.0f);
+
+	glm::mat4 MV = view* transform->GetLocal();
 	glLoadMatrixf(glm::value_ptr(MV));
 	glUseProgram(0);
 
-	P_Sphere ps;
-	ps.radius = 2.0f;
-	ps.wire = true;
-	ps.axis = true;
-	ps.Render();
-	
-	Frustum* fr = &camera->m_Camera->frustum;
-	
-	glLineWidth(2.0f);
+	glLineWidth(3.0f);
 	glBegin(GL_LINES);
 	math::float3 c[8];
+	MyFrustum* f = &frustumCamera->m_Camera->frustum;
+	glColor3f(255, 0, 0);
 
-	math::float3 p0 = fr->CornerPoint(0);
-	math::float3 p1 = fr->CornerPoint(1);
-	math::float3 p2 = fr->CornerPoint(2);
-	math::float3 p3 = fr->CornerPoint(3);
-	math::float3 p4 = fr->CornerPoint(4);
-	math::float3 p5 = fr->CornerPoint(5);
-	math::float3 p6 = fr->CornerPoint(6);
-	math::float3 p7 = fr->CornerPoint(7);
+	// Near face
+	glVertex3f(f->P(0).x, f->P(0).y, f->P(0).z); glVertex3f(f->P(1).x, f->P(1).y, f->P(1).z);
+	glVertex3f(f->P(1).x, f->P(1).y, f->P(1).z); glVertex3f(f->P(3).x, f->P(3).y, f->P(3).z);
+	glVertex3f(f->P(3).x, f->P(3).y, f->P(3).z); glVertex3f(f->P(2).x, f->P(2).y, f->P(2).z);
+	glVertex3f(f->P(2).x, f->P(2).y, f->P(2).z); glVertex3f(f->P(0).x, f->P(0).y, f->P(0).z);
 
-	glColor3f(0, 255, 0);
-
-	// Bottom face
-	glVertex3f(p0.x, p0.y, p0.z); glVertex3f(p4.x, p4.y, p4.z);
-	glVertex3f(p4.x, p4.y, p4.z); glVertex3f(p6.x, p6.y, p6.z);
-	glVertex3f(p6.x, p6.y, p6.z); glVertex3f(p2.x, p2.y, p2.z);
-	glVertex3f(p2.x, p2.y, p2.z); glVertex3f(p0.x, p0.y, p0.z);
-
+	// Front face
+	glVertex3f(f->P(4).x, f->P(4).y, f->P(4).z); glVertex3f(f->P(5).x, f->P(5).y, f->P(5).z);
+	glVertex3f(f->P(5).x, f->P(5).y, f->P(5).z); glVertex3f(f->P(7).x, f->P(7).y, f->P(7).z);
+	glVertex3f(f->P(7).x, f->P(7).y, f->P(7).z); glVertex3f(f->P(6).x, f->P(6).y, f->P(6).z);
+	glVertex3f(f->P(6).x, f->P(6).y, f->P(6).z); glVertex3f(f->P(4).x, f->P(4).y, f->P(4).z);
 
 	// Left face
-	glVertex3f(p0.x, p0.y, p0.z); glVertex3f(p2.x, p2.y, p2.z);
-	glVertex3f(p2.x, p2.y, p2.z); glVertex3f(p3.x, p3.y, p3.z);
-	glVertex3f(p3.x, p3.y, p3.z); glVertex3f(p1.x, p1.y, p1.z);
-	glVertex3f(p1.x, p1.y, p1.z); glVertex3f(p0.x, p0.y, p0.z);
-
-	// Top face
-	glVertex3f(p1.x, p1.y, p1.z); glVertex3f(p5.x, p5.y, p5.z);
-	glVertex3f(p5.x, p5.y, p5.z); glVertex3f(p7.x, p7.y, p7.z);
-	glVertex3f(p7.x, p7.y, p7.z); glVertex3f(p3.x, p3.y, p3.z);
-	glVertex3f(p3.x, p3.y, p3.z); glVertex3f(p1.x, p1.y, p1.z);
+	glVertex3f(f->P(0).x, f->P(0).y, f->P(0).z); glVertex3f(f->P(1).x, f->P(1).y, f->P(1).z);
+	glVertex3f(f->P(1).x, f->P(1).y, f->P(1).z); glVertex3f(f->P(5).x, f->P(5).y, f->P(5).z);
+	glVertex3f(f->P(5).x, f->P(5).y, f->P(5).z); glVertex3f(f->P(4).x, f->P(4).y, f->P(4).z);
+	glVertex3f(f->P(4).x, f->P(4).y, f->P(4).z); glVertex3f(f->P(0).x, f->P(0).y, f->P(0).z);
 
 	// Right face
-	glVertex3f(p5.x, p5.y, p5.z); glVertex3f(p4.x, p4.y, p4.z);
-	glVertex3f(p4.x, p4.y, p4.z); glVertex3f(p6.x, p6.y, p6.z);
-	glVertex3f(p6.x, p6.y, p6.z); glVertex3f(p7.x, p7.y, p7.z);
-	glVertex3f(p7.x, p7.y, p7.z); glVertex3f(p5.x, p5.y, p5.z);
+	glVertex3f(f->P(2).x, f->P(2).y, f->P(2).z); glVertex3f(f->P(3).x, f->P(3).y, f->P(3).z);
+	glVertex3f(f->P(3).x, f->P(3).y, f->P(3).z); glVertex3f(f->P(7).x, f->P(7).y, f->P(7).z);
+	glVertex3f(f->P(7).x, f->P(7).y, f->P(7).z); glVertex3f(f->P(6).x, f->P(6).y, f->P(6).z);
+	glVertex3f(f->P(6).x, f->P(6).y, f->P(6).z); glVertex3f(f->P(2).x, f->P(2).y, f->P(2).z);
 
 	glEnd();
 	glLineWidth(1.0f);

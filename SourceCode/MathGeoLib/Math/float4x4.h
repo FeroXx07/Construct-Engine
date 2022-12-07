@@ -402,7 +402,8 @@ public:
 //	template<typename Convention = XposRight_YposUp_ZposForward> float3 Forward() const;
 
 	float4x4 FromGLM(glm::mat4x4 m);
-
+	glm::mat4x4 FromGEO(float4x4 m);
+	glm::mat4x4 FromGEO();
 	/// Returns the local +X axis in world space.
 	/** This is the same as transforming the vector (1,0,0) by this matrix. [indexTitle: X/Y/Z] */
 	float3 WorldX() const;

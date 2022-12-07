@@ -351,8 +351,6 @@ Mesh* ModelLoader::LoadFromCustomFormat(const char* filename, Mesh* compareMesh)
     file.open(path, std::ios::binary);
     if (file)
     {
-        vector<Vertex> vertices;
-        vector<GLuint> indices;
         vector<Texture> textures;
 
         uint vertices_Size_In_Bytes = 0;
@@ -361,12 +359,16 @@ Mesh* ModelLoader::LoadFromCustomFormat(const char* filename, Mesh* compareMesh)
         // Read all header data and resize the vector
         file.read((char*)&vertices_Size_In_Bytes, sizeof(Vertex)); // Vertex position data in bytes, we need size to reserve (malloc or resize for std::)
         file.read((char*)&indices_Size_In_Bytes, sizeof(GLuint)); // Vertex position data in bytes, we need size to reserve (malloc or resize for std::)
-       
 
         int numVertices = vertices_Size_In_Bytes / sizeof(Vertex);
+        std::cout << "Vertices size: " << numVertices << std::endl;
+        vector<Vertex> vertices(numVertices);
+        std::cout << "Vertices vector size: " << vertices.size() << std::endl;
+
         int numIndices = indices_Size_In_Bytes / sizeof(GLuint);
-        vertices.resize(numVertices);
-        indices.resize(numIndices);
+        std::cout << "indices size: " << numIndices << std::endl;
+        vector<GLuint> indices(numIndices);
+        std::cout << "indices vector size: " << indices.size() << std::endl;
         bool everythingCorrect = true;
         // Fill the vector with the boty data
         for (int i = 0; i < numVertices; i++)
@@ -387,7 +389,10 @@ Mesh* ModelLoader::LoadFromCustomFormat(const char* filename, Mesh* compareMesh)
             //
         }
         for (int i = 0; i < numIndices; i++)
+        {
             file.read((char*)&indices[i], sizeof(GLuint));
+        }
+            
 
         if (everythingCorrect == false)
             printf("Not equal!");

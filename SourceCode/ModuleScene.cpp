@@ -95,19 +95,6 @@ void ModuleScene::Draw()
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
-	//for (auto camera : App->camera->cameras)
-	//{
-	//	if (camera->fbo != 0)
-	//		continue;
-	//	glBindFramebuffer(GL_FRAMEBUFFER, camera->fbo); // If fbo=0 then default frame buffer, as the case for editorCamera.
-	//	// make sure we clear the framebuffer's content
-	//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//	glm::mat4 view = camera->camera->GetViewMatrix();
-	//	modelsShader->setMat4("view", view);
-	//	App->componentsManager->DrawGameObject(*modelsShader, this->root, this->root->GetTransform()->GetLocal());
-	//}
-
-
 	for (auto camera : App->camera->cameras)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, camera->m_Framebuffer); // If fbo=0 then default frame buffer, as the case for editorCamera.
@@ -120,16 +107,15 @@ void ModuleScene::Draw()
 		int height, width;
 		App->window->GetScreenSize(width, height);
 		float aspectRatio = (float)width / (float)height;
-		float verticalFov = camera->m_Camera->Zoom;
-		float horizontalFov = 2 * Atan(Tan(glm::radians(verticalFov) / 2) * aspectRatio);
-
-		float nearPlane = 0.1f;
-		float farPlane = 100.0f * 10.0f;
-		camera->m_Camera->frustum.nearPlaneDistance = nearPlane;
-		camera->m_Camera->frustum.farPlaneDistance = farPlane;
-
-		camera->m_Camera->frustum.verticalFov = verticalFov;
-		camera->m_Camera->frustum.verticalFov = horizontalFov;
+		float nearPlane = 1.0f;
+		float farPlane = 50.0f;
+		string compareString = "editorCamera";
+		if (camera->m_Name == compareString)
+		{
+			nearPlane = 0.1f;
+			farPlane = 1000.0f;
+		}
+			
 
 		camera->m_Camera->projection = glm::perspective(glm::radians(camera->m_Camera->Zoom), aspectRatio, nearPlane, farPlane);
 		modelsShader->setMat4("projection", camera->m_Camera->projection);
@@ -137,7 +123,10 @@ void ModuleScene::Draw()
 		modelsShader->use();
 		glm::mat4 view = camera->m_Camera->GetViewMatrix();
 		modelsShader->setMat4("view", view);
+		camera->m_Camera->frustum = MyFrustum(camera->m_Camera->projection * camera->m_Camera->GetViewMatrix());
+
 		App->componentsManager->DrawGameObject(camera, *modelsShader, this->root, this->root->GetTransform()->GetLocal());
+
 
 		glMatrixMode(GL_PROJECTION);
 		glLoadMatrixf(glm::value_ptr(camera->m_Camera->projection));
@@ -145,7 +134,7 @@ void ModuleScene::Draw()
 		glm::mat4 MV = view;
 		glLoadMatrixf(glm::value_ptr(MV));
 		
-		App->physics3D->world->debugDrawWorld();
+		//App->physics3D->world->debugDrawWorld();
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0); // If fbo=0 then default frame buffer, as the case for editorCamera.

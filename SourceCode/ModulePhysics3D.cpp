@@ -146,7 +146,7 @@ update_status ModulePhysics3D::Update(float dt)
 		glm::mat4x4 m;
 		(*item)->GetTransform(m);
 		string n = (*item)->ownerGameObject->m_Name;
-		std::cout << n << "  " << glm::to_string(m) << std::endl << std::endl;
+		//std::cout << n << "  " << glm::to_string(m) << std::endl << std::endl;
 	}
 
 	if(debug == true)
