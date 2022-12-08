@@ -15,6 +15,7 @@ public:
 
 	std::vector<ComponentCamera*> cameras;
 	ComponentCamera* editorCamera = nullptr;
+	void ChangeCamerasAspectRatio(const int width, const int height);
 	float lastX = 0;
 	float lastY = 0;
 	float lastScroll = 0;

@@ -31,6 +31,7 @@ bool ModuleCamera3D::Start()
 
 	int height, width;
 	App->window->GetScreenSize(width, height);
+	ChangeCamerasAspectRatio(width, height);
 	/*lastX = width / 2.0f;
 	lastY = height / 2.0f;*/
 
@@ -52,6 +53,12 @@ bool ModuleCamera3D::CleanUp()
 	cameras.clear();
 
 	return true;
+}
+
+void ModuleCamera3D::ChangeCamerasAspectRatio(const int width, const int height)
+{
+	for (std::vector<ComponentCamera*>::iterator i = cameras.begin(); i != cameras.end(); ++i)
+		(*i)->ChangeAspectRatio(width, height);
 }
 
 // -----------------------------------------------------------------

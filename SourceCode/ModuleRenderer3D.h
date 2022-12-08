@@ -17,6 +17,7 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 	void OnResize(int width, int height);
+	void RefreshWindowSize();
 public:
 
 	Light lights[MAX_LIGHTS];

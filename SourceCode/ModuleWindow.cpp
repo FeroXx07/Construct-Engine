@@ -56,7 +56,8 @@ bool ModuleWindow::Init()
 	// GL 3.0 + GLSL 130
 		const char* glsl_version = "#version 130";
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
-		//SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 #endif
@@ -158,6 +159,7 @@ void ModuleWindow::SetScreenSize(int width, int height)
 	this->width = width;
 	this->height = height;
 	SDL_SetWindowSize(window, this->width, this->height);
+	App->renderer3D->OnResize(width, height);
 	SaveJson();
 }
 

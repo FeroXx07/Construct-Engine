@@ -17,8 +17,7 @@ ComponentCamera::~ComponentCamera()
 	}
 
 	m_Camera = nullptr;
-	glDeleteVertexArrays(1, &m_QuadVAO);
-	glDeleteBuffers(1, &m_QuadVBO);
+	DeleteFrameBuffers();
 }
 
 void ComponentCamera::GenerateBuffers(Shader* screenShader)
@@ -45,7 +44,7 @@ void ComponentCamera::GenerateBuffers(Shader* screenShader)
 	// create a color attachment texture
 	glGenTextures(1, &m_TextureColorbuffer);
 	glBindTexture(GL_TEXTURE_2D, m_TextureColorbuffer);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1920, 1080, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_TextureColorbuffer, 0);
@@ -53,7 +52,7 @@ void ComponentCamera::GenerateBuffers(Shader* screenShader)
 	// create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
 	glGenRenderbuffers(1, &m_Rbo);
 	glBindRenderbuffer(GL_RENDERBUFFER, m_Rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 1920, 1080); // use a single renderbuffer object for both a depth AND stencil buffer.
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height); // use a single renderbuffer object for both a depth AND stencil buffer.
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_Rbo); // now actually attach it
 	// now that we actually created the framebuffer and added all attachments we want to check if it is actually complete now
 
@@ -116,7 +115,7 @@ void ComponentCamera::RenderWindow()
 		ImGuiIO& io = ImGui::GetIO();
 		ImTextureID my_tex_id = (void*)(intptr_t)m_TextureColorbuffer;
 		ImVec2 size = ImGui::GetItemRectSize();
-		ImVec2 available = ImGui::GetContentRegionMax();
+		ImVec2 available = ImGui::GetContentRegionAvail();
 		float my_tex_w = (float)available.x;
 		float my_tex_h = (float)available.y;
 
@@ -139,4 +138,19 @@ void ComponentCamera::BindFrameBuffer()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, m_Framebuffer);
 	glEnable(GL_DEPTH_TEST); // enable depth testing (is disabled for rendering screen-space quad)
+}
+
+void ComponentCamera::ChangeAspectRatio(const int width_, const int height_)
+{
+	DeleteFrameBuffers();
+	width = width_;
+	height = height_;
+	GenerateBuffers();
+}
+
+void ComponentCamera::DeleteFrameBuffers()
+{
+	glDeleteVertexArrays(1, &m_QuadVAO);
+	glDeleteBuffers(1, &m_QuadVBO);
+	glDeleteTextures(1, &m_TextureColorbuffer);
 }

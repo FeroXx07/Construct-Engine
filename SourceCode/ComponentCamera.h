@@ -29,7 +29,8 @@ public:
 	GLuint m_Rbo;
 
 	void BindFrameBuffer();
-
+	void ChangeAspectRatio(const int width, const int height);
+	void DeleteFrameBuffers();
 	float m_QuadVertices[24] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates. NOTE that this plane is now much smaller and at the top of the screen
 		// positions   // texCoords
 		-1.0f,  1.0f,  0.0f, 1.0f,
@@ -41,6 +42,8 @@ public:
          1.0f,  1.0f,  1.0f, 1.0f
 	};
 	unsigned int m_QuadVAO, m_QuadVBO;
+	int width = 1920;
+	int height = 1080;
 };
 
 #endif

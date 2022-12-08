@@ -57,6 +57,7 @@ bool ModuleScene::Start()
 	ground->GetTransform()->SetScale(glm::vec3(100, 100, 100));
 	ground->SetPhysBody(App->physics3D->AddBodyCube(ground->GetTransform()->GetLocal(), 1.0f));
 	debug_draw = false;
+	App->renderer3D->RefreshWindowSize();
 	SaveSceneJson();
 	return ret;
 }
