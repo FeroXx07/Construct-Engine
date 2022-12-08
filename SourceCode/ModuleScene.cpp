@@ -111,20 +111,25 @@ void ModuleScene::Draw()
 		float nearPlane = 1.0f;
 		float farPlane = 50.0f;
 		string compareString = "editorCamera";
+
 		if (camera->m_Name == compareString)
 		{
 			nearPlane = 0.1f;
 			farPlane = 1000.0f;
 		}
-			
-
+		nearPlane = 0.1f;
+		farPlane = 1000.0f;
 		camera->m_Camera->projection = glm::perspective(glm::radians(camera->m_Camera->Zoom), aspectRatio, nearPlane, farPlane);
 		modelsShader->setMat4("projection", camera->m_Camera->projection);
 
 		modelsShader->use();
 		glm::mat4 view = camera->m_Camera->GetViewMatrix();
 		modelsShader->setMat4("view", view);
-		camera->m_Camera->frustum = MyFrustum(camera->m_Camera->projection * camera->m_Camera->GetViewMatrix());
+
+		if (camera->m_hasGameObject)
+			camera->m_Camera->frustum = MyFrustum(glm::perspective(glm::radians(camera->m_Camera->Zoom), aspectRatio, nearPlane, 50.0f) * camera->m_Camera->GetViewMatrix());
+		else
+			camera->m_Camera->frustum = MyFrustum(camera->m_Camera->projection * camera->m_Camera->GetViewMatrix());
 
 		App->componentsManager->DrawGameObject(camera, *modelsShader, this->root, this->root->GetTransform()->GetLocal());
 

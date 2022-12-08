@@ -119,7 +119,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <AdditionalLibraryDirectories>$(SolutionDir)\SourceCode\SDL\lib\x64;$(SolutionDir)\SourceCode\Glew\lib\Release\x64;$(SolutionDir)\SourceCode\assimp\lib;$(SolutionDir)\SourceCode\physfs\lib;$(SolutionDir)\SourceCode\freeglut\lib\x64;$(SolutionDir)\SourceCode\Optick\lib\x64\debug</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(CoreLibraryDependencies);SDL2.lib;SDL2main.lib;assimp-vc143-mt.lib;assimp-vc143-mtd.lib;physfs.lib;physfs-static.lib;OptickCore.lib;freeglut.lib</AdditionalDependencies>
@@ -163,7 +163,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <AdditionalLibraryDirectories>$(SolutionDir)\SourceCode\SDL\lib\x64;$(SolutionDir)\SourceCode\Glew\lib\Release\x64;$(SolutionDir)\SourceCode\assimp\lib;$(SolutionDir)\SourceCode\physfs\lib;$(SolutionDir)\SourceCode\freeglut\lib\x64;$(SolutionDir)\SourceCode\Optick\lib\x64\release</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(CoreLibraryDependencies);SDL2.lib;SDL2main.lib;assimp-vc143-mt.lib;assimp-vc143-mtd.lib;physfs.lib;physfs-static.lib;OptickCore.lib;freeglut.lib</AdditionalDependencies>
