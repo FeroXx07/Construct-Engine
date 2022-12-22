@@ -189,6 +189,9 @@
     <ClCompile Include="SourceCode\glmath.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\ComponentCollider.cpp">
+      <Filter>GameObjects And Components\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ImGui">
@@ -343,6 +346,9 @@
       <Filter>Physics</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\MyFrustum.h" />
+    <ClInclude Include="SourceCode\ComponentCollider.h">
+      <Filter>GameObjects And Components\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="SourceCode\MathGeoLib\Geometry\TriangleMesh_IntersectRay_CPP.inl">

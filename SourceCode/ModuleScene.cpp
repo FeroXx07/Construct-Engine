@@ -55,7 +55,7 @@ bool ModuleScene::Start()
 	CreateGameObject("Assets/street/street2.fbx", "StreetScene");
 	GameObject* ground = CreateEmptyGameObject("Ground");
 	ground->GetTransform()->SetScale(glm::vec3(100, 100, 100));
-	ground->SetPhysBody(App->physics3D->AddBodyCube(ground->GetTransform()->GetLocal(), 1.0f));
+	ground->AssignComponent(App->physics3D->AddBodyCube(ground->GetTransform()->GetLocal(), 1.0f));
 	debug_draw = false;
 	App->renderer3D->RefreshWindowSize();
 	SaveSceneJson();

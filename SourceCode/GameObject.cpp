@@ -54,14 +54,6 @@ GameObject::~GameObject()
 		delete m_ComponentCamera;
 		m_ComponentCamera = nullptr;
 	}
-
-
-	// Delete physbody
-	if (m_PhysBody != nullptr)
-	{
-		delete m_PhysBody;
-		m_PhysBody = nullptr;
-	}
 }
 
 Component* GameObject::GetComponent(ComponentType type)
@@ -121,12 +113,12 @@ GameObject* GameObject::FindById(int id)
 	return nullptr;
 }
 
-void GameObject::SetPhysBody(PhysBody3D* newBody)
-{
-	m_PhysBody = newBody;
-	m_PhysBody->SetGameObject(this);
-	m_PhysBody->m_Body->setGravity({0,0,0});
-}
+//void GameObject::SetPhysBody(PhysBody3D* newBody)
+//{
+//	m_PhysBody = newBody;
+//	m_PhysBody->SetGameObject(this);
+//	m_PhysBody->m_Body->setGravity({0,0,0});
+//}
 
 void GameObject::SetParent(GameObject* parent)
 {
@@ -152,15 +144,10 @@ GameObject* GameObject::GetParentConst()const
 
 void GameObject::UpdateBody()
 {
-	if (m_PhysBody != nullptr)
+	/*if (m_PhysBody != nullptr)
 	{
 		m_PhysBody->GetTransform(m_ComponentTransform->m_LocalMat);
-	}
-}
-
-PhysBody3D* GameObject::GetPhysBody()
-{
-	return m_PhysBody;
+	}*/
 }
 
 GameObject* GameObject::GetParent()
@@ -240,6 +227,52 @@ void GameObject::AssignComponent(ComponentCamera* comp)
 	comp->SetGameObject(*this);
 }
 
+void GameObject::AssignComponent(ComponentCollider* comp)
+{
+	m_ComponentCollider = comp;
+	m_HasComponentCollider = true;
+	comp->SetGameObject(*this);
+}
+
+void GameObject::DeAssignComponent(ComponentType type)
+{
+	switch (type)
+	{
+	case ComponentType::TRANSFORM:
+	{
+		m_ComponentTransform = nullptr;
+		m_HasComponentTransform = false;
+		break;
+	}
+	case ComponentType::MESH:
+	{
+		m_ComponentMesh = nullptr;
+		m_HasComponentMesh = false;
+		break;
+	}
+	case ComponentType::MATERIAL:
+	{
+		m_ComponentMaterial = nullptr;
+		m_HasComponentMaterial= false;
+		break;
+	}
+	case ComponentType::CAMERA:
+	{
+		m_ComponentCamera = nullptr;
+		m_HasComponentCamera = false;
+		break;
+	}
+	case ComponentType::COLLIDER:
+	{
+		m_ComponentCollider = nullptr;
+		m_HasComponentCollider = false;
+		break;
+	}
+	default:
+		break;
+	}
+}
+
 ComponentMesh* GameObject::GetMesh()
 {
 	if (m_HasComponentMesh)
@@ -272,6 +305,14 @@ ComponentCamera* GameObject::GetCamera()
 		return nullptr;
 }
 
+ComponentCollider* GameObject::GetCollider()
+{
+	if (m_HasComponentCollider)
+		return m_ComponentCollider;
+	else
+		return nullptr;
+}
+
 ComponentMesh* GameObject::GetMeshConst() const
 {
 	if (m_HasComponentMesh)
@@ -300,6 +341,14 @@ ComponentCamera* GameObject::GetCameraConst() const
 {
 	if (m_HasComponentCamera)
 		return m_ComponentCamera;
+	else
+		return nullptr;
+}
+
+ComponentCollider* GameObject::GetColliderConst() const
+{
+	if (m_HasComponentCollider)
+		return m_ComponentCollider;
 	else
 		return nullptr;
 }

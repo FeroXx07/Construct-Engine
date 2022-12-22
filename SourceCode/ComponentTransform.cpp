@@ -38,9 +38,9 @@ void ComponentTransform::Update()
 	ComposeLocalMatrix();
 	if (m_hasGameObject)
 	{
-		if (m_GameObject->m_PhysBody != nullptr)
+		if (m_GameObject->m_HasComponentCollider)
 		{
-			m_GameObject->m_PhysBody->SetTransform(m_WorldMat);
+			m_GameObject->GetCollider()->SetTransform(m_WorldMat);
 		}
 	}
 }

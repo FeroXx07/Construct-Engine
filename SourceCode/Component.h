@@ -28,7 +28,8 @@ enum class ComponentType
 	TRANSFORM,
 	MESH,
 	MATERIAL,
-	CAMERA
+	CAMERA,
+	COLLIDER
 };
 
 class Component
@@ -42,6 +43,7 @@ public:
 	GameObject& GetGameObject();
 	// Called from AddComponent in GameObject class
 	void SetGameObject(GameObject& go);
+	void RemoveComponentFromGameObject();
 
 	ComponentType GetType() const { return m_Type; }
 	bool m_hasGameObject = false;

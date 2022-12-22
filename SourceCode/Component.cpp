@@ -34,6 +34,16 @@ void Component::SetGameObject(GameObject& go)
 	m_GameObject = &go;
 }
 
+void Component::RemoveComponentFromGameObject()
+{
+	if (m_hasGameObject)
+	{
+		m_GameObject->DeAssignComponent(this->m_Type);
+		m_GameObject = nullptr;
+		m_hasGameObject = false;
+	}
+}
+
 
 void Component::Start()
 {

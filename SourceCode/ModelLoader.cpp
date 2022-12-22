@@ -134,6 +134,7 @@ void ModelLoader::ProcessNode(aiNode* aiNode, const aiScene* aiScene, GameObject
         // Create a ComponentTransform and assign it
         child->AssignComponent(new ComponentTransform(transform));
         child->GenerateBoundingBoxes();
+
         // Create a ComponentMaterial and fill it
         ComponentMaterial* compMaterial = new ComponentMaterial();
         child->AssignComponent(compMaterial);
@@ -142,6 +143,8 @@ void ModelLoader::ProcessNode(aiNode* aiNode, const aiScene* aiScene, GameObject
       /*  meshesList.push_back(CreateMesh(mesh, aiScene));*/
         ++meshesSize;
 
+        // Create a ComponentCollider and assign it
+        ComponentMaterial
         child->SetPhysBody(physics3D->AddBodyCube(transform.m_LocalMat, 1.0f));
        
 

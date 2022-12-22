@@ -1,8 +1,6 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModulePhysics3D.h"
-#include "PhysBody3D.h"
-//#include "PhysVehicle3D.h"
 #include "Primitive.h"
 
 #ifdef _DEBUG
@@ -63,7 +61,7 @@ bool ModulePhysics3D::Start()
 		btRigidBody::btRigidBodyConstructionInfo rbInfo(0.0f, myMotionState, colShape);
 
 		btRigidBody* body = new btRigidBody(rbInfo);
-		ground = new PhysBody3D(body);
+		ground = new ComponentCollider(body);
 		body->setUserPointer(ground);
 		world->addRigidBody(body);
 	}
@@ -88,18 +86,18 @@ update_status ModulePhysics3D::PreUpdate(float dt)
 			int numContacts = contactManifold->getNumContacts();
 			if (numContacts > 0)
 			{
-				PhysBody3D* pbodyA = (PhysBody3D*)obA->getUserPointer();
-				PhysBody3D* pbodyB = (PhysBody3D*)obB->getUserPointer();
+				ComponentCollider* pbodyA = (ComponentCollider*)obA->getUserPointer();
+				ComponentCollider* pbodyB = (ComponentCollider*)obB->getUserPointer();
 
 				if (pbodyA && pbodyB)
 				{
 					//std::list<Module*>* item = pbodyA->collision_listeners.getFirst();
-					for (std::list<Module*>::iterator item = pbodyA->collision_listeners.begin(); item != pbodyA->collision_listeners.end(); item++)
+					for (std::list<Module*>::iterator item = pbodyA->m_Collision_listeners.begin(); item != pbodyA->m_Collision_listeners.end(); item++)
 					{
 						(*item)->OnCollision(pbodyA, pbodyB);
 					}
 
-					for (std::list<Module*>::iterator item2 = pbodyB->collision_listeners.begin(); item2 != pbodyB->collision_listeners.end(); item2++)
+					for (std::list<Module*>::iterator item2 = pbodyB->m_Collision_listeners.begin(); item2 != pbodyB->m_Collision_listeners.end(); item2++)
 					{
 						(*item2)->OnCollision(pbodyB, pbodyA);
 					}
@@ -135,17 +133,17 @@ update_status ModulePhysics3D::Update(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
 	{
-		for (std::list<PhysBody3D*>::iterator item = bodies.begin(); item != bodies.end(); item++)
+		for (std::list<ComponentCollider*>::iterator item = bodies.begin(); item != bodies.end(); item++)
 		{
 			(*item)->Push(0.0f,2.0f,0.0f);
 		}
 	}
-	for (std::list<PhysBody3D*>::iterator item = bodies.begin(); item != bodies.end(); item++)
+	for (std::list<ComponentCollider*>::iterator item = bodies.begin(); item != bodies.end(); item++)
 	{
-		(*item)->ownerGameObject->UpdateBody();
+		(*item)->Update();
 		glm::mat4x4 m;
 		(*item)->GetTransform(m);
-		string n = (*item)->ownerGameObject->m_Name;
+		string n = (*item)->m_GameObject->m_Name;
 		//std::cout << n << "  " << glm::to_string(m) << std::endl << std::endl;
 	}
 
@@ -218,9 +216,9 @@ bool ModulePhysics3D::CleanUp()
 
 	shapes.clear();
 
-	for (std::list<PhysBody3D*>::iterator item = bodies.begin(); item != bodies.end(); item++)
+	for (std::list<ComponentCollider*>::iterator item = bodies.begin(); item != bodies.end(); item++)
 	{
-		(*item)->ownerGameObject->m_PhysBody = nullptr;
+		(*item)->m_GameObject->coll = nullptr;
 		delete* item;
 		*item = nullptr;
 	}
@@ -242,7 +240,7 @@ bool ModulePhysics3D::CleanUp()
 }
 
 // ---------------------------------------------------------
-PhysBody3D* ModulePhysics3D::AddBodySphere(glm::mat4x4 transform, float radius, float mass)
+ComponentCollider* ModulePhysics3D::AddBodySphere(glm::mat4x4 transform, float radius, float mass)
 {
 	btCollisionShape* colShape = new btSphereShape(radius);
 	shapes.push_back(colShape);
@@ -258,8 +256,8 @@ PhysBody3D* ModulePhysics3D::AddBodySphere(glm::mat4x4 transform, float radius, 
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, colShape, localInertia);
 
 	btRigidBody* body = new btRigidBody(rbInfo);
-	PhysBody3D* pbody = new PhysBody3D(body);
-	pbody->shape = Shape::SPHERE;
+	ComponentCollider* pbody = new ComponentCollider(body);
+	pbody->m_Shape = Shape::SPHERE;
 	body->setUserPointer(pbody);
 	world->addRigidBody(body);
 	bodies.push_back(pbody);
@@ -271,7 +269,7 @@ PhysBody3D* ModulePhysics3D::AddBodySphere(glm::mat4x4 transform, float radius, 
 
 
 // ---------------------------------------------------------
-PhysBody3D* ModulePhysics3D::AddBodyCube(glm::mat4x4 transform, float mass)
+ComponentCollider* ModulePhysics3D::AddBodyCube(glm::mat4x4 transform, float mass)
 {
 	glm::vec3 skew;
 	glm::vec4 perspective;
@@ -279,6 +277,8 @@ PhysBody3D* ModulePhysics3D::AddBodyCube(glm::mat4x4 transform, float mass)
 	glm::quat Rotation;
 	glm::vec3 Translation;
 	glm::decompose(transform, Scaling, Rotation, Translation, skew, perspective);
+
+	
 
 	btCollisionShape* colShape = new btBoxShape(btVector3(Translation.x * 0.5f, Translation.y *0.5f, Translation.z * 0.5f));
 	shapes.push_back(colShape);
@@ -295,20 +295,20 @@ PhysBody3D* ModulePhysics3D::AddBodyCube(glm::mat4x4 transform, float mass)
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, colShape, localInertia);
 
 	btRigidBody* body = new btRigidBody(rbInfo);
-	PhysBody3D* pbody = new PhysBody3D(body);
+	ComponentCollider* pbody = new ComponentCollider(body);
 
 	body->setUserPointer(pbody);
 	world->addRigidBody(body);
 	bodies.push_back(pbody);
 	pbody->m_Body = body;
-	pbody->shape = Shape::CUBE;
+	pbody->m_Shape = Shape::CUBE;
 	/*cube.body = pbody;*/
 	/*pbody->parentPrimitive = (Primitive*)&cube;*/
 	return pbody;
 }
 
 // ---------------------------------------------------------
-PhysBody3D* ModulePhysics3D::AddBodyCylinder(glm::mat4x4 transform, float height, float radius, float mass)
+ComponentCollider* ModulePhysics3D::AddBodyCylinder(glm::mat4x4 transform, float height, float radius, float mass)
 {
 	btCollisionShape* colShape = new btCylinderShapeX(btVector3(height*0.5f, radius, 0.0f));
 	shapes.push_back(colShape);
@@ -325,13 +325,13 @@ PhysBody3D* ModulePhysics3D::AddBodyCylinder(glm::mat4x4 transform, float height
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, colShape, localInertia);
 
 	btRigidBody* body = new btRigidBody(rbInfo);
-	PhysBody3D* pbody = new PhysBody3D(body);
+	ComponentCollider* pbody = new ComponentCollider(body);
 
 	body->setUserPointer(pbody);
 	world->addRigidBody(body);
 	bodies.push_back(pbody);
 	pbody->m_Body = body;
-	pbody->shape = Shape::CYLINDER;
+	pbody->m_Shape = Shape::CYLINDER;
 	/*cylinder.body = pbody;
 	pbody->parentPrimitive = (Primitive*)&cylinder;*/
 	return pbody;
@@ -399,7 +399,7 @@ PhysBody3D* ModulePhysics3D::AddBodyCylinder(glm::mat4x4 transform, float height
 //}
 
 // ---------------------------------------------------------
-void ModulePhysics3D::AddConstraintP2P(PhysBody3D& bodyA, PhysBody3D& bodyB, const vec3& anchorA, const vec3& anchorB)
+void ModulePhysics3D::AddConstraintP2P(ComponentCollider& bodyA, ComponentCollider& bodyB, const vec3& anchorA, const vec3& anchorB)
 {
 	btTypedConstraint* p2p = new btPoint2PointConstraint(
 		*(bodyA.m_Body), 
@@ -411,7 +411,7 @@ void ModulePhysics3D::AddConstraintP2P(PhysBody3D& bodyA, PhysBody3D& bodyB, con
 	p2p->setDbgDrawSize(2.0f);
 }
 
-void ModulePhysics3D::AddConstraintHinge(PhysBody3D& bodyA, PhysBody3D& bodyB, const vec3& anchorA, const vec3& anchorB, const vec3& axisA, const vec3& axisB, bool disable_collision)
+void ModulePhysics3D::AddConstraintHinge(ComponentCollider& bodyA, ComponentCollider& bodyB, const vec3& anchorA, const vec3& anchorB, const vec3& axisA, const vec3& axisB, bool disable_collision)
 {
 	btHingeConstraint* hinge = new btHingeConstraint(
 		*(bodyA.m_Body), 

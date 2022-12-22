@@ -4,12 +4,11 @@
 #include <list>
 #include "Primitive.h"
 #include "Bullet/include/btBulletDynamicsCommon.h"
-
+#include "ComponentCollider.h"
 // Recommended scale is 1.0f == 1 meter, no less than 0.2 objects
 #define GRAVITY btVector3(0.0f, -10.0f, 0.0f) 
 
 class DebugDrawer;
-struct PhysBody3D;
 struct PhysVehicle3D;
 struct VehicleInfo;
 
@@ -26,14 +25,14 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-	PhysBody3D* AddBodySphere(glm::mat4x4 transform, float radius = 1.0f, float mass = 1.0f);
-	PhysBody3D* AddBodyCube(glm::mat4x4 transform, float mass = 1.0f);
-	PhysBody3D* AddBodyCylinder(glm::mat4x4 transform, float height, float radius, float mass = 1.0f);
+	ComponentCollider* AddBodySphere(glm::mat4x4 transform, float radius = 1.0f, float mass = 1.0f);
+	ComponentCollider* AddBodyCube(glm::mat4x4 transform, float mass = 1.0f);
+	ComponentCollider* AddBodyCylinder(glm::mat4x4 transform, float height, float radius, float mass = 1.0f);
 	/*PhysVehicle3D* AddVehicle(const VehicleInfo& info);*/
 
-	PhysBody3D* ground;
-	void AddConstraintP2P(PhysBody3D& bodyA, PhysBody3D& bodyB, const vec3& anchorA, const vec3& anchorB);
-	void AddConstraintHinge(PhysBody3D& bodyA, PhysBody3D& bodyB, const vec3& anchorA, const vec3& anchorB, const vec3& axisS, const vec3& axisB, bool disable_collision = false);
+	ComponentCollider* ground;
+	void AddConstraintP2P(ComponentCollider& bodyA, ComponentCollider& bodyB, const vec3& anchorA, const vec3& anchorB);
+	void AddConstraintHinge(ComponentCollider& bodyA, ComponentCollider& bodyB, const vec3& anchorA, const vec3& anchorB, const vec3& axisS, const vec3& axisB, bool disable_collision = false);
 	void AddConstraintSixDof(btRigidBody& bodyA, btRigidBody& bodyB, const btTransform& transform1, const btTransform& transform2);
 	btDiscreteDynamicsWorld* world;
 	float delta = 1.0f / 60.0f;
@@ -50,7 +49,7 @@ private:
 	DebugDrawer*						debug_draw;
 
 	std::list<btCollisionShape*> shapes;
-	std::list<PhysBody3D*> bodies;
+	std::list<ComponentCollider*> bodies;
 	std::list<btDefaultMotionState*> motions;
 	std::list<btTypedConstraint*> constraints;
 	std::list<PhysVehicle3D*> vehicles;
