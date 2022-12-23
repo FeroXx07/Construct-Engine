@@ -38,6 +38,7 @@ public:
 	void SetTrigger(bool isTrigger);
 	btRigidBody* GetBody();
 
+	glm::vec3 positionOffset = glm::vec3(0.0f);
 	Shape m_Shape = Shape::CUBE;
 	btRigidBody* m_Body = nullptr;
 	std::list<Module*> m_Collision_listeners;

@@ -49,12 +49,12 @@ void ModuleComponentSys::DrawGameObject(ComponentCamera* camera, Shader& shader,
 				AABB* box = &node->m_Aabb;
 				glm::vec3 minP = glm::vec3(box->minPoint.x, box->minPoint.y, box->minPoint.z);
 				glm::vec3 maxP = glm::vec3(box->maxPoint.x, box->maxPoint.y, box->maxPoint.z);
-				bool isVisible = frustum->IsBoxVisible(minP, maxP);
+				//bool isVisible = frustum->IsBoxVisible(minP, maxP);
 
-				if (isVisible)
-					mesh->GetMesh()->RenderMesh(shader, material);
-				else
-					std::cout << node->m_Name << " is not visible !" << std::endl << std::endl;
+				//if (isVisible)
+				mesh->GetMesh()->RenderMesh(shader, material);
+				//else
+					//std::cout << node->m_Name << " is not visible !" << std::endl << std::endl;
 			}
 
 			DrawNormals(camera, mesh, local);

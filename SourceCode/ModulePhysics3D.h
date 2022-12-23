@@ -26,7 +26,8 @@ public:
 	bool CleanUp();
 
 	ComponentCollider* AddBodySphere(glm::mat4x4 transform, float radius = 1.0f, float mass = 1.0f);
-	ComponentCollider* AddBodyCube(glm::mat4x4 transform, float mass = 1.0f);
+	ComponentCollider* AddBodyCube(const math::AABB& box, glm::mat4x4 transform, float mass = 1.0f);
+	ComponentCollider* AddBodyCube(const glm::vec3& halfExtents, glm::mat4x4 transform, float mass = 1.0f);
 	ComponentCollider* AddBodyCylinder(glm::mat4x4 transform, float height, float radius, float mass = 1.0f);
 	/*PhysVehicle3D* AddVehicle(const VehicleInfo& info);*/
 

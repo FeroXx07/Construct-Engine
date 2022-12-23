@@ -232,7 +232,6 @@
     <ClCompile Include="SourceCode\ModuleEditor.cpp" />
     <ClCompile Include="SourceCode\ModuleWindow.cpp" />
     <ClCompile Include="SourceCode\PhysBody3D.cpp" />
-    <ClCompile Include="SourceCode\Pipeline.cpp" />
     <ClCompile Include="SourceCode\Primitive.cpp" />
     <ClCompile Include="SourceCode\Timer.cpp" />
   </ItemGroup>
@@ -269,7 +268,6 @@
     <ClInclude Include="SourceCode\PanelHierarchy.h" />
     <ClInclude Include="SourceCode\PanelInspector.h" />
     <ClInclude Include="SourceCode\PhysBody3D.h" />
-    <ClInclude Include="SourceCode\Pipeline.h" />
     <ClInclude Include="SourceCode\Primitive.h" />
     <ClInclude Include="SourceCode\shader.h" />
     <ClInclude Include="SourceCode\singleton.h" />

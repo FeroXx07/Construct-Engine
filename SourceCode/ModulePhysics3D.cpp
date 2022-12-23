@@ -135,7 +135,7 @@ update_status ModulePhysics3D::Update(float dt)
 	{
 		for (std::list<ComponentCollider*>::iterator item = bodies.begin(); item != bodies.end(); item++)
 		{
-			(*item)->Push(0.0f,2.0f,0.0f);
+			(*item)->Push(0.0f,200.0f,0.0f);
 		}
 	}
 	for (std::list<ComponentCollider*>::iterator item = bodies.begin(); item != bodies.end(); item++)
@@ -218,7 +218,7 @@ bool ModulePhysics3D::CleanUp()
 
 	for (std::list<ComponentCollider*>::iterator item = bodies.begin(); item != bodies.end(); item++)
 	{
-		(*item)->m_GameObject->coll = nullptr;
+		(*item)->m_GameObject->DeAssignComponent(ComponentType::COLLIDER);
 		delete* item;
 		*item = nullptr;
 	}
@@ -269,7 +269,7 @@ ComponentCollider* ModulePhysics3D::AddBodySphere(glm::mat4x4 transform, float r
 
 
 // ---------------------------------------------------------
-ComponentCollider* ModulePhysics3D::AddBodyCube(glm::mat4x4 transform, float mass)
+ComponentCollider* ModulePhysics3D::AddBodyCube(const math::AABB& box, glm::mat4x4 transform, float mass)
 {
 	glm::vec3 skew;
 	glm::vec4 perspective;
@@ -277,12 +277,13 @@ ComponentCollider* ModulePhysics3D::AddBodyCube(glm::mat4x4 transform, float mas
 	glm::quat Rotation;
 	glm::vec3 Translation;
 	glm::decompose(transform, Scaling, Rotation, Translation, skew, perspective);
-
 	
+	// Get the size of the box
+	math::float3 halfExtents = box.HalfSize();
 
-	btCollisionShape* colShape = new btBoxShape(btVector3(Translation.x * 0.5f, Translation.y *0.5f, Translation.z * 0.5f));
+	btCollisionShape* colShape = new btBoxShape(btVector3(halfExtents.x, halfExtents.y, halfExtents.z));
+
 	shapes.push_back(colShape);
-
 	btTransform startTransform;
 	startTransform.setFromOpenGLMatrix(glm::value_ptr(transform));
 
@@ -304,6 +305,39 @@ ComponentCollider* ModulePhysics3D::AddBodyCube(glm::mat4x4 transform, float mas
 	pbody->m_Shape = Shape::CUBE;
 	/*cube.body = pbody;*/
 	/*pbody->parentPrimitive = (Primitive*)&cube;*/
+	return pbody;
+}
+
+ComponentCollider* ModulePhysics3D::AddBodyCube(const glm::vec3& halfExtents, glm::mat4x4 transform, float mass)
+{
+	glm::vec3 skew;
+	glm::vec4 perspective;
+	glm::vec3 Scaling;
+	glm::quat Rotation;
+	glm::vec3 Translation;
+	glm::decompose(transform, Scaling, Rotation, Translation, skew, perspective);
+	btCollisionShape* colShape = new btBoxShape(btVector3(halfExtents.x, halfExtents.y, halfExtents.z));
+	shapes.push_back(colShape);
+
+	btTransform startTransform;
+	startTransform.setFromOpenGLMatrix(glm::value_ptr(transform));
+
+	btVector3 localInertia(0, 0, 0);
+	if (mass != 0.f)
+		colShape->calculateLocalInertia(mass, localInertia);
+
+	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
+	motions.push_back(myMotionState);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, colShape, localInertia);
+
+	btRigidBody* body = new btRigidBody(rbInfo);
+	ComponentCollider* pbody = new ComponentCollider(body);
+
+	body->setUserPointer(pbody);
+	world->addRigidBody(body);
+	bodies.push_back(pbody);
+	pbody->m_Body = body;
+	pbody->m_Shape = Shape::CUBE;
 	return pbody;
 }
 

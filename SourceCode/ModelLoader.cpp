@@ -144,10 +144,8 @@ void ModelLoader::ProcessNode(aiNode* aiNode, const aiScene* aiScene, GameObject
         ++meshesSize;
 
         // Create a ComponentCollider and assign it
-        ComponentMaterial
-        child->SetPhysBody(physics3D->AddBodyCube(transform.m_LocalMat, 1.0f));
+        child->AssignComponent(physics3D->AddBodyCube(child->m_Aabb, transform.m_LocalMat, 1.0f));
        
-
         // Save to Custom format
         Save(compMesh->GetMesh(), compMesh->GetMesh()->name.c_str());
         //Load(compMesh->GetMesh(), compMesh->GetMesh()->name.c_str());

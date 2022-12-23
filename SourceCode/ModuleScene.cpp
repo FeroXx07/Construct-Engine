@@ -53,9 +53,8 @@ bool ModuleScene::Start()
 
 	//CreateGameObject("Assets/BakerHouse.fbx", "BakerHouse");
 	CreateGameObject("Assets/street/street2.fbx", "StreetScene");
-	GameObject* ground = CreateEmptyGameObject("Ground");
-	ground->GetTransform()->SetScale(glm::vec3(100, 100, 100));
-	ground->AssignComponent(App->physics3D->AddBodyCube(ground->GetTransform()->GetLocal(), 1.0f));
+	//GameObject* ground = CreateEmptyGameObject("Ground");
+	//ground->AssignComponent(App->physics3D->AddBodyCube(glm::vec3(50,1,50), ground->GetTransform()->GetLocal(), 1.0f));
 	debug_draw = false;
 	App->renderer3D->RefreshWindowSize();
 	SaveSceneJson();
@@ -140,7 +139,7 @@ void ModuleScene::Draw()
 		glm::mat4 MV = view;
 		glLoadMatrixf(glm::value_ptr(MV));
 		
-		//App->physics3D->world->debugDrawWorld();
+		App->physics3D->world->debugDrawWorld();
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0); // If fbo=0 then default frame buffer, as the case for editorCamera.
@@ -167,7 +166,7 @@ void ModuleScene::ChangeEditorState(StateEditor newState)
 	{
 		if (editorState == StateEditor::ON_PLAYING || editorState == StateEditor::ON_PAUSE)
 		{
-			App->physics3D->delta = 0.0000001f;
+			//App->physics3D->delta = 0.0000001f;
 			DeleteScene();
 			LoadSceneJson();
 			editorState = ON_EDITOR;
