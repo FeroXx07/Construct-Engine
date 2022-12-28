@@ -11,6 +11,7 @@
 class btRigidBody;
 class Module;
 class GameObject;
+class ComponentTransform;
 
 enum Shape {
 	SPHERE,
@@ -32,7 +33,7 @@ public:
 
 	void Push(float x, float y, float z);
 	void GetTransform(glm::mat4& mat) const;
-	void SetTransform(glm::mat4& mat) const;
+	void SetTransform(ComponentTransform* transform) const;
 	void SetPos(float x, float y, float z);
 
 	void SetTrigger(bool isTrigger);

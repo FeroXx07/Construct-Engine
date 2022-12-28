@@ -48,6 +48,9 @@ inline void PanelInspector::Update()
 
 		if (m_SelectedNode->m_HasComponentCamera)
 			m_SelectedNode->GetCamera()->OnEditor();
+
+		if (m_SelectedNode->m_HasComponentCollider)
+			m_SelectedNode->GetCollider()->OnEditor();
 	}
 	else
 	{

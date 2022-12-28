@@ -280,9 +280,8 @@ ComponentCollider* ModulePhysics3D::AddBodyCube(const math::AABB& box, glm::mat4
 	
 	// Get the size of the box
 	math::float3 halfExtents = box.HalfSize();
-
 	btCollisionShape* colShape = new btBoxShape(btVector3(halfExtents.x, halfExtents.y, halfExtents.z));
-
+	
 	shapes.push_back(colShape);
 	btTransform startTransform;
 	startTransform.setFromOpenGLMatrix(glm::value_ptr(transform));
@@ -294,7 +293,7 @@ ComponentCollider* ModulePhysics3D::AddBodyCube(const math::AABB& box, glm::mat4
 	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
 	motions.push_back(myMotionState);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, colShape, localInertia);
-
+	
 	btRigidBody* body = new btRigidBody(rbInfo);
 	ComponentCollider* pbody = new ComponentCollider(body);
 

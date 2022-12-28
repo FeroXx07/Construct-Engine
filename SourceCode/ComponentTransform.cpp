@@ -40,7 +40,7 @@ void ComponentTransform::Update()
 	{
 		if (m_GameObject->m_HasComponentCollider)
 		{
-			m_GameObject->GetCollider()->SetTransform(m_WorldMat);
+			m_GameObject->GetCollider()->SetTransform(this);
 		}
 	}
 }
