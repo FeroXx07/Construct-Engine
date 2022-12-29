@@ -11,7 +11,6 @@ ComponentCollider::~ComponentCollider()
 {
 	if (m_Body != nullptr)
 	{
-		delete m_Body;
 		m_Body = nullptr;
 	}
 }
@@ -29,7 +28,7 @@ void ComponentCollider::Update(ModulePhysics3D* phys)
 	}
 }
 
-void ComponentCollider::OnEditor()
+void ComponentCollider::OnEditor(ModulePhysics3D* phys)
 {
 	ImGuiTreeNodeFlags treeFlags = ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_DefaultOpen;
 	ImGuiInputTextFlags lflag = ImGuiInputTextFlags_AllowTabInput;
@@ -54,6 +53,14 @@ void ComponentCollider::OnEditor()
 			SetTrigger(isTriggerLocal);
 		ImGui::Separator();
 
+		const char* items[] = { "SPEHRE", "CUBE", "CYLINDER"};
+		struct Funcs { static bool ItemGetter(void* data, int n, const char** out_str) { *out_str = ((const char**)data)[n]; return true; } };
+		ImGui::Combo("Collider Shape", &m_CurrentShapeSelection, &Funcs::ItemGetter, items, IM_ARRAYSIZE(items));
+		if (m_CurrentShapeSelection != (int)m_Shape)
+		{
+			// Call a function to change shape
+			phys->ChangeBodyShape(this, Shape(m_CurrentShapeSelection));
+		}
 		ImGui::TreePop();
 	}
 	

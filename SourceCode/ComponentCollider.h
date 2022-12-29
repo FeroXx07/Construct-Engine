@@ -29,7 +29,7 @@ public:
 	~ComponentCollider();
 
 	void Update(ModulePhysics3D* phys);
-	void OnEditor();
+	void OnEditor(ModulePhysics3D* phys);
 
 	void Push(float x, float y, float z);
 	void GetTransform(glm::mat4& mat) const;
@@ -48,6 +48,6 @@ public:
 	std::list<Module*> m_Collision_listeners;
 	bool m_Is_Trigger = false;
 	bool m_Is_Static = false;
-
+	int m_CurrentShapeSelection = (int)m_Shape;
 };
 #endif

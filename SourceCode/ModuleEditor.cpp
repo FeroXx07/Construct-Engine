@@ -99,7 +99,7 @@ bool ModuleEditor::Start()
 	m_PanelConfig = new PanelConfig(App->window, App->renderer3D, 60);
 	m_PanelConsole = new PanelConsole();
 	m_PanelHierarchy = new PanelHierarchy(App->scene);
-	m_PanelInspector = new PanelInspector();
+	m_PanelInspector = new PanelInspector(App->physics3D);
 	return true;
 }
 

@@ -54,6 +54,13 @@ GameObject::~GameObject()
 		delete m_ComponentCamera;
 		m_ComponentCamera = nullptr;
 	}
+
+	// Delete material component
+	if (m_ComponentCollider != nullptr)
+	{
+		delete m_ComponentCollider;
+		m_ComponentCollider = nullptr;
+	}
 }
 
 Component* GameObject::GetComponent(ComponentType type)

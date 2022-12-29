@@ -29,6 +29,8 @@ public:
 	ComponentCollider* AddBodyCube(const math::AABB& box, glm::mat4x4 transform, float mass = 1.0f, bool isStatic = false);
 	ComponentCollider* AddBodyCube(const glm::vec3& halfExtents, glm::mat4x4 transform, float mass = 1.0f, bool isStatic = false);
 	ComponentCollider* AddBodyCylinder(glm::mat4x4 transform, float height, float radius, float mass = 1.0f, bool isStatic = false);
+	void ChangeBodyShape(ComponentCollider* body, Shape newShape);
+	void DeleteShape(ComponentCollider* body);
 	/*PhysVehicle3D* AddVehicle(const VehicleInfo& info);*/
 
 	ComponentCollider* ground;

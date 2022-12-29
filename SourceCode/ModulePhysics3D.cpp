@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModulePhysics3D.h"
 #include "Primitive.h"
+#include <algorithm>
 
 #ifdef _DEBUG
 	#pragma comment (lib, "SourceCode/Bullet/lib/BulletCollision_vs2010_x64_debug.lib")
@@ -193,34 +194,35 @@ bool ModulePhysics3D::CleanUp()
 		world->removeCollisionObject(obj);
 	}
 	
-	for(std::list<btTypedConstraint*>::iterator item = constraints.begin(); item != constraints.end(); item++)
+	/*for(std::list<btTypedConstraint*>::iterator item = constraints.begin(); item != constraints.end(); item++)
 	{
 		world->removeConstraint((*item));
 		delete *item;
 		*item = nullptr;
 	}
 	
-	constraints.clear();
+	constraints.clear();*/
 
-	for(std::list<btDefaultMotionState*>::iterator item = motions.begin(); item != motions.end(); item++)
+	/*for(std::list<btDefaultMotionState*>::iterator item = motions.begin(); item != motions.end(); item++)
 	{
 		delete *item;
 		*item = nullptr;
 	}
 
-	motions.clear();
+	motions.clear();*/
 
-	for (std::list<btCollisionShape*>::iterator item = shapes.begin(); item != shapes.end(); item++)
+	/*for (std::list<btCollisionShape*>::iterator item = shapes.begin(); item != shapes.end(); item++)
 	{
 		delete* item;
 		*item = nullptr;
 	}
 
-	shapes.clear();
+	shapes.clear();*/
 
 	for (std::list<ComponentCollider*>::iterator item = bodies.begin(); item != bodies.end(); item++)
 	{
-		(*item)->m_GameObject->DeAssignComponent(ComponentType::COLLIDER);
+		//(*item)->m_GameObject->DeAssignComponent(ComponentType::COLLIDER);
+		DeleteShape(*item);
 		delete* item;
 		*item = nullptr;
 	}
@@ -372,6 +374,73 @@ ComponentCollider* ModulePhysics3D::AddBodyCylinder(glm::mat4x4 transform, float
 	/*cylinder.body = pbody;
 	pbody->parentPrimitive = (Primitive*)&cylinder;*/
 	return pbody;
+}
+
+void ModulePhysics3D::ChangeBodyShape(ComponentCollider* body, Shape newShape)
+{
+	// Remove the body from the world
+	world->removeRigidBody(body->m_Body);
+	// Delete the old shape
+	shapes.remove(body->m_Body->getCollisionShape());
+	delete body->m_Body->getCollisionShape();
+	btCollisionShape* colShape = nullptr;
+	// Create new Shape
+	switch (newShape)
+	{
+	case SPHERE:
+	{
+		colShape = new btSphereShape(body->m_GameObject->m_Aabb.MaximalContainedSphere().r);
+		body->m_Shape = Shape::SPHERE;
+		break;
+	}
+	case CUBE:
+	{
+		// Get the size of the box
+		math::float3 halfExtents = body->m_GameObject->m_Aabb.HalfSize();
+		colShape = new btBoxShape(btVector3(halfExtents.x, halfExtents.y, halfExtents.z));
+		body->m_Shape = Shape::CUBE;
+		break;
+	}
+	case CYLINDER:
+	{
+		colShape = new btCylinderShapeX(btVector3(body->m_GameObject->m_Aabb.maxPoint.y - body->m_GameObject->m_Aabb.minPoint.y * 0.5f, 1.0f, 0.0f));
+		body->m_Shape = Shape::CYLINDER;
+		break;
+	}
+	default:
+		break;
+	}
+	shapes.push_back(colShape);
+	body->m_Body->setCollisionShape(colShape);
+	colShape->calculateLocalInertia(1.0f, btVector3(0, 0, 0));
+	body->m_Body->setMassProps(1.0f, btVector3(0, 0, 0));
+	body->m_Body->updateInertiaTensor();
+	world->addRigidBody(body->m_Body);
+}
+
+void ModulePhysics3D::DeleteShape(ComponentCollider* body)
+{
+	motions.remove((btDefaultMotionState*)body->m_Body->getMotionState());
+	delete body->m_Body->getMotionState();
+
+	shapes.remove(body->m_Body->getCollisionShape());
+	delete body->m_Body->getCollisionShape();
+
+	int constrainNums = body->m_Body->getNumConstraintRefs();
+	if (constrainNums > 0)
+	{
+		for (int i = 0; i < constrainNums; i++)
+		{
+			constraints.remove(body->m_Body->getConstraintRef(i));
+			world->removeConstraint(body->m_Body->getConstraintRef(i));
+			delete body->m_Body->getConstraintRef(i);
+		}
+	}
+
+	world->removeRigidBody(body->m_Body);
+	delete body->m_Body;
+
+	body->RemoveComponentFromGameObject();
 }
 
 // ---------------------------------------------------------

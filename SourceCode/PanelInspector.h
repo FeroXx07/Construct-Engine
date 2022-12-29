@@ -3,11 +3,11 @@
 #include "Panel.h"
 #include "ModuleScene.h"
 #include "ComponentTransform.h"
-
+#include "ModulePhysics3D.h"
 class PanelInspector : Panel
 {
 public:
-	PanelInspector() : Panel(true), isActive(true) {};
+	PanelInspector(ModulePhysics3D* phys) : Panel(true), isActive(true), m_Phys(phys) {};
 	~PanelInspector();
 
 	void Start();
@@ -15,12 +15,14 @@ public:
 
 	void SetNode(GameObject* node);
 	GameObject* m_SelectedNode = nullptr;
+	ModulePhysics3D* m_Phys = nullptr;
 	bool isActive = false;
 };
 
 inline PanelInspector::~PanelInspector()
 {
 	m_SelectedNode = nullptr;
+	m_Phys = nullptr;
 }
 
 inline void PanelInspector::Start()
@@ -50,7 +52,7 @@ inline void PanelInspector::Update()
 			m_SelectedNode->GetCamera()->OnEditor();
 
 		if (m_SelectedNode->m_HasComponentCollider)
-			m_SelectedNode->GetCollider()->OnEditor();
+			m_SelectedNode->GetCollider()->OnEditor(m_Phys);
 	}
 	else
 	{
