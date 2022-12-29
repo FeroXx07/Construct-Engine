@@ -50,6 +50,7 @@ bool ModulePhysics3D::Start()
 	LOG("Creating Physics environment");
 
 	world = new btDiscreteDynamicsWorld(dispatcher, broad_phase, solver, collision_conf);
+	debug_draw->setDebugMode(debug_draw->DBG_MAX_DEBUG_DRAW_MODE);
 	world->setDebugDrawer(debug_draw);
 	world->setGravity(GRAVITY*2);
 	//vehicle_raycaster = new btDefaultVehicleRaycaster(world);

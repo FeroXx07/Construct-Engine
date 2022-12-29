@@ -39,7 +39,7 @@ public:
 	float delta = 1.0f / 60.0f;
 private:
 
-	bool debug;
+	bool debug = true;
 
 	btDefaultCollisionConfiguration*	collision_conf;
 	btCollisionDispatcher*				dispatcher;
