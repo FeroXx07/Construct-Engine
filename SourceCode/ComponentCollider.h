@@ -28,7 +28,7 @@ public:
 	ComponentCollider(btRigidBody* body);
 	~ComponentCollider();
 
-	void Update();
+	void Update(ModulePhysics3D* phys);
 	void OnEditor();
 
 	void Push(float x, float y, float z);
@@ -41,21 +41,13 @@ public:
 	void SetStatic(bool isStatic);
 	btRigidBody* GetBody();
 
-	glm::vec3 positionOffset = glm::vec3(0.0f);
+	glm::vec3 m_PositionOffset = glm::vec3(0.0f);
+	glm::vec3 m_ScalingOffset = glm::vec3(1.0f);
 	Shape m_Shape = Shape::CUBE;
 	btRigidBody* m_Body = nullptr;
 	std::list<Module*> m_Collision_listeners;
 	bool m_Is_Trigger = false;
 	bool m_Is_Static = false;
 
-	glm::mat4x4 BtToGLM(btScalar* m, glm::mat4x4& dst)
-	{
-		// convert to (column major)
-		dst[0][0] = m[0];
-		dst[0][0] = m[0];
-		dst[0][0] = m[0];
-		dst[0][0] = m[0];
-
-	}
 };
 #endif

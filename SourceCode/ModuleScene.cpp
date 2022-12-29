@@ -375,7 +375,8 @@ void ModuleScene::To_Json(json& json_, const GameObject* go_)
 	{
 		ComponentCollider* collider = go_->GetColliderConst();
 		json_["Game Objects"][id]["Collider"]["Exists"] = true;
-		json_["Game Objects"][id]["Collider"]["Offset"] = { collider->positionOffset.x, collider->positionOffset.y, collider->positionOffset.z };
+		json_["Game Objects"][id]["Collider"]["PositionOffset"] = { collider->m_PositionOffset.x, collider->m_PositionOffset.y, collider->m_PositionOffset.z };
+		json_["Game Objects"][id]["Collider"]["ScalingOffset"] = { collider->m_ScalingOffset.x, collider->m_ScalingOffset.y, collider->m_ScalingOffset.z };
 		json_["Game Objects"][id]["Collider"]["Shape"] = collider->GetShapeString();
 	}
 	else
@@ -465,8 +466,10 @@ GameObject* ModuleScene::From_Json(const json& j, const GameObject* goParent)
 			{
 				newCollider = App->physics3D->AddBodyCylinder(newTransform->GetLocal(), newGo->m_Aabb.maxPoint.y - newGo->m_Aabb.minPoint.y, 1.0f);
 			}
-			std::vector<float>offset = j["Collider"]["Offset"];
-			newCollider->positionOffset = vec3(offset.at(0), offset.at(1), offset.at(2));
+			std::vector<float>posOffset = j["Collider"]["PositionOffset"];
+			std::vector<float>scaleOffset = j["Collider"]["ScalingOffset"];
+			newCollider->m_PositionOffset = vec3(posOffset.at(0), posOffset.at(1), posOffset.at(2));
+			newCollider->m_ScalingOffset = vec3(scaleOffset.at(0), scaleOffset.at(1), scaleOffset.at(2));
 			// Create a ComponentCollider and assign it
 			newGo->AssignComponent(newCollider);
 		}

@@ -64,6 +64,7 @@ bool ModulePhysics3D::Start()
 		ground = new ComponentCollider(body);
 		body->setUserPointer(ground);
 		world->addRigidBody(body);
+
 	}
 
 	return true;
@@ -140,7 +141,7 @@ update_status ModulePhysics3D::Update(float dt)
 	}
 	for (std::list<ComponentCollider*>::iterator item = bodies.begin(); item != bodies.end(); item++)
 	{
-		(*item)->Update();
+		(*item)->Update(this);
 		glm::mat4x4 m;
 		(*item)->GetTransform(m);
 		string n = (*item)->m_GameObject->m_Name;
@@ -257,6 +258,7 @@ ComponentCollider* ModulePhysics3D::AddBodySphere(glm::mat4x4 transform, float r
 
 	btRigidBody* body = new btRigidBody(rbInfo);
 	ComponentCollider* pbody = new ComponentCollider(body);
+
 	pbody->m_Shape = Shape::SPHERE;
 	body->setUserPointer(pbody);
 	world->addRigidBody(body);
@@ -296,6 +298,7 @@ ComponentCollider* ModulePhysics3D::AddBodyCube(const math::AABB& box, glm::mat4
 	
 	btRigidBody* body = new btRigidBody(rbInfo);
 	ComponentCollider* pbody = new ComponentCollider(body);
+	pbody->m_PositionOffset.z = halfExtents.z;
 
 	body->setUserPointer(pbody);
 	world->addRigidBody(body);

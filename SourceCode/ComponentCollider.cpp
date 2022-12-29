@@ -1,6 +1,7 @@
 #include "ComponentCollider.h"
 #include "ComponentTransform.h"
 #include "GameObject.h"
+#include "ModulePhysics3D.h"
 
 ComponentCollider::ComponentCollider(btRigidBody* body) : Component(ComponentType::COLLIDER), m_Body(body)
 {
@@ -15,13 +16,16 @@ ComponentCollider::~ComponentCollider()
 	}
 }
 
-void ComponentCollider::Update()
+void ComponentCollider::Update(ModulePhysics3D* phys)
 {
 	if (m_hasGameObject)
 	{
 		glm::mat4 mat;
 		GetTransform(mat);
 		m_GameObject->GetTransform()->SetLocalMatrix(mat);
+
+		m_Body->getCollisionShape()->setLocalScaling((btVector3(m_ScalingOffset.x, m_ScalingOffset.y, m_ScalingOffset.z)));
+		phys->world->updateSingleAabb(m_Body);
 	}
 }
 
@@ -32,7 +36,10 @@ void ComponentCollider::OnEditor()
 	ImGuiInputTextFlags readOnlyFlag = ImGuiInputTextFlags_ReadOnly;
 	if (ImGui::TreeNodeEx("Collider Information: ", treeFlags))
 	{
-		ImGui::DragFloat3("Collider Offset", &positionOffset[0], 0.05f, 0.0f, 0.0f, "%.3f", lflag);
+		ImGui::DragFloat3("Collider Offset", &m_PositionOffset[0], 0.05f, 0.0f, 0.0f, "%.3f", lflag);
+		ImGui::Separator();
+
+		ImGui::DragFloat3("Scalling Offset", &m_ScalingOffset[0], 0.05f, 0.0f, 0.0f, "%.3f", lflag);
 		ImGui::Separator();
 
 		bool isStaticLocal = m_Is_Static;
@@ -49,7 +56,7 @@ void ComponentCollider::OnEditor()
 
 		ImGui::TreePop();
 	}
-
+	
 }
 
 void ComponentCollider::Push(float x, float y, float z)
@@ -73,13 +80,12 @@ void ComponentCollider::GetTransform(glm::mat4& mat) const
 		btQuaternion rotBullet = offsetedTransform.getRotation();
 
 		glm::quat rotEngine = glm::quat(rotBullet.w(), rotBullet.x(), rotBullet.y(), rotBullet.z());
-		glm::vec3 finalOffset = rotEngine * positionOffset;
+		glm::vec3 finalOffset = rotEngine * m_PositionOffset;
 		glm::vec3 posEngine = glm::vec3(posBullet.x() - finalOffset.x, posBullet.y() - finalOffset.y, posBullet.z() - finalOffset.z);
 
 		// Remove the offset because offset is internal only(collider wise)
 		offsetedTransform.setOrigin(btVector3(posEngine.x, posEngine.y, posEngine.z));
 		offsetedTransform.setRotation(rotBullet);
-
 		offsetedTransform.getOpenGLMatrix(glm::value_ptr(mat));
 	}
 }
@@ -95,7 +101,7 @@ void ComponentCollider::SetTransform(ComponentTransform* transform) const
 		glm::quat rotEngine = transform->GetRotationQuat();
 
 		// Get the offset
-		glm::vec3 finalOffset = rotEngine * positionOffset;
+		glm::vec3 finalOffset = rotEngine * m_PositionOffset;
 		glm::vec3 finalPosBullet = posEngine + finalOffset;
 
 		// Apply the offset because offset is internal only(collider wise)
@@ -103,6 +109,7 @@ void ComponentCollider::SetTransform(ComponentTransform* transform) const
 		t.setFromOpenGLMatrix(glm::value_ptr(transform->GetWorld()));
 		t.setOrigin(btVector3(finalPosBullet.x, finalPosBullet.y, finalPosBullet.z));
 		t.setRotation(btQuaternion(rotEngine.x, rotEngine.y, rotEngine.z, rotEngine.w));
+
 		m_Body->setWorldTransform(t);
 	}
 }
