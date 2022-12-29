@@ -13,6 +13,7 @@
 
 #include "ComponentMesh.h"
 #include "ComponentCamera.h"
+#include "ComponentCollider.h"
 ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 }
@@ -285,8 +286,7 @@ void ModuleScene::LoadSceneJson()
 		}
 		file.close();
 	}
-	// Load all children from root node
-	App->physics3D->Start();
+
 }
 
 void ModuleScene::DeleteScene()
@@ -367,6 +367,15 @@ void ModuleScene::To_Json(json& json_, const GameObject* go_)
 	else
 		json_["Game Objects"][id]["Camera"]["Exists"] = false;
 
+	if (go_->m_HasComponentCollider)
+	{
+		ComponentCollider* collider = go_->GetColliderConst();
+		json_["Game Objects"][id]["Collider"]["Exists"] = true;
+		json_["Game Objects"][id]["Collider"]["Offset"] = { collider->positionOffset.x, collider->positionOffset.y, collider->positionOffset.z };
+		json_["Game Objects"][id]["Collider"]["Shape"] = collider->GetShapeString();
+	}
+	else
+		json_["Game Objects"][id]["Collider"]["Exists"] = false;
 
 	for (auto children : go_->m_Children)
 	{
@@ -435,8 +444,28 @@ GameObject* ModuleScene::From_Json(const json& j, const GameObject* goParent)
 			CreateCamera(camName, newGo);
 			newGo->GetCamera()->m_Camera->Position = cameraPos;
 		}
-		/*json_["Game Objects"][id]["Camera"]["Position"] = { t->GetTranslate().x, t->GetTranslate().y, t->GetTranslate().z };
-		json_["Game Objects"][id]["Camera"]["Name"] = go_->GetCameraConst()->m_Name;*/
+		
+		if (j["Collider"]["Exists"])
+		{
+			ComponentCollider* newCollider = nullptr;
+			string shapeType = j["Collider"]["Shape"];
+			if (shapeType == string("CUBE"))
+			{
+				newCollider = App->physics3D->AddBodyCube(newGo->m_Aabb, newTransform->GetLocal(), 1.0f);
+			}
+			else if (shapeType == string("SPHERE"))
+			{
+				newCollider = App->physics3D->AddBodySphere(newTransform->GetLocal(), newGo->m_Aabb.MaximalContainedSphere().r, 1.0f);
+			}
+			else if (shapeType == string("CYLINDER"))
+			{
+				newCollider = App->physics3D->AddBodyCylinder(newTransform->GetLocal(), newGo->m_Aabb.maxPoint.y - newGo->m_Aabb.minPoint.y, 1.0f);
+			}
+			std::vector<float>offset = j["Collider"]["Offset"];
+			newCollider->positionOffset = vec3(offset.at(0), offset.at(1), offset.at(2));
+			// Create a ComponentCollider and assign it
+			newGo->AssignComponent(newCollider);
+		}
 
 		return newGo;
 	}

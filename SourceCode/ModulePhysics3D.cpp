@@ -52,19 +52,19 @@ bool ModulePhysics3D::Start()
 	world = new btDiscreteDynamicsWorld(dispatcher, broad_phase, solver, collision_conf);
 	world->setDebugDrawer(debug_draw);
 	world->setGravity(GRAVITY*2);
-	vehicle_raycaster = new btDefaultVehicleRaycaster(world);
-	// Big plane as ground
-	{
-		btCollisionShape* colShape = new btStaticPlaneShape(btVector3(0, 1, 0), 0);
+	//vehicle_raycaster = new btDefaultVehicleRaycaster(world);
+	//// Big plane as ground
+	//{
+	//	btCollisionShape* colShape = new btStaticPlaneShape(btVector3(0, 1, 0), 0);
 
-		btDefaultMotionState* myMotionState = new btDefaultMotionState();
-		btRigidBody::btRigidBodyConstructionInfo rbInfo(0.0f, myMotionState, colShape);
+	//	btDefaultMotionState* myMotionState = new btDefaultMotionState();
+	//	btRigidBody::btRigidBodyConstructionInfo rbInfo(0.0f, myMotionState, colShape);
 
-		btRigidBody* body = new btRigidBody(rbInfo);
-		ground = new ComponentCollider(body);
-		body->setUserPointer(ground);
-		world->addRigidBody(body);
-	}
+	//	btRigidBody* body = new btRigidBody(rbInfo);
+	//	ground = new ComponentCollider(body);
+	//	body->setUserPointer(ground);
+	//	world->addRigidBody(body);
+	//}
 
 	return true;
 }
@@ -233,7 +233,7 @@ bool ModulePhysics3D::CleanUp()
 
 	//vehicles.clear();
 
-	delete vehicle_raycaster;
+	//delete vehicle_raycaster;
 	delete world;
 
 	return true;
@@ -296,7 +296,6 @@ ComponentCollider* ModulePhysics3D::AddBodyCube(const math::AABB& box, glm::mat4
 	
 	btRigidBody* body = new btRigidBody(rbInfo);
 	ComponentCollider* pbody = new ComponentCollider(body);
-
 	body->setUserPointer(pbody);
 	world->addRigidBody(body);
 	bodies.push_back(pbody);

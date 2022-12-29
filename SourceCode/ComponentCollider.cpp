@@ -102,6 +102,25 @@ void ComponentCollider::SetPos(float x, float y, float z)
 	}
 }
 
+const char* ComponentCollider::GetShapeString()
+{
+	switch (m_Shape)
+	{
+	case SPHERE:
+		return "SPHERE";
+		break;
+	case CUBE:
+		return "CUBE";
+		break;
+	case CYLINDER:
+		return "CYLINDER";
+		break;
+	default:
+		return "NONE";
+		break;
+	}
+}
+
 void ComponentCollider::SetTrigger(bool isTrigger)
 {
 	if (m_Is_Trigger != isTrigger)

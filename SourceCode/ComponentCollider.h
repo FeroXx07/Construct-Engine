@@ -36,6 +36,7 @@ public:
 	void SetTransform(ComponentTransform* transform) const;
 	void SetPos(float x, float y, float z);
 
+	const char* GetShapeString();
 	void SetTrigger(bool isTrigger);
 	btRigidBody* GetBody();
 
