@@ -25,10 +25,10 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-	ComponentCollider* AddBodySphere(glm::mat4x4 transform, float radius = 1.0f, float mass = 1.0f);
-	ComponentCollider* AddBodyCube(const math::AABB& box, glm::mat4x4 transform, float mass = 1.0f);
-	ComponentCollider* AddBodyCube(const glm::vec3& halfExtents, glm::mat4x4 transform, float mass = 1.0f);
-	ComponentCollider* AddBodyCylinder(glm::mat4x4 transform, float height, float radius, float mass = 1.0f);
+	ComponentCollider* AddBodySphere(glm::mat4x4 transform, float radius = 1.0f, float mass = 1.0f, bool isStatic = false);
+	ComponentCollider* AddBodyCube(const math::AABB& box, glm::mat4x4 transform, float mass = 1.0f, bool isStatic = false);
+	ComponentCollider* AddBodyCube(const glm::vec3& halfExtents, glm::mat4x4 transform, float mass = 1.0f, bool isStatic = false);
+	ComponentCollider* AddBodyCylinder(glm::mat4x4 transform, float height, float radius, float mass = 1.0f, bool isStatic = false);
 	/*PhysVehicle3D* AddVehicle(const VehicleInfo& info);*/
 
 	ComponentCollider* ground;

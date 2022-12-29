@@ -33,8 +33,23 @@ void ComponentCollider::OnEditor()
 	if (ImGui::TreeNodeEx("Collider Information: ", treeFlags))
 	{
 		ImGui::DragFloat3("Collider Offset", &positionOffset[0], 0.05f, 0.0f, 0.0f, "%.3f", lflag);
+		ImGui::Separator();
+
+		bool isStaticLocal = m_Is_Static;
+		ImGui::Checkbox("Is Static", &isStaticLocal);
+		if (isStaticLocal != m_Is_Static)
+			SetStatic(isStaticLocal);
+		ImGui::Separator();
+
+		bool isTriggerLocal = m_Is_Trigger;
+		ImGui::Checkbox("Is Trigger", &isTriggerLocal);
+		if (isTriggerLocal != m_Is_Trigger)
+			SetTrigger(isTriggerLocal);
+		ImGui::Separator();
+
 		ImGui::TreePop();
 	}
+
 }
 
 void ComponentCollider::Push(float x, float y, float z)
@@ -130,6 +145,24 @@ void ComponentCollider::SetTrigger(bool isTrigger)
 			m_Body->setCollisionFlags(m_Body->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
 		else
 			m_Body->setCollisionFlags(m_Body->getCollisionFlags() & ~btCollisionObject::CF_NO_CONTACT_RESPONSE);
+	}
+}
+
+void ComponentCollider::SetStatic(bool isStatic)
+{
+	if (m_Is_Static != isStatic)
+	{
+		m_Is_Static = isStatic;
+		if (m_Is_Static == true)
+		{
+			this->m_Body->setMassProps(0.0f, { 0,0,0 });
+			m_Body->setCollisionFlags(m_Body->getCollisionFlags() | btCollisionObject::CF_STATIC_OBJECT);
+		}
+		else
+		{
+			this->m_Body->setMassProps(1.0f, { 0,0,0 });
+			m_Body->setCollisionFlags(m_Body->getCollisionFlags() & ~btCollisionObject::CF_STATIC_OBJECT);
+		}
 	}
 }
 

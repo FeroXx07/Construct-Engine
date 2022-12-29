@@ -239,6 +239,8 @@ GameObject* ModuleScene::CreateCamera(string name, GameObject* destinationGO)
 		cameraComp->GenerateBuffers(screenShader);
 		App->camera->cameras.push_back(cameraComp);
 		destinationGO->AssignComponent(cameraComp);
+		destinationGO->AssignComponent(App->physics3D->AddBodySphere(destinationGO->GetTransformConst()->GetLocal(),
+			1.0f, 1.0f));
 		return destinationGO;
 	}
 	else
@@ -251,6 +253,8 @@ GameObject* ModuleScene::CreateCamera(string name, GameObject* destinationGO)
 		cameraComp->GenerateBuffers(screenShader);
 		App->camera->cameras.push_back(cameraComp);
 		cameraGO->AssignComponent(cameraComp);
+		cameraGO->AssignComponent(App->physics3D->AddBodySphere(cameraGO->GetTransformConst()->GetLocal(),
+			1.0f, 1.0f));
 		return cameraGO;
 	}
 }

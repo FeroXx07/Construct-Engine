@@ -53,18 +53,18 @@ bool ModulePhysics3D::Start()
 	world->setDebugDrawer(debug_draw);
 	world->setGravity(GRAVITY*2);
 	//vehicle_raycaster = new btDefaultVehicleRaycaster(world);
-	//// Big plane as ground
-	//{
-	//	btCollisionShape* colShape = new btStaticPlaneShape(btVector3(0, 1, 0), 0);
+	// Big plane as ground
+	{
+		btCollisionShape* colShape = new btStaticPlaneShape(btVector3(0, 1, 0), 0);
 
-	//	btDefaultMotionState* myMotionState = new btDefaultMotionState();
-	//	btRigidBody::btRigidBodyConstructionInfo rbInfo(0.0f, myMotionState, colShape);
+		btDefaultMotionState* myMotionState = new btDefaultMotionState();
+		btRigidBody::btRigidBodyConstructionInfo rbInfo(0.0f, myMotionState, colShape);
 
-	//	btRigidBody* body = new btRigidBody(rbInfo);
-	//	ground = new ComponentCollider(body);
-	//	body->setUserPointer(ground);
-	//	world->addRigidBody(body);
-	//}
+		btRigidBody* body = new btRigidBody(rbInfo);
+		ground = new ComponentCollider(body);
+		body->setUserPointer(ground);
+		world->addRigidBody(body);
+	}
 
 	return true;
 }
@@ -240,7 +240,7 @@ bool ModulePhysics3D::CleanUp()
 }
 
 // ---------------------------------------------------------
-ComponentCollider* ModulePhysics3D::AddBodySphere(glm::mat4x4 transform, float radius, float mass)
+ComponentCollider* ModulePhysics3D::AddBodySphere(glm::mat4x4 transform, float radius, float mass, bool isStatic)
 {
 	btCollisionShape* colShape = new btSphereShape(radius);
 	shapes.push_back(colShape);
@@ -269,7 +269,7 @@ ComponentCollider* ModulePhysics3D::AddBodySphere(glm::mat4x4 transform, float r
 
 
 // ---------------------------------------------------------
-ComponentCollider* ModulePhysics3D::AddBodyCube(const math::AABB& box, glm::mat4x4 transform, float mass)
+ComponentCollider* ModulePhysics3D::AddBodyCube(const math::AABB& box, glm::mat4x4 transform, float mass, bool isStatic)
 {
 	glm::vec3 skew;
 	glm::vec4 perspective;
@@ -296,6 +296,7 @@ ComponentCollider* ModulePhysics3D::AddBodyCube(const math::AABB& box, glm::mat4
 	
 	btRigidBody* body = new btRigidBody(rbInfo);
 	ComponentCollider* pbody = new ComponentCollider(body);
+
 	body->setUserPointer(pbody);
 	world->addRigidBody(body);
 	bodies.push_back(pbody);
@@ -306,7 +307,7 @@ ComponentCollider* ModulePhysics3D::AddBodyCube(const math::AABB& box, glm::mat4
 	return pbody;
 }
 
-ComponentCollider* ModulePhysics3D::AddBodyCube(const glm::vec3& halfExtents, glm::mat4x4 transform, float mass)
+ComponentCollider* ModulePhysics3D::AddBodyCube(const glm::vec3& halfExtents, glm::mat4x4 transform, float mass, bool isStatic)
 {
 	glm::vec3 skew;
 	glm::vec4 perspective;
@@ -340,7 +341,7 @@ ComponentCollider* ModulePhysics3D::AddBodyCube(const glm::vec3& halfExtents, gl
 }
 
 // ---------------------------------------------------------
-ComponentCollider* ModulePhysics3D::AddBodyCylinder(glm::mat4x4 transform, float height, float radius, float mass)
+ComponentCollider* ModulePhysics3D::AddBodyCylinder(glm::mat4x4 transform, float height, float radius, float mass, bool isStatic)
 {
 	btCollisionShape* colShape = new btCylinderShapeX(btVector3(height*0.5f, radius, 0.0f));
 	shapes.push_back(colShape);

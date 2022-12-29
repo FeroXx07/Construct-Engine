@@ -38,6 +38,7 @@ public:
 
 	const char* GetShapeString();
 	void SetTrigger(bool isTrigger);
+	void SetStatic(bool isStatic);
 	btRigidBody* GetBody();
 
 	glm::vec3 positionOffset = glm::vec3(0.0f);
@@ -45,7 +46,7 @@ public:
 	btRigidBody* m_Body = nullptr;
 	std::list<Module*> m_Collision_listeners;
 	bool m_Is_Trigger = false;
-	bool m_Is_Static = true;
+	bool m_Is_Static = false;
 
 	glm::mat4x4 BtToGLM(btScalar* m, glm::mat4x4& dst)
 	{
