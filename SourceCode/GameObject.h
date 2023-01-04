@@ -91,6 +91,10 @@ public:
 	ComponentCollider* GetColliderConst() const;
 	ComponentConstraint* GetConstraintConst() const;
 
+	static int GetMaxId()
+	{
+		return s_id;
+	}
 public:
 	bool gui_IsSelected = false;
 };

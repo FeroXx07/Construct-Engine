@@ -208,7 +208,7 @@ void GameObject::RemoveChild(GameObject* child)
 	uint i = 0;
 	for (auto go : m_Children)
 	{
-		if (go->m_Name == child->m_Name)
+		if (go->id == child->id)
 			m_Children.erase(m_Children.begin() + i);
 		++i;
 	}

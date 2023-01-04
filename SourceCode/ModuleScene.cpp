@@ -561,9 +561,15 @@ update_status ModuleScene::Update(float dt)
 		SaveSceneJson();
 	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_UP)
 		DeleteScene();
-	if ((App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && editorState == StateEditor::ON_PLAYING)
+	if ((App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) && editorState == StateEditor::ON_PLAYING)
 	{
 		CreateGameObject("Resources/Meshes/Sphere.fbx", "Sphere");
+		GameObject* go = root->FindById(root->GetMaxId());
+		App->physics3D->ChangeBodyShape(go->GetCollider(), Shape::SPHERE);
+		go->GetTransform()->SetTranslate(App->camera->editorCamera->m_Camera->Position);
+		glm::vec3 front = App->camera->editorCamera->m_Camera->Front;
+		front *= 100;
+		go->GetCollider()->Push(front.x, front.y, front.z);
 	}
 	return UPDATE_CONTINUE;
 }
