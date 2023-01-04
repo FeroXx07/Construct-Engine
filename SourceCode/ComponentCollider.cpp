@@ -44,6 +44,12 @@ void ComponentCollider::OnEditor(ModulePhysics3D* phys, ModuleScene* scene)
 		ImGui::DragFloat3("Scalling Offset", &m_ScalingOffset[0], 0.05f, 0.0f, 0.0f, "%.3f", lflag);
 		ImGui::Separator();
 
+		if (ImGui::DragFloat("Mass", &m_Mass, 0.05f, 0.0f, 0.0f, "%.3f", lflag))
+		{
+			m_Body->setMassProps(m_Mass, { 0,0,0 });
+		}
+		ImGui::Separator();
+
 		bool isStaticLocal = m_Is_Static;
 		ImGui::Checkbox("Is Static", &isStaticLocal);
 		if (isStaticLocal != m_Is_Static)

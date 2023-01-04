@@ -50,6 +50,7 @@ public:
 	std::list<Module*> m_Collision_listeners;
 	bool m_Is_Trigger = false;
 	bool m_Is_Static = false;
+	float m_Mass = 1.0f;
 	int m_CurrentShapeSelection = (int)m_Shape;
 	GameObject* m_SelectionNode = nullptr;
 };

@@ -561,6 +561,10 @@ update_status ModuleScene::Update(float dt)
 		SaveSceneJson();
 	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_UP)
 		DeleteScene();
+	if ((App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && editorState == StateEditor::ON_PLAYING)
+	{
+		CreateGameObject("Resources/Meshes/Sphere.fbx", "Sphere");
+	}
 	return UPDATE_CONTINUE;
 }
 
