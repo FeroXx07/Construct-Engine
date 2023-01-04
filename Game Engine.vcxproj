@@ -175,6 +175,7 @@
     <ClCompile Include="SourceCode\Component.cpp" />
     <ClCompile Include="SourceCode\ComponentCamera.cpp" />
     <ClCompile Include="SourceCode\ComponentCollider.cpp" />
+    <ClCompile Include="SourceCode\ComponentConstraint.cpp" />
     <ClCompile Include="SourceCode\ComponentMaterial.cpp" />
     <ClCompile Include="SourceCode\ComponentMesh.cpp" />
     <ClCompile Include="SourceCode\ComponentTransform.cpp" />
@@ -242,6 +243,7 @@
     <ClInclude Include="SourceCode\Component.h" />
     <ClInclude Include="SourceCode\ComponentCamera.h" />
     <ClInclude Include="SourceCode\ComponentCollider.h" />
+    <ClInclude Include="SourceCode\ComponentConstraint.h" />
     <ClInclude Include="SourceCode\ComponentMaterial.h" />
     <ClInclude Include="SourceCode\ComponentMesh.h" />
     <ClInclude Include="SourceCode\ComponentTransform.h" />

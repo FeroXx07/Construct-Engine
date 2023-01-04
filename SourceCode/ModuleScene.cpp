@@ -288,6 +288,10 @@ void ModuleScene::LoadSceneJson()
 		{
 			From_Json(el, root);
 		}
+		for (auto el : data["Game Objects"])
+		{
+			LoadConstraints(el, root);
+		}
 		file.close();
 	}
 
@@ -382,9 +386,59 @@ void ModuleScene::To_Json(json& json_, const GameObject* go_)
 	else
 		json_["Game Objects"][id]["Collider"]["Exists"] = false;
 
+	if (go_->m_HasComponentConstraint)
+	{
+		ComponentConstraint* constraint = go_->GetConstraintConst();
+		json_["Game Objects"][id]["Constraint"]["Exists"] = true;
+		json_["Game Objects"][id]["Constraint"]["AnchorA"] = { constraint->m_AnchorA.x(), constraint->m_AnchorA.y(), constraint->m_AnchorA.z()};
+		json_["Game Objects"][id]["Constraint"]["AnchorB"] = { constraint->m_AnchorB.x(), constraint->m_AnchorB.y(), constraint->m_AnchorB.z()};
+		json_["Game Objects"][id]["Constraint"]["BodyA"] = constraint->m_BodyA->m_GameObject->m_Name;
+		json_["Game Objects"][id]["Constraint"]["BodyB"] = constraint->m_BodyB->m_GameObject->m_Name;
+		json_["Game Objects"][id]["Constraint"]["Type"] = constraint->GetTypeString();
+	}
+	else
+		json_["Game Objects"][id]["Constraint"]["Exists"] = false;
+
 	for (auto children : go_->m_Children)
 	{
 		To_Json(json_, children);
+	}
+}
+
+void ModuleScene::LoadConstraints(json& j, const GameObject* goParent)
+{
+	if (j["Constraint"]["Exists"])
+	{
+		ComponentConstraint* newConstraint = nullptr;
+		GameObject* goA = root->FindByName(j["Constraint"]["BodyA"]);
+		GameObject* goB = root->FindByName(j["Constraint"]["BodyB"]);
+		
+		string type = j["Constraint"]["Type"];
+		if (type == string("P2P"))
+		{
+			std::vector<float>anchorA = j["Constraint"]["AnchorA"];
+			std::vector<float>anchorB = j["Constraint"]["AnchorB"];
+			newConstraint = new ComponentConstraint(goA->GetCollider(), goB->GetCollider(),
+				App->physics3D->AddConstraintP2P(*goA->GetCollider(), *goB->GetCollider(), 
+					{ anchorA.at(0), anchorA.at(1), anchorA.at(2) }, { anchorB.at(0), anchorB.at(1), anchorB.at(2) }),
+				ConstraintType::P2P);
+		}
+		else if (type == string("HINGE"))
+		{
+			newConstraint = new ComponentConstraint(goA->GetCollider(), goB->GetCollider(),
+				App->physics3D->AddConstraintHinge(*goA->GetCollider(), *goB->GetCollider(),
+					{ 12.5f,0,0 }, { 0,0,0 }, { 0,0,0 }, { 0,0,0 }),
+				ConstraintType::HINGE);
+		}
+		else if (type == string("SLIDER"))
+		{
+			/*newConstraint = new ComponentConstraint(goA->GetCollider(), goB->GetCollider(),
+				App->physics3D->AddConstraintP2P(*goA->GetCollider(), *goB->GetCollider(),
+					{ anchorA.at(0), anchorA.at(1), anchorA.at(2) }, { anchorB.at(0), anchorB.at(1), anchorB.at(2) }),
+				ConstraintType::P2P);*/
+		}
+		goA->AssignComponent(newConstraint);
+		goB->AssignComponent(newConstraint);
 	}
 }
 
@@ -473,6 +527,24 @@ GameObject* ModuleScene::From_Json(const json& j, const GameObject* goParent)
 			// Create a ComponentCollider and assign it
 			newGo->AssignComponent(newCollider);
 		}
+
+		//if (j["Constraint"]["Exists"])
+		//{
+		//	ComponentConstraint* newConstraint = nullptr;
+		//	string type = j["Constraint"]["Type"];
+		//	if (type == string("P2P"))
+		//	{
+		//		newConstraint = new ComponentConstraint()
+		//	}
+		//	else if (type == string("HINGE"))
+		//	{
+		//		newConstraint = App->physics3D->AddBodySphere(newTransform->GetLocal(), newGo->m_Aabb.MaximalContainedSphere().r, 1.0f);
+		//	}
+		//	else if (type == string("SLIDER"))
+		//	{
+		//		newConstraint = App->physics3D->AddBodyCylinder(newTransform->GetLocal(), newGo->m_Aabb.maxPoint.y - newGo->m_Aabb.minPoint.y, 1.0f);
+		//	}
+		//}
 
 		return newGo;
 	}

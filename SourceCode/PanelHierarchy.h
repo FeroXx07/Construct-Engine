@@ -58,7 +58,6 @@ inline void PanelHierarchy::DrawGameObjNode(GameObject* node, ImGuiTreeNodeFlags
     node_flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
     if (node->gui_IsSelected)
         node_flags |= ImGuiTreeNodeFlags_Selected;
-    
     // Change state if clicked
     if (ImGui::TreeNodeEx(node->m_Name.c_str(), node_flags))
     {
@@ -66,7 +65,17 @@ inline void PanelHierarchy::DrawGameObjNode(GameObject* node, ImGuiTreeNodeFlags
         {
             m_HoveredNode = node;
         }
-        if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
+
+        if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
+        {
+            ImGui::BeginTooltip();
+            ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+            ImGui::TextUnformatted("Double click to open in it the inspector window...");
+            ImGui::PopTextWrapPos();
+            ImGui::EndTooltip();
+        }
+      
+        if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
         {
             ChangeSelectionNode(node);
         }

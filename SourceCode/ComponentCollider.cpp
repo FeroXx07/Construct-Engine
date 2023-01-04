@@ -1,14 +1,17 @@
 #include "ComponentCollider.h"
 #include "ComponentTransform.h"
+#include "ComponentConstraint.h"
 #include "GameObject.h"
 #include "ModulePhysics3D.h"
-
-ComponentCollider::ComponentCollider(btRigidBody* body) : Component(ComponentType::COLLIDER), m_Body(body)
+#include "ModuleScene.h"
+	
+ComponentCollider::ComponentCollider(btRigidBody* body) : Component(ComponentType::COLLIDER), m_Body(body), m_SelectionNode(nullptr)
 {
 }
 
 ComponentCollider::~ComponentCollider()
 {
+	m_SelectionNode = nullptr;
 	if (m_Body != nullptr)
 	{
 		m_Body = nullptr;
@@ -28,7 +31,7 @@ void ComponentCollider::Update(ModulePhysics3D* phys)
 	}
 }
 
-void ComponentCollider::OnEditor(ModulePhysics3D* phys)
+void ComponentCollider::OnEditor(ModulePhysics3D* phys, ModuleScene* scene)
 {
 	ImGuiTreeNodeFlags treeFlags = ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_DefaultOpen;
 	ImGuiInputTextFlags lflag = ImGuiInputTextFlags_AllowTabInput;
@@ -61,6 +64,53 @@ void ComponentCollider::OnEditor(ModulePhysics3D* phys)
 			// Call a function to change shape
 			phys->ChangeBodyShape(this, Shape(m_CurrentShapeSelection));
 		}
+
+		static int e = 0;
+		ImGui::RadioButton("Point to Point", &e, 0); ImGui::SameLine();
+		ImGui::RadioButton("Hinge", &e, 1); ImGui::SameLine();
+		ImGui::RadioButton("Slider", &e, 2);
+
+		string name = "Drag and drop a GameObject";
+		if (m_SelectionNode != nullptr)
+			name = m_SelectionNode->m_Name;
+
+		ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_DefaultOpen;
+		node_flags |= ImGuiTreeNodeFlags_Bullet;
+		node_flags |= ImGuiTreeNodeFlags_Selected;
+		// Change state if clicked
+		if (ImGui::TreeNodeEx(name.c_str(), node_flags))
+		{
+			if (ImGui::BeginDragDropTarget())
+			{
+				//ImGuiDragDropFlags_SourceNoDisableHover
+				const ImGuiPayload* data = ImGui::AcceptDragDropPayload("hierarchy_node");
+				if (data != nullptr)
+				{
+					string idS = (const char*)data->Data;
+					int idI = std::stoi(idS);
+					m_SelectionNode = scene->root->FindById(idI);
+				}
+				ImGui::EndDragDropTarget();
+			}
+			ImGui::TreePop();
+		}
+
+		// Flags for selected nodes
+		ImGui::PushID(0);
+		ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0 / 7.0f, 0.6f, 0.6f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0 / 7.0f, 0.7f, 0.7f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0 / 7.0f, 0.8f, 0.8f));
+		if (ImGui::Button("Create Constraint Component"))
+		{
+			if (m_SelectionNode != nullptr && m_GameObject->m_HasComponentConstraint == false)
+			{
+				if (m_SelectionNode->m_HasComponentCollider)
+					CreateConstraint(phys, m_SelectionNode->GetCollider(), ConstraintType::P2P);
+			}
+		}
+		ImGui::PopStyleColor(3);
+		ImGui::PopID();
+
 		ImGui::TreePop();
 	}
 	
@@ -178,6 +228,41 @@ void ComponentCollider::SetStatic(bool isStatic)
 			m_Body->setCollisionFlags(m_Body->getCollisionFlags() & ~btCollisionObject::CF_STATIC_OBJECT);
 		}
 	}
+}
+
+int ComponentCollider::CreateConstraint(ModulePhysics3D* phys, ComponentCollider* secondBody, ConstraintType type)
+{	
+	ComponentConstraint* constraint = nullptr;
+	switch (type)
+	{
+	case P2P:
+	{
+		constraint = new ComponentConstraint(this, secondBody, phys->AddConstraintP2P(*this, *secondBody, { 12.5f,0,0 }, { 0,0,0 }), ConstraintType::P2P);
+		break;
+	}
+	case HINGE:
+	{
+		constraint = new ComponentConstraint(this, secondBody, phys->AddConstraintHinge(*this, *secondBody, { 12.5f,0,0 }, { 0,0,0 }, { 0,0,0 }, { 0,0,0 }), ConstraintType::HINGE);
+		break;
+	}
+	case SLIDER:
+	{
+		break;
+	}
+	default:
+	{
+		constraint = new ComponentConstraint(this, secondBody, phys->AddConstraintP2P(*this, *secondBody, { 0,0,0 }, { 0,0,0 }), ConstraintType::P2P);
+		break;
+	}
+	}
+	m_GameObject->AssignComponent(constraint);
+	secondBody->m_GameObject->AssignComponent(constraint);
+	m_Body->updateInertiaTensor();
+	secondBody->m_Body->updateInertiaTensor();
+	phys->world->updateSingleAabb(m_Body);
+	phys->world->updateSingleAabb(secondBody->m_Body);
+	phys->ForceUpdate();
+	return 1;
 }
 
 btRigidBody* ComponentCollider::GetBody()

@@ -4,10 +4,11 @@
 #include "ModuleScene.h"
 #include "ComponentTransform.h"
 #include "ModulePhysics3D.h"
+#include "ModuleScene.h"
 class PanelInspector : Panel
 {
 public:
-	PanelInspector(ModulePhysics3D* phys) : Panel(true), isActive(true), m_Phys(phys) {};
+	PanelInspector(ModulePhysics3D* phys, ModuleScene* scene) : Panel(true), isActive(true), m_Phys(phys), m_Scene(scene) {};
 	~PanelInspector();
 
 	void Start();
@@ -16,6 +17,7 @@ public:
 	void SetNode(GameObject* node);
 	GameObject* m_SelectedNode = nullptr;
 	ModulePhysics3D* m_Phys = nullptr;
+	ModuleScene* m_Scene = nullptr;
 	bool isActive = false;
 };
 
@@ -23,6 +25,7 @@ inline PanelInspector::~PanelInspector()
 {
 	m_SelectedNode = nullptr;
 	m_Phys = nullptr;
+	m_Scene = nullptr;
 }
 
 inline void PanelInspector::Start()
@@ -52,7 +55,10 @@ inline void PanelInspector::Update()
 			m_SelectedNode->GetCamera()->OnEditor();
 
 		if (m_SelectedNode->m_HasComponentCollider)
-			m_SelectedNode->GetCollider()->OnEditor(m_Phys);
+			m_SelectedNode->GetCollider()->OnEditor(m_Phys, m_Scene);
+
+		if (m_SelectedNode->m_HasComponentConstraint)
+			m_SelectedNode->GetConstraint()->OnEditor(m_Phys, m_Scene);
 	}
 	else
 	{

@@ -29,7 +29,8 @@ enum class ComponentType
 	MESH,
 	MATERIAL,
 	CAMERA,
-	COLLIDER
+	COLLIDER,
+	CONSTRAINT
 };
 
 class Component

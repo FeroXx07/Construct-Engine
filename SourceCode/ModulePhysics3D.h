@@ -14,6 +14,7 @@ struct VehicleInfo;
 
 class ModulePhysics3D : public Module
 {
+	friend class ComponentConstraint;
 public:
 	ModulePhysics3D(Application* app, bool start_enabled = true);
 	~ModulePhysics3D();
@@ -23,6 +24,7 @@ public:
 	update_status PreUpdate(float dt);
 	update_status Update(float dt);
 	update_status PostUpdate(float dt);
+	void ForceUpdate();
 	bool CleanUp();
 
 	ComponentCollider* AddBodySphere(glm::mat4x4 transform, float radius = 1.0f, float mass = 1.0f, bool isStatic = false);
@@ -34,9 +36,10 @@ public:
 	/*PhysVehicle3D* AddVehicle(const VehicleInfo& info);*/
 
 	ComponentCollider* ground;
-	void AddConstraintP2P(ComponentCollider& bodyA, ComponentCollider& bodyB, const vec3& anchorA, const vec3& anchorB);
-	void AddConstraintHinge(ComponentCollider& bodyA, ComponentCollider& bodyB, const vec3& anchorA, const vec3& anchorB, const vec3& axisS, const vec3& axisB, bool disable_collision = false);
-	void AddConstraintSixDof(btRigidBody& bodyA, btRigidBody& bodyB, const btTransform& transform1, const btTransform& transform2);
+	btTypedConstraint* AddConstraintP2P(ComponentCollider& bodyA, ComponentCollider& bodyB, const vec3& anchorA, const vec3& anchorB);
+	btTypedConstraint* AddConstraintHinge(ComponentCollider& bodyA, ComponentCollider& bodyB, const vec3& anchorA, const vec3& anchorB, const vec3& axisS, const vec3& axisB, bool disable_collision = false);
+	btTypedConstraint* AddConstraintSlider(ComponentCollider& bodyA, ComponentCollider& bodyB);
+	btTypedConstraint* AddConstraintSixDof(btRigidBody& bodyA, btRigidBody& bodyB, const btTransform& transform1, const btTransform& transform2);
 	btDiscreteDynamicsWorld* world;
 	float delta = 1.0f / 60.0f;
 private:

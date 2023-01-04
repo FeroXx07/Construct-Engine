@@ -189,6 +189,9 @@
     <ClCompile Include="SourceCode\ComponentCollider.cpp">
       <Filter>GameObjects And Components\Components</Filter>
     </ClCompile>
+    <ClCompile Include="SourceCode\ComponentConstraint.cpp">
+      <Filter>GameObjects And Components\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ImGui">
@@ -339,9 +342,14 @@
     <ClInclude Include="SourceCode\glmath.h">
       <Filter>Physics</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\MyFrustum.h" />
     <ClInclude Include="SourceCode\ComponentCollider.h">
       <Filter>GameObjects And Components\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\ComponentConstraint.h">
+      <Filter>GameObjects And Components\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\MyFrustum.h">
+      <Filter>OpenGL Classes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

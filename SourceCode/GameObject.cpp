@@ -2,12 +2,14 @@
 #include "Bullet/include/btBulletDynamicsCommon.h"
 std::atomic<int> GameObject::s_id;
 
-GameObject::GameObject() : id(++s_id), m_Parent(nullptr), m_ComponentMesh(nullptr), m_ComponentTransform(nullptr), m_ComponentMaterial(nullptr), m_HasComponentMesh(0), m_HasComponentTransform(0), m_HasComponentMaterial(0), m_ComponentCamera(0)
+GameObject::GameObject() : id(++s_id), m_Parent(nullptr), m_ComponentMesh(nullptr), m_ComponentTransform(nullptr), m_ComponentMaterial(nullptr), m_ComponentCamera(nullptr), m_ComponentCollider(nullptr), m_ComponentConstraint(nullptr), 
+m_HasComponentMesh(0), m_HasComponentTransform(0), m_HasComponentMaterial(0), m_HasComponentCamera(0), m_HasComponentCollider(0), m_HasComponentConstraint(0)
 {
 	m_Name = "No Name!!";
 }
 
-GameObject::GameObject(string name) :id(++s_id), m_Name(name), m_Parent(nullptr), m_ComponentMesh(nullptr), m_ComponentTransform(nullptr), m_ComponentMaterial(nullptr), m_HasComponentMesh(0), m_HasComponentTransform(0), m_HasComponentMaterial(0), m_ComponentCamera(0)
+GameObject::GameObject(string name) :id(++s_id), m_Name(name), m_Parent(nullptr), m_ComponentMesh(nullptr), m_ComponentTransform(nullptr), m_ComponentMaterial(nullptr), m_ComponentCamera(nullptr), m_ComponentCollider(nullptr), m_ComponentConstraint(nullptr),
+m_HasComponentMesh(0), m_HasComponentTransform(0), m_HasComponentMaterial(0), m_HasComponentCamera(0), m_HasComponentCollider(0), m_HasComponentConstraint(0)
 {
 }
 
@@ -55,12 +57,19 @@ GameObject::~GameObject()
 		m_ComponentCamera = nullptr;
 	}
 
-	// Delete material component
+	// Delete collider component
 	if (m_ComponentCollider != nullptr)
 	{
 		delete m_ComponentCollider;
 		m_ComponentCollider = nullptr;
 	}
+
+	//// Delete constraint component
+	//if (m_ComponentConstraint != nullptr)
+	//{
+	//	delete m_ComponentConstraint;
+	//	m_ComponentConstraint = nullptr;
+	//}
 }
 
 Component* GameObject::GetComponent(ComponentType type)
@@ -86,8 +95,17 @@ Component* GameObject::GetComponent(ComponentType type)
 	{
 		if (m_HasComponentMaterial) { return m_ComponentMaterial; };
 	}
+	case ComponentType::COLLIDER:
+	{
+		if (m_HasComponentCollider) { return m_ComponentCollider; };
+	}
+	case ComponentType::CONSTRAINT:
+	{
+		if (m_HasComponentConstraint) { return m_ComponentConstraint; };
+	}
 	break;
 	default:
+		return nullptr;
 		break;
 	}
 }
@@ -116,6 +134,23 @@ GameObject* GameObject::FindById(int id)
 			return chl;
 		}
 		chl->FindById(id);
+	}
+	return nullptr;
+}
+
+GameObject* GameObject::FindByName(string name)
+{
+	if (this->m_Name == name)
+	{
+		return this;
+	}
+	for (auto chl : this->m_Children)
+	{
+		if (chl->m_Name == name)
+		{
+			return chl;
+		}
+		chl->FindByName(name);
 	}
 	return nullptr;
 }
@@ -241,6 +276,13 @@ void GameObject::AssignComponent(ComponentCollider* comp)
 	comp->SetGameObject(*this);
 }
 
+void GameObject::AssignComponent(ComponentConstraint* comp)
+{
+	m_ComponentConstraint = comp;
+	m_HasComponentConstraint = true;
+	comp->SetGameObject(*this);
+}
+
 void GameObject::DeAssignComponent(ComponentType type)
 {
 	switch (type)
@@ -273,6 +315,12 @@ void GameObject::DeAssignComponent(ComponentType type)
 	{
 		m_ComponentCollider = nullptr;
 		m_HasComponentCollider = false;
+		break;
+	}
+	case ComponentType::CONSTRAINT:
+	{
+		m_ComponentConstraint = nullptr;
+		m_HasComponentConstraint = false;
 		break;
 	}
 	default:
@@ -320,6 +368,14 @@ ComponentCollider* GameObject::GetCollider()
 		return nullptr;
 }
 
+ComponentConstraint* GameObject::GetConstraint()
+{
+	if (m_HasComponentConstraint)
+		return m_ComponentConstraint;
+	else
+		return nullptr;
+}
+
 ComponentMesh* GameObject::GetMeshConst() const
 {
 	if (m_HasComponentMesh)
@@ -356,6 +412,14 @@ ComponentCollider* GameObject::GetColliderConst() const
 {
 	if (m_HasComponentCollider)
 		return m_ComponentCollider;
+	else
+		return nullptr;
+}
+
+ComponentConstraint* GameObject::GetConstraintConst() const
+{
+	if (m_HasComponentConstraint)
+		return m_ComponentConstraint;
 	else
 		return nullptr;
 }

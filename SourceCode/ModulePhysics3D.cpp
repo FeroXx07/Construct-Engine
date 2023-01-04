@@ -182,6 +182,19 @@ update_status ModulePhysics3D::PostUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
+void ModulePhysics3D::ForceUpdate()
+{
+	world->stepSimulation(1.0f / 120.0f, 15);
+	for (std::list<ComponentCollider*>::iterator item = bodies.begin(); item != bodies.end(); item++)
+	{
+		(*item)->Update(this);
+		glm::mat4x4 m;
+		(*item)->GetTransform(m);
+		string n = (*item)->m_GameObject->m_Name;
+		//std::cout << n << "  " << glm::to_string(m) << std::endl << std::endl;
+	}
+}
+
 // Called before quitting
 bool ModulePhysics3D::CleanUp()
 {
@@ -194,14 +207,20 @@ bool ModulePhysics3D::CleanUp()
 		world->removeCollisionObject(obj);
 	}
 	
-	/*for(std::list<btTypedConstraint*>::iterator item = constraints.begin(); item != constraints.end(); item++)
+	for(std::list<btTypedConstraint*>::iterator item = constraints.begin(); item != constraints.end(); item++)
 	{
+		ComponentCollider* collA = (ComponentCollider*)(*item)->getRigidBodyA().getUserPointer();
+		ComponentCollider* collB = (ComponentCollider*)(*item)->getRigidBodyB().getUserPointer();
+		ComponentConstraint* constr = collA->m_GameObject->GetConstraint();
+		collA->m_GameObject->DeAssignComponent(ComponentType::CONSTRAINT);
+		collB->m_GameObject->DeAssignComponent(ComponentType::CONSTRAINT);
+		delete constr;
 		world->removeConstraint((*item));
 		delete *item;
 		*item = nullptr;
 	}
 	
-	constraints.clear();*/
+	constraints.clear();
 
 	/*for(std::list<btDefaultMotionState*>::iterator item = motions.begin(); item != motions.end(); item++)
 	{
@@ -420,12 +439,6 @@ void ModulePhysics3D::ChangeBodyShape(ComponentCollider* body, Shape newShape)
 
 void ModulePhysics3D::DeleteShape(ComponentCollider* body)
 {
-	motions.remove((btDefaultMotionState*)body->m_Body->getMotionState());
-	delete body->m_Body->getMotionState();
-
-	shapes.remove(body->m_Body->getCollisionShape());
-	delete body->m_Body->getCollisionShape();
-
 	int constrainNums = body->m_Body->getNumConstraintRefs();
 	if (constrainNums > 0)
 	{
@@ -436,6 +449,12 @@ void ModulePhysics3D::DeleteShape(ComponentCollider* body)
 			delete body->m_Body->getConstraintRef(i);
 		}
 	}
+
+	motions.remove((btDefaultMotionState*)body->m_Body->getMotionState());
+	delete body->m_Body->getMotionState();
+
+	shapes.remove(body->m_Body->getCollisionShape());
+	delete body->m_Body->getCollisionShape();
 
 	world->removeRigidBody(body->m_Body);
 	delete body->m_Body;
@@ -505,7 +524,7 @@ void ModulePhysics3D::DeleteShape(ComponentCollider* body)
 //}
 
 // ---------------------------------------------------------
-void ModulePhysics3D::AddConstraintP2P(ComponentCollider& bodyA, ComponentCollider& bodyB, const vec3& anchorA, const vec3& anchorB)
+btTypedConstraint* ModulePhysics3D::AddConstraintP2P(ComponentCollider& bodyA, ComponentCollider& bodyB, const vec3& anchorA, const vec3& anchorB)
 {
 	btTypedConstraint* p2p = new btPoint2PointConstraint(
 		*(bodyA.m_Body), 
@@ -515,11 +534,13 @@ void ModulePhysics3D::AddConstraintP2P(ComponentCollider& bodyA, ComponentCollid
 	world->addConstraint(p2p);
 	constraints.push_back(p2p);
 	p2p->setDbgDrawSize(2.0f);
+
+	return p2p;
 }
 
-void ModulePhysics3D::AddConstraintHinge(ComponentCollider& bodyA, ComponentCollider& bodyB, const vec3& anchorA, const vec3& anchorB, const vec3& axisA, const vec3& axisB, bool disable_collision)
+btTypedConstraint* ModulePhysics3D::AddConstraintHinge(ComponentCollider& bodyA, ComponentCollider& bodyB, const vec3& anchorA, const vec3& anchorB, const vec3& axisA, const vec3& axisB, bool disable_collision)
 {
-	btHingeConstraint* hinge = new btHingeConstraint(
+	btTypedConstraint* hinge = new btHingeConstraint(
 		*(bodyA.m_Body), 
 		*(bodyB.m_Body), 
 		btVector3(anchorA.x, anchorA.y, anchorA.z),
@@ -530,9 +551,25 @@ void ModulePhysics3D::AddConstraintHinge(ComponentCollider& bodyA, ComponentColl
 	world->addConstraint(hinge, disable_collision);
 	constraints.push_back(hinge);
 	hinge->setDbgDrawSize(2.0f);
+	return hinge;
 }
 
-void ModulePhysics3D::AddConstraintSixDof(btRigidBody& bodyA, btRigidBody& bodyB, const btTransform& transform1, const btTransform& transform2)
+btTypedConstraint* ModulePhysics3D::AddConstraintSlider(ComponentCollider& bodyA, ComponentCollider& bodyB)
+{
+	btTypedConstraint* slider = new btSliderConstraint(
+		*(bodyA.m_Body),
+		*(bodyB.m_Body),
+		bodyA.m_Body->getWorldTransform(),
+		bodyB.m_Body->getWorldTransform(),
+		false);
+
+	world->addConstraint(slider);
+	constraints.push_back(slider);
+	slider->setDbgDrawSize(2.0f);
+	return slider;
+}
+
+btTypedConstraint* ModulePhysics3D::AddConstraintSixDof(btRigidBody& bodyA, btRigidBody& bodyB, const btTransform& transform1, const btTransform& transform2)
 {
 	btGeneric6DofConstraint * free = new btGeneric6DofConstraint(bodyA, bodyB, transform1, transform2, true);
 	for (int i = 1; i <= 6; ++i)
@@ -543,6 +580,7 @@ void ModulePhysics3D::AddConstraintSixDof(btRigidBody& bodyA, btRigidBody& bodyB
 	constraints.push_back(free);
 	free->setDbgDrawSize(2.0f);
 	bodyB.setDamping(100000, 100000);
+	return free;
 }
 
 

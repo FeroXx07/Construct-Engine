@@ -99,7 +99,7 @@ bool ModuleEditor::Start()
 	m_PanelConfig = new PanelConfig(App->window, App->renderer3D, 60);
 	m_PanelConsole = new PanelConsole();
 	m_PanelHierarchy = new PanelHierarchy(App->scene);
-	m_PanelInspector = new PanelInspector(App->physics3D);
+	m_PanelInspector = new PanelInspector(App->physics3D, App->scene);
 	return true;
 }
 
@@ -277,7 +277,7 @@ void ModuleEditor::MenuBarUpdate()
 			if (ImGui::MenuItem("Creat Empty"))
 				App->scene->CreateEmptyGameObject("Empty GameObject");
 
-			if (ImGui::MenuItem("Creat Camer"))
+			if (ImGui::MenuItem("Creat Camera"))
 				App->scene->CreateCamera("");
 
 			if (ImGui::MenuItem("Creat Cube"))

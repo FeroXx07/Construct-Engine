@@ -7,6 +7,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "Component.h"
 #include "Bullet/include/btBulletDynamicsCommon.h"
+#include "ComponentConstraint.h"
 
 class btRigidBody;
 class Module;
@@ -23,13 +24,13 @@ class ComponentCollider : public Component
 {
 	friend class ModulePhysics3D;
 	friend class ModulePlayer;
-	friend class ModuleSceneIntro;
+	friend class ModuleScene;
 public:
 	ComponentCollider(btRigidBody* body);
 	~ComponentCollider();
 
 	void Update(ModulePhysics3D* phys);
-	void OnEditor(ModulePhysics3D* phys);
+	void OnEditor(ModulePhysics3D* phys, ModuleScene* scene);
 
 	void Push(float x, float y, float z);
 	void GetTransform(glm::mat4& mat) const;
@@ -39,6 +40,7 @@ public:
 	const char* GetShapeString();
 	void SetTrigger(bool isTrigger);
 	void SetStatic(bool isStatic);
+	int CreateConstraint(ModulePhysics3D* phys, ComponentCollider* secondBody, ConstraintType type);
 	btRigidBody* GetBody();
 
 	glm::vec3 m_PositionOffset = glm::vec3(0.0f);
@@ -49,5 +51,6 @@ public:
 	bool m_Is_Trigger = false;
 	bool m_Is_Static = false;
 	int m_CurrentShapeSelection = (int)m_Shape;
+	GameObject* m_SelectionNode = nullptr;
 };
 #endif
