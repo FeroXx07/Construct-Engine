@@ -105,7 +105,7 @@ void ComponentCollider::OnEditor(ModulePhysics3D* phys, ModuleScene* scene)
 			if (m_SelectionNode != nullptr && m_GameObject->m_HasComponentConstraint == false)
 			{
 				if (m_SelectionNode->m_HasComponentCollider)
-					CreateConstraint(phys, m_SelectionNode->GetCollider(), ConstraintType::P2P);
+					CreateConstraint(phys, m_SelectionNode->GetCollider(), (ConstraintType)e);
 			}
 		}
 		ImGui::PopStyleColor(3);
@@ -242,11 +242,12 @@ int ComponentCollider::CreateConstraint(ModulePhysics3D* phys, ComponentCollider
 	}
 	case HINGE:
 	{
-		constraint = new ComponentConstraint(this, secondBody, phys->AddConstraintHinge(*this, *secondBody, { 12.5f,0,0 }, { 0,0,0 }, { 0,0,0 }, { 0,0,0 }), ConstraintType::HINGE);
+		constraint = new ComponentConstraint(this, secondBody, phys->AddConstraintHinge(*this, *secondBody, { 12.5f,0,0 }, { 0,0,0 }, { 1,0,0 }, { 1,0,0 }), ConstraintType::HINGE);
 		break;
 	}
 	case SLIDER:
 	{
+		constraint = new ComponentConstraint(this, secondBody, phys->AddConstraintSlider(*this, *secondBody), ConstraintType::SLIDER);
 		break;
 	}
 	default:

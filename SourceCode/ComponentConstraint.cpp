@@ -1,8 +1,9 @@
 #include "ComponentConstraint.h"
 #include "GameObject.h"
+#include "ModulePhysics3D.h"
 
 ComponentConstraint::ComponentConstraint(ComponentCollider* A_, ComponentCollider* B_, btTypedConstraint* constraint_, ConstraintType type_) : Component(ComponentType::CONSTRAINT),
-m_BodyA(A_), m_BodyB(B_), m_Constraint(constraint_), m_Type(type_)
+m_BodyA(A_), m_BodyB(B_), m_Constraint(constraint_), m_Type(type_), m_CurrentTypeSelection(type_)
 {
 }
 
@@ -46,7 +47,7 @@ void ComponentConstraint::OnEditor(ModulePhysics3D* phys, ModuleScene* scene)
 		{
 			m_Type = (ConstraintType)m_CurrentTypeSelection;
 			// Call a function to change shape
-			//phys->ChangeBodyShape(this, ConstraintType(m_CurrentTypeSelection));
+			phys->ChangeConstraint(this, m_Type);
 		}
 		ImGui::TreePop();
 	}

@@ -5,6 +5,8 @@
 #include "Primitive.h"
 #include "Bullet/include/btBulletDynamicsCommon.h"
 #include "ComponentCollider.h"
+#include "ComponentConstraint.h"
+
 // Recommended scale is 1.0f == 1 meter, no less than 0.2 objects
 #define GRAVITY btVector3(0.0f, -10.0f, 0.0f) 
 
@@ -33,6 +35,7 @@ public:
 	ComponentCollider* AddBodyCylinder(glm::mat4x4 transform, float height, float radius, float mass = 1.0f, bool isStatic = false);
 	void ChangeBodyShape(ComponentCollider* body, Shape newShape);
 	void DeleteShape(ComponentCollider* body);
+	void ChangeConstraint(ComponentConstraint* constraint, ConstraintType newType);
 	/*PhysVehicle3D* AddVehicle(const VehicleInfo& info);*/
 
 	ComponentCollider* ground;

@@ -427,15 +427,14 @@ void ModuleScene::LoadConstraints(json& j, const GameObject* goParent)
 		{
 			newConstraint = new ComponentConstraint(goA->GetCollider(), goB->GetCollider(),
 				App->physics3D->AddConstraintHinge(*goA->GetCollider(), *goB->GetCollider(),
-					{ 12.5f,0,0 }, { 0,0,0 }, { 0,0,0 }, { 0,0,0 }),
+					{ 12.5f,0,0 }, { 0,0,0 }, { 1,0,0 }, { 1,0,0 }),
 				ConstraintType::HINGE);
 		}
 		else if (type == string("SLIDER"))
 		{
-			/*newConstraint = new ComponentConstraint(goA->GetCollider(), goB->GetCollider(),
-				App->physics3D->AddConstraintP2P(*goA->GetCollider(), *goB->GetCollider(),
-					{ anchorA.at(0), anchorA.at(1), anchorA.at(2) }, { anchorB.at(0), anchorB.at(1), anchorB.at(2) }),
-				ConstraintType::P2P);*/
+			newConstraint = new ComponentConstraint(goA->GetCollider(), goB->GetCollider(),
+				App->physics3D->AddConstraintSlider(*goA->GetCollider(), *goB->GetCollider()), 
+				ConstraintType::SLIDER);
 		}
 		goA->AssignComponent(newConstraint);
 		goB->AssignComponent(newConstraint);

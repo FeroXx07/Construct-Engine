@@ -462,6 +462,39 @@ void ModulePhysics3D::DeleteShape(ComponentCollider* body)
 	body->RemoveComponentFromGameObject();
 }
 
+void ModulePhysics3D::ChangeConstraint(ComponentConstraint* constraintComp, ConstraintType newType)
+{
+	ComponentCollider* collA = (ComponentCollider*)(constraintComp->m_Constraint)->getRigidBodyA().getUserPointer();
+	ComponentCollider* collB = (ComponentCollider*)(constraintComp->m_Constraint)->getRigidBodyB().getUserPointer();
+	// Delete old constraints
+	constraints.remove(constraintComp->m_Constraint);
+	world->removeConstraint(constraintComp->m_Constraint);
+	delete constraintComp->m_Constraint;
+
+	switch (newType)
+	{
+	case P2P:
+	{
+		constraintComp->m_Constraint = AddConstraintP2P(*collA, *collB, { 12.5f,0,0 }, { 0,0,0 });
+		break;
+	}
+	case HINGE:
+	{
+		constraintComp->m_Constraint = AddConstraintHinge(*collA, *collB, { 12.5f,0,0 }, { 0,0,0 }, { 1,0,0 }, { 1,0,0 });
+		break;
+	}
+	case SLIDER:
+	{
+		constraintComp->m_Constraint = AddConstraintSlider(*collA, *collB);
+		break;
+	}
+	default:
+		break;
+	}
+	constraintComp->m_Type = newType;
+
+}
+
 // ---------------------------------------------------------
 //PhysVehicle3D* ModulePhysics3D::AddVehicle(const VehicleInfo& info)
 //{
