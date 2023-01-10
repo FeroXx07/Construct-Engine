@@ -8,7 +8,26 @@ All the licenses can be found in the license folder of the repository.
 [Github repository](https://github.com/FeroXx07/Construct-Engine)
 
 ## Team
-- Ali Hassan Shahid - Solo developer 
+
+**Ali Hassan Shahid** - Solo developer
+
+<img src="https://raw.githubusercontent.com/FeroXx07/Construct-Engine/main/docs/images/AliHassanShahidPhoto.jpg" width="100" height="150">
+
+## Contents of the engine
+The engine uses SDL + OpenGL environment, for the interface management it uses ImGUI and other 3rd parties libraries like Glew, JsonParse fro nlohmann and math
+libraries like GLM and MathGeoLib.
+
+## New contents, Physics Sub-System
+The engine uses Bullet physics library to implement some basic collisions and forces managment. It has three primitive shapes: Box, Spehere and Cylinder
+and three constraints available: Point to Point, Hinge and Slider.
+
+![In-Editor](https://raw.githubusercontent.com/FeroXx07/Construct-Engine/main/docs/gifs/In_Editor.gif)
+
+![In-Game](https://raw.githubusercontent.com/FeroXx07/Construct-Engine/main/docs/gifs/In_Game.gif)
+
+## Video showcase
+
+[![Alt text](https://img.youtube.com/vi/T6JH3_sUVHQ/0.jpg)](https://www.youtube.com/watch?v=T6JH3_sUVHQ)
 
 ## How to use? + Controls
 - “WASD” fps-like movement
@@ -20,6 +39,7 @@ All the licenses can be found in the license folder of the repository.
 - Press "L" key to delete the scene.
 - Press "K" key to save the scene.
 - Press "SPACE BAR" key to load the saved the scene.
+- Press "1" key to shoot spheres when on execution.
 
 ## License
 MIT License
