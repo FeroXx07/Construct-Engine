@@ -21,6 +21,14 @@ libraries like GLM and MathGeoLib.
 The engine uses Bullet physics library to implement some basic collisions and forces managment. It has three primitive shapes: Box, Spehere and Cylinder
 and three constraints available: Point to Point, Hinge and Slider.
 
+![In-Editor](https://raw.githubusercontent.com/FeroXx07/Construct-Engine/main/docs/gifs/In_Editor.gif)
+
+![In-Game](https://raw.githubusercontent.com/FeroXx07/Construct-Engine/main/docs/gifs/In_Game.gif)
+
+## Video showcase
+
+[![Alt text](https://img.youtube.com/vi/T6JH3_sUVHQ/0.jpg)](https://www.youtube.com/watch?v=T6JH3_sUVHQ)
+
 ## How to use? + Controls
 - “WASD” fps-like movement
 - While Right clicking free look around
