@@ -41,6 +41,10 @@ and three constraints available: Point to Point, Hinge and Slider.
 - Press "SPACE BAR" key to load the saved the scene.
 - Press "1" key to shoot spheres when on execution.
 
+## Latest release
+
+https://github.com/FeroXx07/Construct-Engine/releases/tag/V.1
+
 ## License
 MIT License
 
