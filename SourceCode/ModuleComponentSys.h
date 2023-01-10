@@ -23,7 +23,7 @@ public:
 	void DrawBoundingBoxes(ComponentCamera* camera, ComponentTransform* transform, GameObject* go);
 	void DrawFrustum(ComponentCamera* camera, ComponentCamera* frustumCamera, ComponentTransform* transform);
 
-	void UpdateAllTransforms(GameObject* rootNode);
+	void UpdateAllTransforms(GameObject* rootNode, glm::mat4x4 parentWorld);
 	bool CleanUp();
 
 	//MeshSystem* m_MeshSystem = nullptr;

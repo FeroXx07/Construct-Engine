@@ -47,6 +47,7 @@ public:
 
 	void SaveSceneJson();
 	void LoadSceneJson();
+	void LoadSceneJson(const char* sceneName);
 	void DeleteScene();
 	void To_Json(json& j, const GameObject* go);
 	void LoadConstraints(json& j, const GameObject* goParent);

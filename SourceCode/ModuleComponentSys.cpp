@@ -219,14 +219,23 @@ void ModuleComponentSys::DrawFrustum(ComponentCamera* camera, ComponentCamera* f
 	glLoadIdentity();
 }
 
-void ModuleComponentSys::UpdateAllTransforms(GameObject* rootNode)
+void ModuleComponentSys::UpdateAllTransforms(GameObject* node, glm::mat4x4 parentWorld)
 {
-	//glMatrixMode(GL_PROJECTION);
-	//glLoadIdentity();
-	//glMatrixMode(GL_MODELVIEW);
-	//glLoadIdentity();
-	//rootNode->UpdateBody();
-
+	bool isRoot = false;
+	if (node->GetParent() == nullptr)
+		isRoot = true;
+	glm::mat4x4 world = parentWorld;
+	if (!isRoot)
+	{
+		ComponentTransform* local = node->GetTransform();
+		local->Update();
+		world = local->Combine(parentWorld);
+		local->SetWorldMatrix(world);
+	}
+	for (auto c : node->m_Children)
+	{
+		UpdateAllTransforms(c, world);
+	}
 	//for (auto c : rootNode->m_Children)
 	//{
 	//	UpdateAllTransforms(c);

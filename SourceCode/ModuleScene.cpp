@@ -58,13 +58,17 @@ bool ModuleScene::Start()
 	//ground->AssignComponent(App->physics3D->AddBodyCube(glm::vec3(50,1,50), ground->GetTransform()->GetLocal(), 1.0f));
 	debug_draw = false;
 	App->renderer3D->RefreshWindowSize();
+
+	DeleteScene();
+	LoadSceneJson("physicsScene");
 	SaveSceneJson();
 	return ret;
 }
 
 update_status ModuleScene::PreUpdate(float dt)
 {
-	App->componentsManager->UpdateAllTransforms(this->root);
+	if (editorState == StateEditor::ON_EDITOR)
+		App->componentsManager->UpdateAllTransforms(this->root, this->root->GetTransform()->GetLocal());
 	return UPDATE_CONTINUE;
 }
 
@@ -294,7 +298,30 @@ void ModuleScene::LoadSceneJson()
 		}
 		file.close();
 	}
+	App->renderer3D->RefreshWindowSize();
 
+}
+
+void ModuleScene::LoadSceneJson(const char* sceneName)
+{
+	string directory = "Resources/Scenes/";
+	string path = directory + sceneName + ".json";
+
+	std::ifstream file(path);
+	if (file.is_open())
+	{
+		json data = json::parse(file);
+		for (auto el : data["Game Objects"])
+		{
+			From_Json(el, root);
+		}
+		for (auto el : data["Game Objects"])
+		{
+			LoadConstraints(el, root);
+		}
+		file.close();
+	}
+	App->renderer3D->RefreshWindowSize();
 }
 
 void ModuleScene::DeleteScene()

@@ -196,9 +196,12 @@ void ModuleEditor::SetupImGuiStyle()
 
 void ModuleEditor::SetNullSelected()
 {
-	m_PanelHierarchy->SetNullSelection();
-	m_CurrentSelectedNode = nullptr;
-	m_PanelInspector->m_SelectedNode = nullptr;
+	if (m_PanelHierarchy != nullptr)
+		m_PanelHierarchy->SetNullSelection();
+	if (m_CurrentSelectedNode != nullptr)
+		m_CurrentSelectedNode = nullptr;
+	if (m_PanelInspector != nullptr)
+		m_PanelInspector->m_SelectedNode = nullptr;
 }
 
 void ModuleEditor::MenuBarUpdate()
